@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\LaravelDT\View\Components;
+namespace Amprest\LaravelDT\Views\Components;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
@@ -24,16 +24,20 @@ class DatatablesAssets extends Component
      */
     public function render(): string
     {
-        //  Get the script path
-        $scriptPath = package_path('resources/js/app.js');
+        //  Get the package name
+        $name = config('laravel-dt.name');
 
-        //  Get the style path
-        $stylePath = package_path('resources/sass/app.scss');
+        //  Get the package author
+        $author = config('laravel-dt.author');
+
+        //  Return the path
+        $path = "vendor/$author/$name";
 
         //  Render the assets
         return new HtmlString(
             Blade::render(<<<blade
-                @vite(["$scriptPath", "$stylePath"])
+                @vite('resources/js/app.js', "$path")
+                @vite('resources/sass/app.scss', "$path")
             blade)
         );
     }

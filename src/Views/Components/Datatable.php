@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\LaravelDT\View\Components;
+namespace Amprest\LaravelDT\Views\Components;
 
 use Illuminate\View\Component;
 use Illuminate\View\View;
