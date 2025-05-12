@@ -2,6 +2,7 @@
 
 namespace Amprest\LaravelDT\Views\Components;
 
+use Illuminate\Foundation\Vite;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Fluent;
 use Illuminate\View\Component;
@@ -10,13 +11,33 @@ use Illuminate\View\View;
 class DatatableAssets extends Component
 {
     /**
+     * The Vite instance.
+     *
+     * @var \Illuminate\Foundation\Vite
+     */
+    public Vite $vite;
+
+    /**
      * Create a new component instance.
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
     public function __construct()
     {
-    
+        //  Get the path of the hot file
+        $path = package_path('public/hot');
+
+        //  Define the entry points
+        $entryPoints = [
+            package_path('resources/js/app.js'),
+            package_path('resources/css/app.css'),
+        ];
+
+        //  Build the vite instance
+        $this->vite = app(Vite::class)
+            ->useHotFile(is_file($path) ? $path : null)
+            ->useBuildDirectory(package_path('public/build'))
+            ->withEntryPoints($entryPoints);
     }
 
     /**
@@ -26,14 +47,14 @@ class DatatableAssets extends Component
      */
     public function assets()
     {
-        //  Get the public path of the package
-        $publicPath = package_path('public');
-
         //  Get the asset path
-        $assetPath = "$publicPath/build/assets";
+        $path = package_path('public/build/assets');
+
+        //  Create the asset path if it does not exist
+        $files = ! file_exists($path) ? [] : File::files($path);
 
         //  Get the assets
-        return collect(File::files($assetPath))->map(fn($file) => new Fluent([
+        return collect($files)->map(fn($file) => new Fluent([
             'path' => route('laravel-dt.asset.show', ['name' => $file->getFilename()]),
             'type' => $file->getExtension(),
         ]));
@@ -46,8 +67,6 @@ class DatatableAssets extends Component
      */
     public function render(): View
     {
-        return view('laravel-dt::components.datatable-assets', [
-            'assets' => $this->assets(),
-        ]);
+        return view('laravel-dt::components.datatable-assets');
     }
 }
