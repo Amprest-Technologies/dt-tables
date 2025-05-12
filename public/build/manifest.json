@@ -1,16 +1,17 @@
 {
-  "packages/laravel-dt/resources/js/app.js": {
-    "file": "assets/app-CQ3AoC1H.js",
+  "resources/css/app.css": {
+    "file": "assets/app-l0sNRNKZ.js",
     "name": "app",
-    "src": "packages/laravel-dt/resources/js/app.js",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-C0mWkBD2.js",
+    "name": "app",
+    "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
       "assets/app-PtVLqxZb.css"
     ]
-  },
-  "packages/laravel-dt/resources/sass/app.scss": {
-    "file": "assets/app-DsTzuu0T.css",
-    "src": "packages/laravel-dt/resources/sass/app.scss",
-    "isEntry": true
   }
 }

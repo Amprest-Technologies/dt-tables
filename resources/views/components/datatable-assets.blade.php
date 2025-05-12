@@ -1,6 +1,5 @@
 @if(app(\Illuminate\Foundation\Vite::class)->isRunningHot())
-    @vite('packages/laravel-dt/resources/sass/app.scss')
-    @vite('packages/laravel-dt/resources/js/app.js')
+    @vite('vendor/amprest/laravel-dt/resources/js/app.js')
 @else
     @foreach ($assets as $asset)
         @if ($asset->type === 'js')
