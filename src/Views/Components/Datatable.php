@@ -24,6 +24,6 @@ class Datatable extends Component
      */
     public function render(): View
     {
-        return view('laravel-dt::components.datatables');
+        return view('laravel-dt::components.data-table');
     }
 }

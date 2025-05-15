@@ -13,7 +13,7 @@ class SchemaSeeder extends Command
      *
      * @var string
      */
-    protected $signature = 'ldt:schema-seeder';
+    protected $signature = 'schema-seeder';
 
     /**
      * The console command description.

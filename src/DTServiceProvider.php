@@ -44,15 +44,18 @@ class DTServiceProvider extends ServiceProvider
         //  Load the configuration file
         $this->mergeConfigFrom(__DIR__."/../config/laravel-dt.php", $this->packageName);
 
+        //  Load the views file
+        $this->loadViewsFrom(__DIR__.'/../resources/views', $this->packageName);
+
+        //  Publish the configuration file
+        $this->loadTranslationsFrom(__DIR__.'/../lang', $this->packageName);
+
         //  Load the routes file
         $this->app['router']
             ->name('laravel-dt.')
             ->prefix($this->packageName)
             ->middleware('web')
             ->group(fn () => $this->loadRoutesFrom(__DIR__.'/../routes/web.php'));
-
-        //  Load the views file
-        $this->loadViewsFrom(__DIR__.'/../resources/views', $this->packageName);
 
         //  Load custom commands
         if ($this->app->runningInConsole()) {

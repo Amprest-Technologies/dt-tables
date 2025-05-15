@@ -1,0 +1,81 @@
+@import "tailwindcss";
+@source "@resources/views/pages";
+
+@layer base {
+    [type="text"],
+    [type="email"],
+    [type="url"],
+    [type="password"],
+    [type="number"],
+    [type="date"],
+    [type="datetime-local"],
+    [type="month"],
+    [type="search"],
+    [type="tel"],
+    [type="time"],
+    [type="week"],
+    [multiple],
+    [inputmode="numeric"],
+    select,
+    textarea {
+        @apply w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+    }
+
+    [type="checkbox"],
+    [type="radio"] {
+        @apply h-5 w-5 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500;
+    }
+
+    [aria-required="true"] {
+        @apply before:text-red-800 before:content-['*'] before:inline-block before:mr-1;
+    }
+
+    label {
+        @apply block text-gray-600 text-sm font-medium mb-0.5;
+    }
+}
+
+@layer components {
+    .btn {
+        @apply px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 whitespace-nowrap cursor-pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .element-group {
+        @apply flex items-stretch rounded-md overflow-hidden;
+    
+        * {
+            @apply rounded-none!;
+    
+            &:not(:first-child) {
+                @apply border-x! border-white!;
+            }
+    
+            &:first-child {
+                @apply rounded-none! rounded-l-md!;
+            }
+    
+            &:last-child {
+                @apply rounded-none! rounded-r-md!;
+            }
+        }
+    }
+
+    .table {
+        @apply w-full text-sm text-left;
+
+        tbody tr {
+            @apply hover:bg-gray-100;
+        }
+
+        th,td {
+            @apply p-2.5 border border-gray-300;
+        }
+
+        &.no-wrap {
+            td, th {
+                @apply whitespace-nowrap;
+            }
+        }
+    }
+}

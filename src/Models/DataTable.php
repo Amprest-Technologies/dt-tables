@@ -20,7 +20,7 @@ class DataTable extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
+        'identifier',
         'settings',
     ];
 

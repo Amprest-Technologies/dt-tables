@@ -67,6 +67,6 @@ class DatatableAssets extends Component
      */
     public function render(): View
     {
-        return view('laravel-dt::components.datatable-assets');
+        return view('laravel-dt::components.data-table-assets');
     }
 }

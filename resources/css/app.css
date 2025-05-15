@@ -1,2 +1,1 @@
-@import "tailwindcss" prefix(ldt);
-@source "@resources/views/pages";
+@import "./tailwind";
