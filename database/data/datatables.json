@@ -1,0 +1,42 @@
+[
+    {
+        "details": {
+            "name": "transactions",
+            "settings": {
+                "buttons": ["copy", "colvis", "csv", "excel", "print"]
+            }
+        },
+        "columns": [
+            {
+                "key": "organization_name",
+                "search_type": "input",
+                "data_type": "string"
+            },
+            {
+                "key": "tenant_name",
+                "search_type": "input",
+                "data_type": "string"
+            },
+            {
+                "key": "amount",
+                "search_type": null,
+                "data_type": "num"
+            },
+            {
+                "key": "payment_method",
+                "search_type": "select",
+                "data_type": "string"
+            },
+            {
+                "key": "reference_no",
+                "search_type": "input",
+                "data_type": "string"
+            },
+            {
+                "key": "status",
+                "search_type": "select",
+                "data_type": "string"
+            }
+        ]
+    }
+]

@@ -2,11 +2,11 @@
 
 namespace Amprest\LaravelDT;
 
+use Amprest\LaravelDT\Console\Commands\SchemaSeeder;
+use Amprest\LaravelDT\Providers\DatabaseServiceProvider;
 use Amprest\LaravelDT\Views\Components\Datatable;
 use Amprest\LaravelDT\Views\Components\DatatableAssets;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class DTServiceProvider extends ServiceProvider
@@ -15,7 +15,7 @@ class DTServiceProvider extends ServiceProvider
      * Define the package name.
      *
      */
-    protected string $packageName = 'laravel-dt';
+    protected string $packageName = '';
 
     /**
      * Register the application services.
@@ -24,7 +24,14 @@ class DTServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->createDatabaseConnection();
+        //  Load helpers
+        $this->loadHelpersFrom(__DIR__.'/../src/Utils');
+
+        //  Load the package config
+        $this->packageName = package_name();
+
+        //  Register other service providers
+        $this->app->register(DatabaseServiceProvider::class);
     }
 
     /**
@@ -37,9 +44,6 @@ class DTServiceProvider extends ServiceProvider
         //  Load the configuration file
         $this->mergeConfigFrom(__DIR__."/../config/laravel-dt.php", $this->packageName);
 
-        //  Load helpers
-        $this->loadHelpersFrom(__DIR__.'/../src/Utils');
-
         //  Load the routes file
         $this->app['router']
             ->name('laravel-dt.')
@@ -49,6 +53,11 @@ class DTServiceProvider extends ServiceProvider
 
         //  Load the views file
         $this->loadViewsFrom(__DIR__.'/../resources/views', $this->packageName);
+
+        //  Load custom commands
+        if ($this->app->runningInConsole()) {
+            $this->commands([SchemaSeeder::class]);
+        }
 
         //  Load the blade components
         Blade::component('datatable', Datatable::class);
@@ -64,36 +73,6 @@ class DTServiceProvider extends ServiceProvider
     {
         foreach (glob("$path/*.php") as $helper) {
             require_once $helper;
-        }
-    }
-
-    /**
-     * Create the database connection for the package.
-     *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
-     */
-    protected function createDatabaseConnection(): void
-    {
-        //  Check if the database exists and create it if it doesn't
-        if (! file_exists($path = base_path('laravel-dt.sqlite'))) {
-            touch($path);
-        }
-
-        //  Set the connection config early
-        config()->set("database.connections.{$this->packageName}", [
-            'driver' => 'sqlite',
-            'database' => $path,
-            'foreign_key_constraints' => true,
-        ]);
-
-        //  Check if the table exists,
-        if(!Schema::connection($this->packageName)->hasTable('data_tables')) {
-            //  If it doesnt exist, create it
-            Schema::connection($this->packageName)->create('data_tables', function (Blueprint $table) {
-                $table->id();
-                $table->string('name')->unique();
-                $table->timestamps();
-            });
         }
     }
 }
