@@ -8,6 +8,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('assets/{name}', AssetController::class)->name('asset.show');
 
 //  Define the route for the data table model
-Route::resource('data-tables', DataTableController::class)->only([
-    'index', 'store', 'edit'
-]);
+Route::resource('data-tables', DataTableController::class)->except(['show']);

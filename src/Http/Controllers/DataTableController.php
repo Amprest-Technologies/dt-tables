@@ -2,9 +2,9 @@
 
 namespace Amprest\LaravelDT\Http\Controllers;
 
+use Amprest\LaravelDT\Http\Requests\DataTableRequest;
 use Amprest\LaravelDT\Models\DataTable;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 
@@ -18,11 +18,11 @@ class DataTableController extends Controller
     public function index(): View
     {
         //  Get the list of tables
-        $tables = DataTable::latest()->get();
+        $dataTables = DataTable::latest()->get();
 
         //  Return the view with the list of tables
         return view('laravel-dt::pages.data-tables.index', [
-            'tables' => $tables,
+            'dataTables' => $dataTables,
         ]);
     }
 
@@ -31,19 +31,72 @@ class DataTableController extends Controller
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
-    public function store(Request $request): RedirectResponse
+    public function store(DataTableRequest $request): RedirectResponse
     {
-        //  Validate the request
-        $request->validate([
-            'identifier' => ['required', 'string', 'max:255'],
-        ]);
-
         //  Create the table
-        DataTable::create(array_merge($request->all(), [
+        DataTable::create(array_merge($request->validated(), [
             'settings' => config('laravel-dt.defaults.settings'),
         ]));
 
         //  Return the view with the list of tables  
-        return redirect()->back();
+        return redirect()->back()->with([
+            'alert' => [
+                'type' => 'success',
+                'message' => trans('laravel-dt::alerts.data-table.created'),
+            ],
+        ]);
+    }
+
+    /**
+     * Show the page to edit a table.
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    public function edit(DataTable $dataTable): View
+    {
+        return view('laravel-dt::pages.data-tables.edit', [
+            'dataTable' => $dataTable,
+        ]);
+    }
+
+    /**
+     * Update the data table.
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    public function update(DataTableRequest $request, DataTable $dataTable): RedirectResponse
+    {
+        //  Update the table
+        $dataTable->update($request->validated());
+
+        //  Return the view with the list of tables  
+        return redirect()->back()->with([
+            'alert' => [
+                'type' => 'success',
+                'message' => trans('laravel-dt::alerts.data-table.updated'),
+            ],
+        ]);
+    }
+
+    /**
+     * Destroy a table.
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    public function destroy(DataTable $dataTable): RedirectResponse
+    {
+        //  Delete the table columns
+        $dataTable->columns()->delete();
+
+        //  Delete the table
+        $dataTable->delete();
+
+        //  Return the view with the list of tables  
+        return redirect()->back()->with([
+            'alert' => [
+                'type' => 'success',
+                'message' => trans('laravel-dt::alerts.data-table.destroyed'),
+            ],
+        ]);
     }
 }

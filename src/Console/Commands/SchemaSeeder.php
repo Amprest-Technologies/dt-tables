@@ -29,7 +29,7 @@ class SchemaSeeder extends Command
     {
         DB::transaction(function () {
             //  Get the json file from the config
-            $tables = file_get_contents(package_path('database/data/datatables.json'));
+            $tables = file_get_contents(package_path('database/data/data-tables.json'));
     
             //  Decode the json file
             $tables = collect(json_decode($tables, true));

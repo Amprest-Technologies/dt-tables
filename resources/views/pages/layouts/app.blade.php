@@ -8,7 +8,11 @@
     <x-datatable-assets />
 </head>
 <body>
-    @yield('content')
+    <div class="container mx-auto mt-5">
+        <div class="text-2xl mb-2 text-center font-semi-bold">Laravel Data Tables</div>
+            @yield('content')
+        </div>
+    </div>
     @if(session()->has('alert'))
         <script type="module">
             toastr[`{{ session('alert.type') }}`](`{{ session('alert.message') }}`);
