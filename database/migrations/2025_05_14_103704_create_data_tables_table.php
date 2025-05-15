@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::connection('laravel-dt')->create('data_tables', function (Blueprint $table) {
             $table->id();
+            $table->ulid('ulid')->unique();
             $table->string('identifier')->unique();
             $table->json('settings');
             $table->timestamps();

@@ -23,3 +23,17 @@ if (! function_exists('package_path')) {
         return base_path('vendor/amprest/laravel-dt/' . $path);
     }
 }
+
+if (! function_exists('prettify')) {
+    /**
+     * Prettify text
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    function prettify(string $text): string
+    {
+        return $text
+            ? ucwords(str_replace('-', ' ', str_replace('_', ' ', strtolower($text))))
+            : $text;
+    }
+}

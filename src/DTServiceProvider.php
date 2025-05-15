@@ -4,8 +4,8 @@ namespace Amprest\LaravelDT;
 
 use Amprest\LaravelDT\Console\Commands\SchemaSeeder;
 use Amprest\LaravelDT\Providers\DatabaseServiceProvider;
-use Amprest\LaravelDT\Views\Components\Datatable;
-use Amprest\LaravelDT\Views\Components\DatatableAssets;
+use Amprest\LaravelDT\Views\Components\DataTable;
+use Amprest\LaravelDT\Views\Components\DataTableAssets;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -63,8 +63,8 @@ class DTServiceProvider extends ServiceProvider
         }
 
         //  Load the blade components
-        Blade::component('datatable', Datatable::class);
-        Blade::component('datatable-assets', DatatableAssets::class);
+        Blade::component('data-table', DataTable::class);
+        Blade::component('data-table-assets', DataTableAssets::class);
     }
 
     /**

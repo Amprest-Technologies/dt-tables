@@ -2,11 +2,14 @@
 
 namespace Amprest\LaravelDT\Models;
 
+use Amprest\LaravelDT\Traits\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DataTable extends Model
 {
+    use HasUlids;
+
     /**
      * Define the connection name for the model.
      *

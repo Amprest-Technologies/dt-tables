@@ -8,7 +8,7 @@ use Illuminate\Support\Fluent;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
-class DatatableAssets extends Component
+class DataTableAssets extends Component
 {
     /**
      * The Vite instance.

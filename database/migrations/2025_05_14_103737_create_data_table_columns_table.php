@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::connection('laravel-dt')->create('data_table_columns', function (Blueprint $table) {
             $table->id();
+            $table->ulid('ulid')->unique();
             $table->foreignIdFor(DataTable::class)->constrained();
             $table->string('key');
             $table->string('search_type')->nullable();

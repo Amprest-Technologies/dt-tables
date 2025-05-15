@@ -16,4 +16,10 @@ return [
         'updated' => 'Data table updated successfully.',
         'destroyed' => 'Data table deleted successfully.',
     ],
+
+    'data-table-column' => [
+        'created' => 'Data table created successfully.',
+        'updated' => 'Data table updated successfully.',
+        'destroyed' => 'Data table deleted successfully.',
+    ],
 ];
