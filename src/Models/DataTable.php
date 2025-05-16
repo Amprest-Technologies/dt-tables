@@ -24,6 +24,7 @@ class DataTable extends Model
      */
     protected $fillable = [
         'identifier',
+        'settings',
         'settings->buttons',
     ];
 

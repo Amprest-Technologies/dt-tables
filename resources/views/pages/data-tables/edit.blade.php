@@ -2,21 +2,31 @@
 @section('title', prettify($dataTable->identifier))
 @section('content')
     <section class="mb-3">
-        <h1 class="font-semibold text-xl">
-            Edit Configurations : {{ prettify($dataTable->identifier) }}
-        </h1>
+        <div class="flex items-center justify-between">
+            <h1 class="font-semibold text-xl">
+                Edit Configurations : {{ prettify($dataTable->identifier) }}
+            </h1>
+            <div>
+                <a href="{{ route('laravel-dt.data-tables.index') }}" class="underline">Back Home</a>
+            </div>
+        </div>
     </section>
     <section class="mb-5">
         <div class="mb-3 font-semibold">Column Configurations</div>
         <div>
             <form action="{{ route('laravel-dt.data-tables.data-table-columns.store', ['data_table' => $dataTable]) }}" method="POST" class="mb-1">
                 @csrf
+                @php $id = 'new-column' @endphp
+                {!! bag($id) !!}
                 <div class="element-group">
-                    <input name="key" type="text" placeholder="List a new column">
+                    <input name="key" type="text" class="@error('key', $id) border border-red-800 @enderror" placeholder="List a new column" value="{{ old('key') }}">
                     <button class="btn">Add Column</button>
                 </div>
+                @error('key', $id)
+                    <small class="text-red-900">{{ $message }}</small>
+                @enderror
             </form>
-            <div>
+            @if($columns->isNotEmpty())
                 <table class="table">
                     <thead>
                         <tr>
@@ -32,41 +42,56 @@
                             <tr>
                                 <td class="text-center">{{ $loop->iteration }}</td>
                                 <td>
-                                    <input name="key" type="text" value="{{ $column->name }}" placeholder="Column Name" form="{{ $form = 'update-'.$column->getRouteKey().'-form' }}">
+                                    @php $id = $column->getRouteKey() @endphp
+                                    <input name="key" type="text" value="{{ old('key', $column->name) }}" placeholder="Column Name" class="@error('key', $id) border border-red-800 @enderror" form="{{ $form = 'update-'.$id.'-form' }}">
+                                    @error('key', $id)
+                                        <small class="text-red-900">{{ $message }}</small>
+                                    @enderror
                                 </td>
                                 <td>
-                                    <select name="search_type" form="{{ $form }}">
+                                    <select name="search_type" class="@error('search_type', $id) border border-red-800 @enderror" form="{{ $form }}">
                                         @foreach (config('laravel-dt.columns.search_types') as $searchType)
-                                            <option value="{{ $searchType }}" @selected($searchType == $column->search_type)>{{ prettify($searchType) }}</option>
+                                            <option value="{{ $searchType }}" @selected($searchType == old('search_type', $column))>{{ prettify($searchType) }}</option>
                                         @endforeach
                                     </select>
+                                    @error('search_type', $id)
+                                        <small class="text-red-900">{{ $message }}</small>
+                                    @enderror
                                 </td>
                                 <td>
-                                    <select name="data_type" form="{{ $form }}">
+                                    <select name="data_type" class="@error('data_type', $id) border border-red-800 @enderror" form="{{ $form }}">
                                         @foreach (config('laravel-dt.columns.data_types') as $dataType)
-                                            <option value="{{ $dataType }}" @selected($dataType == $column->data_type)>{{ prettify($dataType) }}</option>
+                                            <option value="{{ $dataType }}" @selected($dataType == old('data_type', $column))>{{ prettify($dataType) }}</option>
                                         @endforeach
                                     </select>
+                                    @error('data_type', $id)
+                                        <small class="text-red-900">{{ $message }}</small>
+                                    @enderror
                                 </td>
                                 <td class="text-center">
                                     <div class="element-group justify-center">
-                                        <form id="{{ $form }}" action="{{ route('laravel-dt.data-table-columns.update', ['data_table_column' => $column]) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn">Update</button>
-                                        </form>
-                                        <form action="{{ route('laravel-dt.data-table-columns.destroy', ['data_table_column' => $column]) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn">Delete</button>
-                                        </form>
+                                        <button form="{{ $form }}" type="submit" class="btn">Update</button>
+                                        <button form="{{ $deleteForm = 'delete-'.$id.'-form' }}" type="submit" class="btn">Delete</button>
                                     </div>
                                 </td>
                             </tr>
+                            <form id="{{ $form }}" action="{{ route('laravel-dt.data-table-columns.update', ['data_table_column' => $column]) }}" method="POST">
+                                @csrf
+                                {!! bag($id) !!}
+                                @method('PUT')
+                            </form>
+                            <form id="{{ $deleteForm }}" action="{{ route('laravel-dt.data-table-columns.destroy', ['data_table_column' => $column]) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                            </form>
                         @endforeach
                     </tbody>
                 </table>
-            </div>
+            @else
+                <div class="mb-1 border border-gray-200 rounded-lg p-4">
+                    No columns listed yet
+                </div>
+            @endif
         </div>
     </section>
     <section class="mb-3">

@@ -18,6 +18,10 @@ class DataTableColumnRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
+        //  Get the identifier from the request
+        $this->errorBag = $this->{'_bag'} ?? $this->errorBag;
+
+        //  Merge inexisting data with the request
         $this->merge([
             'key' => Str::slug($this->key, '_'),
             'search_type' => $this->search_type ?? 'input',

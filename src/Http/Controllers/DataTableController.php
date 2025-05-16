@@ -34,12 +34,12 @@ class DataTableController extends Controller
     public function store(DataTableRequest $request): RedirectResponse
     {
         //  Create the table
-        DataTable::create(array_merge($request->validated(), [
+        $dataTable = DataTable::create(array_merge($request->validated(), [
             'settings' => config('laravel-dt.defaults.settings'),
         ]));
 
         //  Return the view with the list of tables  
-        return redirect()->back()->with([
+        return redirect()->route('laravel-dt.data-tables.edit', ['data_table' => $dataTable])->with([
             'alert' => [
                 'type' => 'success',
                 'message' => trans('laravel-dt::alerts.data-table.created'),

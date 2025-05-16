@@ -38,7 +38,7 @@ class DataTableRequest extends FormRequest
         //  Return the rules
         return [
             'identifier' => ['required', 'string', 'max:255', $uniqueRule],
-            'type' => ['required', Rule::in(['buttons'])],
+            'type' => ['sometimes', 'required', Rule::in(['buttons'])],
         ];
     }
 
