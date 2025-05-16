@@ -3,7 +3,7 @@
         "details": {
             "identifier": "transactions-table",
             "settings": {
-                "buttons": ["copy", "colvis", "csv", "excel", "print"]
+                "buttons": ["copy", "colvis", "csv", "excel"]
             }
         },
         "columns": [
@@ -19,7 +19,7 @@
             },
             {
                 "key": "amount",
-                "search_type": null,
+                "search_type": "none",
                 "data_type": "num"
             },
             {

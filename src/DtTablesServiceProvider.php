@@ -42,24 +42,30 @@ class DtTablesServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //  Load the configuration file
-        $this->mergeConfigFrom(__DIR__."/../config/dt-tables.php", $this->packageName);
+        $this->mergeConfigFrom(package_path('config/dt-tables.php'), $this->packageName);
 
         //  Load the views file
-        $this->loadViewsFrom(__DIR__.'/../resources/views', $this->packageName);
+        $this->loadViewsFrom(package_path('resources/views'), $this->packageName);
 
         //  Publish the configuration file
-        $this->loadTranslationsFrom(__DIR__.'/../lang', $this->packageName);
+        $this->loadTranslationsFrom(package_path('lang'), $this->packageName);
 
         //  Load the routes file
         $this->app['router']
             ->name('dt-tables.')
             ->prefix($this->packageName)
             ->middleware('web')
-            ->group(fn () => $this->loadRoutesFrom(__DIR__.'/../routes/web.php'));
+            ->group(fn () => $this->loadRoutesFrom(package_path('routes/web.php')));
 
         //  Load custom commands
         if ($this->app->runningInConsole()) {
+            //  Add the package commands
             $this->commands([SchemaSeeder::class]);
+
+            //  Prohibit the schema seeder in production
+            SchemaSeeder::prohibit(
+                ! $this->app->environment('local')
+            );
         }
 
         //  Load the blade components

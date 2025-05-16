@@ -4,10 +4,13 @@ namespace Amprest\DtTables\Console\Commands;
 
 use Amprest\DtTables\Models\DataTable;
 use Illuminate\Console\Command;
+use Illuminate\Console\Prohibitable;
 use Illuminate\Support\Facades\DB;
 
 class SchemaSeeder extends Command
 {
+    use Prohibitable;
+    
     /**
      * The name and signature of the console command.
      *
@@ -27,6 +30,10 @@ class SchemaSeeder extends Command
      */
     public function handle()
     {
+        //  Truncate all tables in the database
+        $this->truncateTables();
+
+        //  Launch a transaction
         DB::transaction(function () {
             //  Get the json file from the config
             $tables = file_get_contents(package_path('database/data/data-tables.json'));
@@ -43,5 +50,29 @@ class SchemaSeeder extends Command
                 $currentTable->columns()->createMany($table['columns']);
             }
         });
+    }
+
+    /**
+     * Truncate all tables in the database.
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    protected function truncateTables(): void
+    {
+        //  Get the package name
+        $connection = DB::connection(package_name());
+
+        //  Disable foreign key constraints in SQLite
+        $connection->statement('PRAGMA foreign_keys = OFF;');
+
+        //  Get the statement
+        $statement = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';";
+
+        //  Get all table names
+        collect($connection->select($statement))
+            ->each(fn ($table) => $connection->table($table->name)->truncate());
+
+        //  Enable foreign key constraints in SQLite
+        $connection->statement('PRAGMA foreign_keys = ON;');
     }
 }
