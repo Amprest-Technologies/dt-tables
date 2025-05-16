@@ -12,7 +12,20 @@ return [
     */
     'defaults' => [
         'settings' => [
-            'buttons' => ['copy', 'colvis', 'csv', 'excel', 'print']
+            'buttons' => ['copy', 'colvis', 'csv', 'excel']
         ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Laravel DataTable Column Settings
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default settings for your DataTable columns.
+    |
+    */
+    'columns' => [
+        'search_types' => ['input', 'select'],
+        'data_types' => ['string', 'num'],
     ],
 ];

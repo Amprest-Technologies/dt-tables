@@ -4,7 +4,7 @@ namespace Amprest\LaravelDT\Http\Requests;
 
 use Amprest\LaravelDT\Models\DataTableColumn;
 use Illuminate\Container\Attributes\RouteParameter;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -19,13 +19,12 @@ class DataTableColumnRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'key' => Str::slug($this->key),
-            'search_type' => 'input',
-            'data_type' => 'string',
+            'key' => Str::slug($this->key, '_'),
+            'search_type' => $this->search_type ?? 'input',
+            'data_type' => $this->data_type ?? 'string',
         ]);
-
-        dd($this->all());
     }
+
     /**
      * Return the rules for the request.
      *
@@ -41,8 +40,8 @@ class DataTableColumnRequest extends FormRequest
         //  Return the rules
         return [
             'key' => ['required', 'string', 'max:255', $uniqueRule],
-            'search_type' => ['required', Rule::in(['input', 'select'])],
-            'data_type' => ['required', Rule::in(['string', 'num'])],
+            'search_type' => ['required', Rule::in(config('laravel-dt.columns.search_types'))],
+            'data_type' => ['required', Rule::in(config('laravel-dt.columns.data_types'))],
         ];
     }
 }

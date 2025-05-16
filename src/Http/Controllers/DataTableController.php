@@ -56,6 +56,7 @@ class DataTableController extends Controller
     {
         return view('laravel-dt::pages.data-tables.edit', [
             'dataTable' => $dataTable,
+            'columns' => $dataTable->columns,
         ]);
     }
 
@@ -67,7 +68,7 @@ class DataTableController extends Controller
     public function update(DataTableRequest $request, DataTable $dataTable): RedirectResponse
     {
         //  Update the table
-        $dataTable->update($request->validated());
+        $dataTable->update($request->updateData());
 
         //  Return the view with the list of tables  
         return redirect()->back()->with([
