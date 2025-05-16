@@ -65,12 +65,11 @@ class SchemaSeeder extends Command
         //  Disable foreign key constraints in SQLite
         $connection->statement('PRAGMA foreign_keys = OFF;');
 
-        //  Get the statement
-        $statement = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';";
+        //  Get the tables
+        $tables = $connection->select("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';");
 
         //  Get all table names
-        collect($connection->select($statement))
-            ->each(fn ($table) => $connection->table($table->name)->truncate());
+        collect($tables)->each(fn ($table) => $connection->table($table->name)->truncate());
 
         //  Enable foreign key constraints in SQLite
         $connection->statement('PRAGMA foreign_keys = ON;');

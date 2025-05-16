@@ -1,25 +1,31 @@
-@props(['data'])
-
-<table {{ $attributes }}>
+<table id="{{ $tableId }}" {{ $attributes }}>
     {{ $slot }}
 </table>
 
 <script type="module" defer>
     //  Get the table ID
-    let tableId = @js($attributes->get('id'));
+    let tableId = @js($tableId);
 
+    //  Build table config
+    let config = @js($table);
+    
     //  Initialize the datatable
     setupDataTable(tableId);
 
     //  Define the table
     let table = new DataTable(`#${tableId}`, {
-        data: @js($data),
+        data: @js($payload),
         responsive: true,
-        layout: layout(),
-        columns: columns(tableId),
+        layout: {
+            topStart: { buttons: buttons(config.settings.buttons) },
+            topEnd: 'pageLength',
+            bottomStart: 'info',
+            bottomEnd: 'paging'
+        },
+        columns: columns(tableId, config.columns),
         initComplete: function () {
             //  Setup the filters
-            setupFilters(this.api());
+            setupFilters(this.api(), config.columns);
         },
     });
 </script>
