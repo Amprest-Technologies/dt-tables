@@ -1,4 +1,4 @@
-@extends('laravel-dt::pages.layouts.app')
+@extends('dt-tables::pages.layouts.app')
 @section('title', prettify($dataTable->identifier))
 @section('content')
     <section class="mb-3">
@@ -7,14 +7,14 @@
                 Edit Configurations : {{ prettify($dataTable->identifier) }}
             </h1>
             <div>
-                <a href="{{ route('laravel-dt.data-tables.index') }}" class="underline">Back Home</a>
+                <a href="{{ route('dt-tables.data-tables.index') }}" class="underline">Back Home</a>
             </div>
         </div>
     </section>
     <section class="mb-5">
         <div class="mb-3 font-semibold">Column Configurations</div>
         <div>
-            <form action="{{ route('laravel-dt.data-tables.data-table-columns.store', ['data_table' => $dataTable]) }}" method="POST" class="mb-1">
+            <form action="{{ route('dt-tables.data-tables.data-table-columns.store', ['data_table' => $dataTable]) }}" method="POST" class="mb-1">
                 @csrf
                 @php $id = 'new-column' @endphp
                 {!! bag($id) !!}
@@ -50,7 +50,7 @@
                                 </td>
                                 <td>
                                     <select name="search_type" class="@error('search_type', $id) border border-red-800 @enderror" form="{{ $form }}">
-                                        @foreach (config('laravel-dt.columns.search_types') as $searchType)
+                                        @foreach (config('dt-tables.columns.search_types') as $searchType)
                                             <option value="{{ $searchType }}" @selected($searchType == old('search_type', $column))>{{ prettify($searchType) }}</option>
                                         @endforeach
                                     </select>
@@ -60,7 +60,7 @@
                                 </td>
                                 <td>
                                     <select name="data_type" class="@error('data_type', $id) border border-red-800 @enderror" form="{{ $form }}">
-                                        @foreach (config('laravel-dt.columns.data_types') as $dataType)
+                                        @foreach (config('dt-tables.columns.data_types') as $dataType)
                                             <option value="{{ $dataType }}" @selected($dataType == old('data_type', $column))>{{ prettify($dataType) }}</option>
                                         @endforeach
                                     </select>
@@ -75,12 +75,12 @@
                                     </div>
                                 </td>
                             </tr>
-                            <form id="{{ $form }}" action="{{ route('laravel-dt.data-table-columns.update', ['data_table_column' => $column]) }}" method="POST">
+                            <form id="{{ $form }}" action="{{ route('dt-tables.data-table-columns.update', ['data_table_column' => $column]) }}" method="POST">
                                 @csrf
                                 {!! bag($id) !!}
                                 @method('PUT')
                             </form>
-                            <form id="{{ $deleteForm }}" action="{{ route('laravel-dt.data-table-columns.destroy', ['data_table_column' => $column]) }}" method="POST">
+                            <form id="{{ $deleteForm }}" action="{{ route('dt-tables.data-table-columns.destroy', ['data_table_column' => $column]) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                             </form>
@@ -96,10 +96,10 @@
     </section>
     <section class="mb-3">
         <div class="mb-3 font-semibold">Button Configurations</div>
-        <form action="{{ route('laravel-dt.data-tables.update', ['data_table' => $dataTable, 'type' => 'buttons']) }}" method="POST">
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable, 'type' => 'buttons']) }}" method="POST">
             @csrf
             @method('PUT')
-            @foreach(config('laravel-dt.defaults.settings.buttons') as $button)
+            @foreach(config('dt-tables.defaults.settings.buttons') as $button)
                 <div class="mb-3">
                     <label class="mb-1">{{ prettify($button) }}</label>
                     <select name="buttons[{{ $button }}]">

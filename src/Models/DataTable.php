@@ -1,8 +1,8 @@
 <?php
 
-namespace Amprest\LaravelDT\Models;
+namespace Amprest\DtTables\Models;
 
-use Amprest\LaravelDT\Traits\HasUlids;
+use Amprest\DtTables\Traits\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -15,7 +15,7 @@ class DataTable extends Model
      *
      * @var string
      */
-    protected $connection = 'laravel-dt';
+    protected $connection = 'dt-tables';
 
     /**
      * The attributes that are mass assignable.

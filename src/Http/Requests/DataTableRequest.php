@@ -1,8 +1,8 @@
 <?php
 
-namespace Amprest\LaravelDT\Http\Requests;
+namespace Amprest\DtTables\Http\Requests;
 
-use Amprest\LaravelDT\Models\DataTable;
+use Amprest\DtTables\Models\DataTable;
 use Illuminate\Container\Attributes\RouteParameter;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Amprest\LaravelDT\Http\Controllers;
+namespace Amprest\DtTables\Http\Controllers;
 
-use Amprest\LaravelDT\Services\AssetService;
+use Amprest\DtTables\Services\AssetService;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\File;
 

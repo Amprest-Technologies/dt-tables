@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\LaravelDT\Views\Components;
+namespace Amprest\DtTables\Views\Components;
 
 use Illuminate\View\Component;
 use Illuminate\View\View;
@@ -14,6 +14,6 @@ class DataTable extends Component
      */
     public function render(): View
     {
-        return view('laravel-dt::components.data-table');
+        return view('dt-tables::components.data-table');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use Amprest\LaravelDT\Models\DataTable;
+use Amprest\DtTables\Models\DataTable;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::connection('laravel-dt')->create('data_table_columns', function (Blueprint $table) {
+        Schema::connection('dt-tables')->create('data_table_columns', function (Blueprint $table) {
             $table->id();
             $table->ulid('ulid')->unique();
             $table->foreignIdFor(DataTable::class)->constrained();

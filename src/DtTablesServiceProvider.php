@@ -1,15 +1,15 @@
 <?php
 
-namespace Amprest\LaravelDT;
+namespace Amprest\DtTables;
 
-use Amprest\LaravelDT\Console\Commands\SchemaSeeder;
-use Amprest\LaravelDT\Providers\DatabaseServiceProvider;
-use Amprest\LaravelDT\Views\Components\DataTable;
-use Amprest\LaravelDT\Views\Components\DataTableAssets;
+use Amprest\DtTables\Console\Commands\SchemaSeeder;
+use Amprest\DtTables\Providers\DatabaseServiceProvider;
+use Amprest\DtTables\Views\Components\DataTable;
+use Amprest\DtTables\Views\Components\DataTableAssets;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
-class DTServiceProvider extends ServiceProvider
+class DtTablesServiceProvider extends ServiceProvider
 {
     /**
      * Define the package name.
@@ -42,7 +42,7 @@ class DTServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //  Load the configuration file
-        $this->mergeConfigFrom(__DIR__."/../config/laravel-dt.php", $this->packageName);
+        $this->mergeConfigFrom(__DIR__."/../config/dt-tables.php", $this->packageName);
 
         //  Load the views file
         $this->loadViewsFrom(__DIR__.'/../resources/views', $this->packageName);
@@ -52,7 +52,7 @@ class DTServiceProvider extends ServiceProvider
 
         //  Load the routes file
         $this->app['router']
-            ->name('laravel-dt.')
+            ->name('dt-tables.')
             ->prefix($this->packageName)
             ->middleware('web')
             ->group(fn () => $this->loadRoutesFrom(__DIR__.'/../routes/web.php'));

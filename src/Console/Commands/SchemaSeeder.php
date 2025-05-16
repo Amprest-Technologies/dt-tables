@@ -1,8 +1,8 @@
 <?php
 
-namespace Amprest\LaravelDT\Console\Commands;
+namespace Amprest\DtTables\Console\Commands;
 
-use Amprest\LaravelDT\Models\DataTable;
+use Amprest\DtTables\Models\DataTable;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 

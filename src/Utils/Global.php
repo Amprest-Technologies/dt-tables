@@ -10,7 +10,7 @@ if (! function_exists('package_name')) {
      */
     function package_name(): mixed
     {
-        return 'laravel-dt';
+        return 'dt-tables';
     }
 }
 
@@ -22,7 +22,7 @@ if (! function_exists('package_path')) {
      */
     function package_path($path): mixed
     {
-        return base_path('vendor/amprest/laravel-dt/' . $path);
+        return base_path('vendor/amprest/dt-tables/' . $path);
     }
 }
 

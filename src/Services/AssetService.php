@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\LaravelDT\Services;
+namespace Amprest\DtTables\Services;
 
 class AssetService
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\LaravelDT\Traits;
+namespace Amprest\DtTables\Traits;
 
 use Illuminate\Support\Str;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\LaravelDT\Providers;
+namespace Amprest\DtTables\Providers;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
@@ -68,7 +68,7 @@ class DatabaseServiceProvider extends ServiceProvider
     protected function createDatabase(): string
     {
         //  Check if the database file exists
-        if (! file_exists($path = base_path('laravel-dt.sqlite'))) {
+        if (! file_exists($path = base_path('dt-tables.sqlite'))) {
             touch($path);
         }
 

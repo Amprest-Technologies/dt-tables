@@ -25,7 +25,7 @@ return [
     |
     */
     'columns' => [
-        'search_types' => ['input', 'select'],
+        'search_types' => ['none', 'input', 'select'],
         'data_types' => ['string', 'num'],
     ],
 ];

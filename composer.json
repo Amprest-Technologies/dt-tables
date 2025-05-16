@@ -1,5 +1,5 @@
 {
-	"name": "amprest/laravel-dt",
+	"name": "amprest/dt-tables",
 	"type": "library",
 	"description": "This is a package that provides a customizable datatables component for the Laravel Framework.",
 	"homepage": "https://amprest.co.ke/",
@@ -18,13 +18,13 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Amprest\\LaravelDT\\": "src/"
+			"Amprest\\DtTables\\": "src/"
 		}
 	},
 	"extra": {
 		"laravel": {
 			"providers": [
-				"Amprest\\LaravelDT\\DTServiceProvider"
+				"Amprest\\DtTables\\DtTablesServiceProvider"
 			]
 		}
 	}

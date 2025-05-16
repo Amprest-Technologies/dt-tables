@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\LaravelDT\Views\Components;
+namespace Amprest\DtTables\Views\Components;
 
 use Illuminate\Foundation\Vite;
 use Illuminate\Support\Facades\File;
@@ -55,7 +55,7 @@ class DataTableAssets extends Component
 
         //  Get the assets
         return collect($files)->map(fn($file) => new Fluent([
-            'path' => route('laravel-dt.asset.show', ['name' => $file->getFilename()]),
+            'path' => route('dt-tables.asset.show', ['name' => $file->getFilename()]),
             'type' => $file->getExtension(),
         ]));
     }
@@ -67,6 +67,6 @@ class DataTableAssets extends Component
      */
     public function render(): View
     {
-        return view('laravel-dt::components.data-table-assets');
+        return view('dt-tables::components.data-table-assets');
     }
 }

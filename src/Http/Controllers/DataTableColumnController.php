@@ -1,10 +1,10 @@
 <?php
 
-namespace Amprest\LaravelDT\Http\Controllers;
+namespace Amprest\DtTables\Http\Controllers;
 
-use Amprest\LaravelDT\Http\Requests\DataTableColumnRequest;
-use Amprest\LaravelDT\Models\DataTable;
-use Amprest\LaravelDT\Models\DataTableColumn;
+use Amprest\DtTables\Http\Requests\DataTableColumnRequest;
+use Amprest\DtTables\Models\DataTable;
+use Amprest\DtTables\Models\DataTableColumn;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 
@@ -24,7 +24,7 @@ class DataTableColumnController extends Controller
         return redirect()->back()->with([
             'alert' => [
                 'type' => 'success',
-                'message' => trans('laravel-dt::alerts.data-table-column.created'),
+                'message' => trans('dt-tables::alerts.data-table-column.created'),
             ],
         ]);
     }
@@ -43,7 +43,7 @@ class DataTableColumnController extends Controller
         return redirect()->back()->with([
             'alert' => [
                 'type' => 'success',
-                'message' => trans('laravel-dt::alerts.data-table-column.updated'),
+                'message' => trans('dt-tables::alerts.data-table-column.updated'),
             ],
         ]);
     }
@@ -62,7 +62,7 @@ class DataTableColumnController extends Controller
         return redirect()->back()->with([
             'alert' => [
                 'type' => 'success',
-                'message' => trans('laravel-dt::alerts.data-table-column.destroyed'),
+                'message' => trans('dt-tables::alerts.data-table-column.destroyed'),
             ],
         ]);
     }

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::connection('laravel-dt')->create('data_tables', function (Blueprint $table) {
+        Schema::connection('dt-tables')->create('data_tables', function (Blueprint $table) {
             $table->id();
             $table->ulid('ulid')->unique();
             $table->string('identifier')->unique();

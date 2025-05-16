@@ -1,8 +1,8 @@
 <?php
 
-namespace Amprest\LaravelDT\Http\Requests;
+namespace Amprest\DtTables\Http\Requests;
 
-use Amprest\LaravelDT\Models\DataTableColumn;
+use Amprest\DtTables\Models\DataTableColumn;
 use Illuminate\Container\Attributes\RouteParameter;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
@@ -24,7 +24,7 @@ class DataTableColumnRequest extends FormRequest
         //  Merge inexisting data with the request
         $this->merge([
             'key' => Str::slug($this->key, '_'),
-            'search_type' => $this->search_type ?? 'input',
+            'search_type' => $this->search_type ?? 'none',
             'data_type' => $this->data_type ?? 'string',
         ]);
     }
@@ -44,8 +44,8 @@ class DataTableColumnRequest extends FormRequest
         //  Return the rules
         return [
             'key' => ['required', 'string', 'max:255', $uniqueRule],
-            'search_type' => ['required', Rule::in(config('laravel-dt.columns.search_types'))],
-            'data_type' => ['required', Rule::in(config('laravel-dt.columns.data_types'))],
+            'search_type' => ['required', Rule::in(config('dt-tables.columns.search_types'))],
+            'data_type' => ['required', Rule::in(config('dt-tables.columns.data_types'))],
         ];
     }
 }

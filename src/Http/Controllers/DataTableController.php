@@ -1,9 +1,9 @@
 <?php
 
-namespace Amprest\LaravelDT\Http\Controllers;
+namespace Amprest\DtTables\Http\Controllers;
 
-use Amprest\LaravelDT\Http\Requests\DataTableRequest;
-use Amprest\LaravelDT\Models\DataTable;
+use Amprest\DtTables\Http\Requests\DataTableRequest;
+use Amprest\DtTables\Models\DataTable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
@@ -21,7 +21,7 @@ class DataTableController extends Controller
         $dataTables = DataTable::latest()->get();
 
         //  Return the view with the list of tables
-        return view('laravel-dt::pages.data-tables.index', [
+        return view('dt-tables::pages.data-tables.index', [
             'dataTables' => $dataTables,
         ]);
     }
@@ -35,14 +35,14 @@ class DataTableController extends Controller
     {
         //  Create the table
         $dataTable = DataTable::create(array_merge($request->validated(), [
-            'settings' => config('laravel-dt.defaults.settings'),
+            'settings' => config('dt-tables.defaults.settings'),
         ]));
 
         //  Return the view with the list of tables  
-        return redirect()->route('laravel-dt.data-tables.edit', ['data_table' => $dataTable])->with([
+        return redirect()->route('dt-tables.data-tables.edit', ['data_table' => $dataTable])->with([
             'alert' => [
                 'type' => 'success',
-                'message' => trans('laravel-dt::alerts.data-table.created'),
+                'message' => trans('dt-tables::alerts.data-table.created'),
             ],
         ]);
     }
@@ -54,7 +54,7 @@ class DataTableController extends Controller
      */
     public function edit(DataTable $dataTable): View
     {
-        return view('laravel-dt::pages.data-tables.edit', [
+        return view('dt-tables::pages.data-tables.edit', [
             'dataTable' => $dataTable,
             'columns' => $dataTable->columns,
         ]);
@@ -74,7 +74,7 @@ class DataTableController extends Controller
         return redirect()->back()->with([
             'alert' => [
                 'type' => 'success',
-                'message' => trans('laravel-dt::alerts.data-table.updated'),
+                'message' => trans('dt-tables::alerts.data-table.updated'),
             ],
         ]);
     }
@@ -96,7 +96,7 @@ class DataTableController extends Controller
         return redirect()->back()->with([
             'alert' => [
                 'type' => 'success',
-                'message' => trans('laravel-dt::alerts.data-table.destroyed'),
+                'message' => trans('dt-tables::alerts.data-table.destroyed'),
             ],
         ]);
     }

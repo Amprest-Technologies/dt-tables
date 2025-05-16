@@ -9,7 +9,7 @@
 </head>
 <body class="bg-gray-50 text-gray-600">
     <div class="container mx-auto my-10">
-        <div class="text-2xl mb-2 text-center font-semi-bold">Laravel Data Tables</div>
+        <div class="text-2xl mb-2 text-center font-semi-bold">Amprest DtTables</div>
         <hr class="mb-5">
         @yield('content')
     </div>
