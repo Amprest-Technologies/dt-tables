@@ -17,13 +17,6 @@ class DataTableAssets extends Component
     public Vite $vite;
 
     /**
-     * Get the entry points for vite.
-     *
-     * @var array
-     */
-    public array $entryPoints = [];
-
-    /**
      * Create a new component instance.
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
@@ -33,17 +26,14 @@ class DataTableAssets extends Component
         //  Get the path of the hot file
         $path = package_path('public/hot');
         
-        //  Define the entry points
-        $this->entryPoints = [
-            package_path("resources/js/{$mode}.js"),
-            package_path("resources/css/{$mode}.css"),
-        ];
-
         //  Build the vite instance
         $this->vite = app(Vite::class)
             ->useHotFile(is_file($path) ? $path : null)
             ->useBuildDirectory(package_path('public/build'))
-            ->withEntryPoints($this->entryPoints);
+            ->withEntryPoints([
+                package_path("resources/js/app.js"),
+                package_path("resources/css/app.css"),
+            ]);
     }
 
     /**
@@ -53,11 +43,7 @@ class DataTableAssets extends Component
      */
     public function assets()
     {
-        //  Parse the manifest file
-        $files = $this->parseManifest();
-
-        //  Get the assets
-        return collect($files)->map(fn($file) => new Fluent([
+        return collect($this->parseManifest())->map(fn($file) => new Fluent([
             'path' => route('dt-tables.asset.show', ['name' => basename($file)]),
             'type' => pathinfo($file, PATHINFO_EXTENSION),
         ]));
@@ -74,9 +60,8 @@ class DataTableAssets extends Component
         $manifest = json_decode(file_get_contents(package_path('public/build/manifest.json')));
 
         //  Get the assets
-        $assets = collect($manifest)
-            ->where('isEntry', true)
-            ->filter(fn($file, $asset) => str_contains($asset, $this->mode));
+        $assets = collect($manifest)->where('isEntry', true);
+            // ->filter(fn($file, $asset) => str_contains($asset, $this->mode));
 
         //  Loop through the assets
         foreach($assets as $asset) {
