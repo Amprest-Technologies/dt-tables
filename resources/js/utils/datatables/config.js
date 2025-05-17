@@ -146,7 +146,7 @@ window.columns = function (tableID, config) {
 
         //  Handle the rest of the columns
         return {
-            data: innerHTML ? innerHTML.replace(/\s+/g, '_').toLowerCase() : null,
+            data: name,
             name: name,
             title: innerHTML,
             type: configObj ? configObj.data_type : 'string',
@@ -168,17 +168,17 @@ window.buttons = function(config) {
     let buttonsConfigurations = [
         {
             extend: 'copy',
-            text: 'Copy',
+            text: 'Copy to Clipboard',
             footer: false
         },
         {
             extend: 'csv',
-            text: 'Export CSV',
+            text: 'Export as CSV',
             footer: false
         },
         {
             extend: 'excel',
-            text: 'Export Excel',
+            text: 'Export as Excel',
             footer: false
         },
         {
@@ -192,7 +192,7 @@ window.buttons = function(config) {
     return [
         {
             extend: 'collection',
-            text: 'Table Options',
+            text: 'Table Actions',
             className: 'btn btn-sm btn-primary',
             buttons: Object.values(config).map((item) => {
                 return buttonsConfigurations.find(button => button.extend === item);
@@ -230,7 +230,7 @@ window.setupFilters = function (api, config) {
                 createSelectFilter(column);
                 break;
             case 'input':
-                createSelectFilter(column);
+                createInputFilter(column);
                 break;
         }
     });
