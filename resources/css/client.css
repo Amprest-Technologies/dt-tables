@@ -1,0 +1,45 @@
+.dt-container {
+    .dt-layout-row {
+        margin: 0 !important;
+
+        .top-row {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            padding: .5rem 1rem;
+            border-bottom: 1px solid #ddd;
+            font-size: 11pt;
+
+            .dt-length {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+
+        .bottom-row {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            padding: .5rem 1rem;
+            font-size: 11pt;
+        }
+    }
+
+    table {
+        td,th {
+            white-space: nowrap;
+            vertical-align: middle !important;
+        }
+
+        td {
+            font-size: 10.5pt;
+        }
+
+        & > thead > tr> th {
+            padding: 5px !important;
+        }
+    }
+}

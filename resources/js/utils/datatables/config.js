@@ -173,12 +173,12 @@ window.setupDataTable = function (tableId) {
 window.layout = function(config) {
     return {
         top: {
-            className: 'top-row d-flex justify-content-between align-items-center w-full px-3 border-bottom pb-0',
+            className: 'top-row',
             features: [ { buttons: buttons(config) }, 'pageLength' ]
         },
         
         bottom: {
-            className: 'bottom-row d-flex justify-content-between align-items-center w-full px-3',
+            className: 'bottom-row',
             features: ['info', 'paging']
         },
         

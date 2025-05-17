@@ -29,10 +29,9 @@ class DataTableAssets extends Component
         //  Build the vite instance
         $this->vite = app(Vite::class)
             ->useHotFile(is_file($path) ? $path : null)
-            ->useBuildDirectory(package_path('public/build'))
             ->withEntryPoints([
-                package_path("resources/js/app.js"),
-                package_path("resources/css/app.css"),
+                package_path("resources/js/{$mode}.js"),
+                package_path("resources/css/{$mode}.css"),
             ]);
     }
 
@@ -59,18 +58,27 @@ class DataTableAssets extends Component
         //  Get the manifest file
         $manifest = json_decode(file_get_contents(package_path('public/build/manifest.json')));
 
+        //  Get all assets
+        $assets = collect($manifest);
+
         //  Get the assets
-        $assets = collect($manifest)->where('isEntry', true);
-            // ->filter(fn($file, $asset) => str_contains($asset, $this->mode));
+        $entryAssets = $assets->where('isEntry', true)
+            ->filter(fn($file, $asset) => str_contains($asset, "{$this->mode}."));
 
         //  Loop through the assets
-        foreach($assets as $asset) {
+        foreach($entryAssets as $asset) {
             //  Get the asset path
             $files[] = package_path("public/build/assets/{$asset->file}");
 
             //  Get the imports
             foreach($asset->imports ?? [] as $file) {
-                $files[] = package_path("public/build/assets/{$file}");
+                //  Get the asset path
+                $path = $assets->get($file);
+
+                //  Add the asset path if it exists
+                if ($path) {
+                    $files[] = package_path("public/build/assets/{$path->file}");
+                }
             }
 
             //  Get the css files
