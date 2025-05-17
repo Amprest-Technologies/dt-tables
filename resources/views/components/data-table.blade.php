@@ -18,24 +18,26 @@
     //  Setup the datatable options
     let options = {
         responsive: true,
-        layout: {
-            topStart: { buttons: buttons(config.settings.buttons) },
-            topEnd: 'pageLength',
-            bottomStart: 'info',
-            bottomEnd: 'paging'
-        },
+        layout: layout(config.settings.buttons),
         columns: columns(tableId, config.columns),
+        language: {
+            lengthMenu: '_MENU_ _ENTRIES_',
+            entries: { _: 'Entries', 1: 'Entry' }
+        },
         initComplete: function () {
-            //  Setup the filters
+            //  Set up styling
+            setupStyling();
+
+            //  Set up filters
             setupFilters(this.api(), config.columns);
         },
     };
 
     //  If the payload is not empty, set the data
-    if(payload.length > 0) {
+    if (payload.length > 0) {
         options.data = payload;
     }
     
     //  Define the table
-    let table = new DataTable(`#${tableId}`, options);
+    new DataTable(`#${tableId}`, options);
 </script>

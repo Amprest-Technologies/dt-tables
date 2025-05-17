@@ -35,6 +35,53 @@ let rowIndex = function (title) {
     };
 }
 
+/* -----------------------------------------------------------------
+ * Create a function to add the buttons to the datatable
+ * ------------------------------------------------------------------
+ */
+let buttons = function(config) {
+    //  Return an empty buttons array if the config is empty
+    if (config.length === 0) {
+        return [];
+    }
+
+    //  Define the configurations
+    let buttonsConfigurations = [
+        {
+            extend: 'copy',
+            text: 'Copy to Clipboard',
+            footer: false
+        },
+        {
+            extend: 'csv',
+            text: 'Export as CSV',
+            footer: false
+        },
+        {
+            extend: 'excel',
+            text: 'Export as Excel',
+            footer: false
+        },
+        {
+            extend: 'colvis',
+            text: 'Column Visibility',
+            postfixButtons: ['colvisRestore'],
+        }
+    ];
+
+    //  Return the buttons
+    return [
+        {
+            extend: 'collection',
+            text: 'Table Actions',
+            className: 'btn btn-sm btn-primary',
+            buttons: Object.values(config).map((item) => {
+                return buttonsConfigurations.find(button => button.extend === item);
+            })
+        }
+    ];
+};
+
 /*-----------------------------------------------------------------
  * Create add an action button to the last column
  * ------------------------------------------------------------------
@@ -120,6 +167,29 @@ window.setupDataTable = function (tableId) {
 };
 
 /* -----------------------------------------------------------------
+ * Create a function to initialize the datatable
+ * ------------------------------------------------------------------
+ */
+window.layout = function(config) {
+    return {
+        top: {
+            className: 'top-row d-flex justify-content-between align-items-center w-full px-3 border-bottom pb-0',
+            features: [ { buttons: buttons(config) }, 'pageLength' ]
+        },
+        
+        bottom: {
+            className: 'bottom-row d-flex justify-content-between align-items-center w-full px-3',
+            features: ['info', 'paging']
+        },
+        
+        topStart: null,
+        topEnd: null,
+        bottomStart: null,
+        bottomEnd: null,
+    };
+};
+
+/* -----------------------------------------------------------------
  * Build the columns for the datatable
  * ------------------------------------------------------------------
  */
@@ -155,52 +225,13 @@ window.columns = function (tableID, config) {
 };
 
 /* -----------------------------------------------------------------
- * Create a function to add the buttons to the datatable
+ * Set up the styling for the datatable
  * ------------------------------------------------------------------
  */
-window.buttons = function(config) {
-    //  Return an empty buttons array if the config is empty
-    if(config.length === 0) {
-        return [];
-    }
-
-    //  Define the configurations
-    let buttonsConfigurations = [
-        {
-            extend: 'copy',
-            text: 'Copy to Clipboard',
-            footer: false
-        },
-        {
-            extend: 'csv',
-            text: 'Export as CSV',
-            footer: false
-        },
-        {
-            extend: 'excel',
-            text: 'Export as Excel',
-            footer: false
-        },
-        {
-            extend: 'colvis',
-            text: 'Column Visibility',
-            postfixButtons: ['colvisRestore'],
-        }
-    ];
-
-    //  Return the buttons
-    return [
-        {
-            extend: 'collection',
-            text: 'Table Actions',
-            className: 'btn btn-sm btn-primary',
-            buttons: Object.values(config).map((item) => {
-                return buttonsConfigurations.find(button => button.extend === item);
-            })
-        }
-    ];
+window.setupStyling = function () {
+    //  Handle buttons
+    document.querySelectorAll('.dt-button').forEach(el => el.classList.remove('dt-button'));
 };
-
 
 /* -----------------------------------------------------------------
  * Set up the filters for the datatable
