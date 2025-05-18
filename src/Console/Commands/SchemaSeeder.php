@@ -16,7 +16,7 @@ class SchemaSeeder extends Command
      *
      * @var string
      */
-    protected $signature = 'schema-seeder';
+    protected $signature = 'schema:seed';
 
     /**
      * The console command description.
@@ -60,7 +60,7 @@ class SchemaSeeder extends Command
     protected function truncateTables(): void
     {
         //  Get the package name
-        $connection = DB::connection(package_name());
+        $connection = DB::connection('dt-tables');
 
         //  Disable foreign key constraints in SQLite
         $connection->statement('PRAGMA foreign_keys = OFF;');

@@ -26,7 +26,7 @@ class DataTableColumn extends Model
         'data_table_id',
         'key',
         'search_type',
-        'data_type',
+        'classes',
     ];
 
     /**

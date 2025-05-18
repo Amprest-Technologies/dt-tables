@@ -3,39 +3,36 @@
         "details": {
             "identifier": "transactions-table",
             "settings": {
-                "buttons": ["copy", "colvis", "csv", "excel"]
+                "buttons": ["copy", "colvis", "csv", "excel"],
+                "theme": "bootstrap5"
             }
         },
         "columns": [
             {
                 "key": "organization_name",
-                "search_type": "input",
-                "data_type": "string"
+                "search_type": "input"
             },
             {
                 "key": "tenant_name",
-                "search_type": "input",
-                "data_type": "string"
+                "search_type": "input"
             },
             {
                 "key": "amount",
                 "search_type": "none",
-                "data_type": "num"
+                "classes": "fw-bold"
             },
             {
                 "key": "payment_method",
-                "search_type": "select",
-                "data_type": "string"
+                "search_type": "select"
             },
             {
                 "key": "reference_no",
-                "search_type": "input",
-                "data_type": "string"
+                "search_type": "input"
             },
             {
                 "key": "status",
                 "search_type": "select",
-                "data_type": "string"
+                "classes": "fw-bold"
             }
         ]
     }

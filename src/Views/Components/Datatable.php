@@ -2,9 +2,10 @@
 
 namespace Amprest\DtTables\Views\Components;
 
-use Amprest\DtTables\Http\Resources\DataTableResource;
 use Amprest\DtTables\Models\DataTable as DataTableModel;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
@@ -18,8 +19,10 @@ class DataTable extends Component
     public function __construct(
         public ?string $id = null,
         public ?string $tableId = null,
-        public Collection|array|null $payload = [],
-        public ?DataTableResource $table = null,
+        public array|Collection|null $payload = [],
+        public array|Collection $columns = [],
+        public array|Collection $buttons = [],
+        public array $theme = [],
     )
     {
         //  Set the tableId to the id if not provided
@@ -29,11 +32,24 @@ class DataTable extends Component
         $this->payload = collect(is_null($this->payload) ? [] : $this->payload)->toArray();
 
         //  Get the table properties
-        $this->table = DataTableModel::query()
+        $table = DataTableModel::query()
             ->with('columns')
             ->where('identifier', $this->tableId)
-            ->first()
-            ->toResource();
+            ->first()?->toResource() ?? null;
+
+        //  Get the columns
+        $this->columns = $table->columns ?? [];
+
+        //  Get the buttons
+        $this->buttons = $table->settings->buttons
+            ?? config('dt-tables.settings.buttons', []);
+
+        //  Get the theme framework
+        $framework = $table->settings->theme
+            ?? config('dt-tables.settings.theme', 'bootstrap5');
+
+        //  Get the theme
+        $this->theme = config("dt-tables.themes.{$framework}", []);
     }
 
     /**
@@ -43,6 +59,10 @@ class DataTable extends Component
      */
     public function render(): View
     {
+        //  Trigger asset injection
+        App::instance('dt-table.assets-enabled', true);
+
+        //  Return the view
         return view('dt-tables::components.data-table');
     }
 }

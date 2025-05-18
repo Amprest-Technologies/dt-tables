@@ -17,8 +17,8 @@ return new class extends Migration
             $table->ulid('ulid')->unique();
             $table->foreignIdFor(DataTable::class)->constrained();
             $table->string('key');
-            $table->string('search_type')->nullable();
-            $table->string('data_type');
+            $table->string('search_type');
+            $table->string('classes')->nullable();
             $table->timestamps();
         });
     }

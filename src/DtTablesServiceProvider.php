@@ -3,20 +3,17 @@
 namespace Amprest\DtTables;
 
 use Amprest\DtTables\Console\Commands\SchemaSeeder;
+use Amprest\DtTables\Http\Middleware\AutoInjectDtTableAssets;
 use Amprest\DtTables\Providers\DatabaseServiceProvider;
 use Amprest\DtTables\Views\Components\DataTable;
 use Amprest\DtTables\Views\Components\DataTableAssets;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class DtTablesServiceProvider extends ServiceProvider
 {
-    /**
-     * Define the package name.
-     *
-     */
-    protected string $packageName = '';
-
     /**
      * Register the application services.
      *
@@ -26,9 +23,6 @@ class DtTablesServiceProvider extends ServiceProvider
     {
         //  Load helpers
         $this->loadHelpersFrom(__DIR__.'/../src/Utils');
-
-        //  Load the package config
-        $this->packageName = package_name();
 
         //  Register other service providers
         $this->app->register(DatabaseServiceProvider::class);
@@ -42,20 +36,23 @@ class DtTablesServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //  Load the configuration file
-        $this->mergeConfigFrom(package_path('config/dt-tables.php'), $this->packageName);
+        $this->mergeConfigFrom(package_path('config/dt-tables.php'), 'dt-tables');
 
         //  Load the views file
-        $this->loadViewsFrom(package_path('resources/views'), $this->packageName);
+        $this->loadViewsFrom(package_path('resources/views'), 'dt-tables');
 
         //  Publish the configuration file
-        $this->loadTranslationsFrom(package_path('lang'), $this->packageName);
+        $this->loadTranslationsFrom(package_path('lang'), 'dt-tables');
 
         //  Load the routes file
-        $this->app['router']
+        $this->app[Router::class]
             ->name('dt-tables.')
-            ->prefix($this->packageName)
+            ->prefix('dt-tables')
             ->middleware('web')
             ->group(fn () => $this->loadRoutesFrom(package_path('routes/web.php')));
+
+        //  Register global middleware
+        $this->app[Kernel::class]->pushMiddleware(AutoInjectDtTableAssets::class);
 
         //  Load custom commands
         if ($this->app->runningInConsole()) {
@@ -63,9 +60,7 @@ class DtTablesServiceProvider extends ServiceProvider
             $this->commands([SchemaSeeder::class]);
 
             //  Prohibit the schema seeder in production
-            SchemaSeeder::prohibit(
-                ! $this->app->environment('local')
-            );
+            SchemaSeeder::prohibit(! $this->app->environment('local'));
         }
 
         //  Load the blade components

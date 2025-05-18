@@ -35,7 +35,7 @@ class DataTableController extends Controller
     {
         //  Create the table
         $dataTable = DataTable::create(array_merge($request->validated(), [
-            'settings' => config('dt-tables.defaults.settings'),
+            'settings' => config('dt-tables.settings'),
         ]));
 
         //  Return the view with the list of tables  

@@ -11,7 +11,7 @@
             </div>
         </div>
     </section>
-    <section class="mb-5">
+    <section class="p-4 mb-3 bg-gray-50 rounded-sm drop-shadow-sm">
         <div class="mb-3 font-semibold">Column Configurations</div>
         <div>
             <form action="{{ route('dt-tables.data-tables.data-table-columns.store', ['data_table' => $dataTable]) }}" method="POST" class="mb-1">
@@ -33,7 +33,7 @@
                             <th class="w-[5%] text-center">#</th>
                             <th class="w-[45%]">Column Name</th>
                             <th class="w-[15%]">Search Type</th>
-                            <th class="w-[15%]">Data Type</th>
+                            <th class="w-[15%]">Html Classes</th>
                             <th class="w-[20%] text-center">Actions</th>
                         </tr>
                     </thead>
@@ -59,12 +59,8 @@
                                     @enderror
                                 </td>
                                 <td>
-                                    <select name="data_type" class="@error('data_type', $id) border border-red-800 @enderror" form="{{ $form }}">
-                                        @foreach (config('dt-tables.columns.data_types') as $dataType)
-                                            <option value="{{ $dataType }}" @selected($dataType == old('data_type', $column))>{{ prettify($dataType) }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('data_type', $id)
+                                    <input name="classes" type="text" value="{{ old('classes', $column->classes) }}" placeholder="Valid html class syntax..." class="@error('key', $id) border border-red-800 @enderror" form="{{ $form = 'update-'.$id.'-form' }}">
+                                    @error('classes', $id)
                                         <small class="text-red-900">{{ $message }}</small>
                                     @enderror
                                 </td>
@@ -94,17 +90,32 @@
             @endif
         </div>
     </section>
-    <section class="mb-3">
+    <section class="p-4 mb-3 bg-gray-50 rounded-sm drop-shadow-sm">
+        <div class="mb-3 font-semibold">Theme Configurations</div>
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable, 'type' => 'theme']) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="mb-3">
+                <label class="mb-1.5 font-bold">Table Theme</label>
+                <select name="theme">
+                    <option value="bootstrap5" @selected($dataTable->settings->theme === 'bootstrap5')>Bootstrap5</option>
+                    <option value="tailwind" @selected($dataTable->settings->theme === 'tailwind')>Tailwind</option>
+                </select>
+            </div>
+            <button class="btn w-full">Submit</button>
+        </form>
+    </section>
+    <section class="p-4 mb-3 bg-gray-50 rounded-sm drop-shadow-sm">
         <div class="mb-3 font-semibold">Button Configurations</div>
         <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable, 'type' => 'buttons']) }}" method="POST">
             @csrf
             @method('PUT')
-            @foreach(config('dt-tables.defaults.settings.buttons') as $button)
+            @foreach(config('dt-tables.settings.buttons') as $button)
                 <div class="mb-3">
-                    <label class="mb-1">{{ prettify($button) }}</label>
+                    <label class="mb-1.5 font-bold">{{ prettify($button) }}</label>
                     <select name="buttons[{{ $button }}]">
-                        <option value="1" @selected(in_array($button, $dataTable->settings['buttons']))>Active</option>
-                        <option value="0" @selected(!in_array($button, $dataTable->settings['buttons']))>Inactive</option>
+                        <option value="1" @selected(in_array($button, $dataTable->settings->buttons))>Active</option>
+                        <option value="0" @selected(!in_array($button, $dataTable->settings->buttons))>Inactive</option>
                     </select>
                 </div>
             @endforeach

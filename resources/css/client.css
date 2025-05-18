@@ -36,7 +36,19 @@
         }
 
         & > thead > tr> th {
-            padding: 5px !important;
+            padding: 10px !important;
+        }
+
+        .row-index {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
         }
     }
 }

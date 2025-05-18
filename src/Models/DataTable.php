@@ -2,6 +2,7 @@
 
 namespace Amprest\DtTables\Models;
 
+use Amprest\DtTables\Casts\AsFluent;
 use Amprest\DtTables\Traits\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,6 +26,7 @@ class DataTable extends Model
     protected $fillable = [
         'identifier',
         'settings',
+        'settings->theme',
         'settings->buttons',
     ];
 
@@ -34,7 +36,7 @@ class DataTable extends Model
      * @var array
      */
     protected $casts = [
-        'settings' => 'array',
+        'settings' => AsFluent::class
     ];
     
     /**

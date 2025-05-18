@@ -3,22 +3,42 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Laravel DataTable Defaults
+    | DT Table Settings
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the default settings for your DataTables. These
-    | settings will be used when you create a new DataTable instance.
+    | Here you may specify the default settings for your DataTables.
     |
     */
-    'defaults' => [
-        'settings' => [
-            'buttons' => ['copy', 'colvis', 'csv', 'excel']
-        ]
+    'settings' => [
+        'buttons' => ['copy', 'colvis', 'csv', 'excel'],
+        'theme' => 'bootstrap5',
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Laravel DataTable Column Settings
+    | DT Table Theme
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default theme options for your DataTables. The theme
+    | will be used to style the DataTable components.
+    |
+    */
+    'themes' => [
+        'bootstrap5' => [
+            'buttons' => 'btn btn-primary btn-sm',
+            'input' => 'form-control form-control-sm',
+            'select' => 'form-control form-control-sm',
+        ],
+        'tailwind' => [
+            'buttons' => '',
+            'input' => '',
+            'select' => '',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | DT Table Column Settings
     |--------------------------------------------------------------------------
     |
     | Here you may specify the default settings for your DataTable columns.
@@ -26,6 +46,5 @@ return [
     */
     'columns' => [
         'search_types' => ['none', 'input', 'select'],
-        'data_types' => ['string', 'num'],
     ],
 ];

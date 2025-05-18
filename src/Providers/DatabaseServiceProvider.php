@@ -9,13 +9,6 @@ use Illuminate\Support\ServiceProvider;
 class DatabaseServiceProvider extends ServiceProvider
 {
     /**
-     * Define the package name.
-     *
-     * @var string
-     */
-    protected string $packageName = '';
-
-    /**
      * Get the schema tables for the package.
      *
      * @var array
@@ -32,10 +25,6 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //  Define the package name
-        $this->packageName = package_name();
-
-        //  Set the database
         $this->setUpDatabase();
     }
 
@@ -50,7 +39,7 @@ class DatabaseServiceProvider extends ServiceProvider
         $path = $this->createDatabase();
 
         //  Set the connection config early
-        config()->set("database.connections.{$this->packageName}", [
+        config()->set("database.connections.dt-tables", [
             'driver' => 'sqlite',
             'database' => $path,
             'foreign_key_constraints' => true,
@@ -86,7 +75,7 @@ class DatabaseServiceProvider extends ServiceProvider
         //  Loop through the tables and create them if they don't exist
         collect($this->schemaTables)->each(function ($table) {
             //  Check if the table exists
-            if (! Schema::connection($this->packageName)->hasTable($table)) {
+            if (! Schema::connection('dt-tables')->hasTable($table)) {
                 //  Get the migration
                 $migration = collect(File::files(package_path('database/migrations')))
                     ->filter(fn ($migration) => str_contains($migration->getFilename(), "create_{$table}_table"))

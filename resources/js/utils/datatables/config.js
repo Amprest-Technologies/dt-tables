@@ -15,6 +15,9 @@ let cloneHeader = function (tableId) {
     //  Add data-dt-order="disable" attribute to the cloned <tr>
     tr.setAttribute('data-dt-order', 'disable');
 
+    //  Add a class to the cloned <tr>
+    tr.classList.add('selection-row');
+
     // Append the cloned <tr> to the thead (or insert wherever needed)
     thead.appendChild(tr);
 };
@@ -28,59 +31,12 @@ let rowIndex = function (title) {
         data: null,
         name: 'row_index',
         title: title,
-        className: 'text-center fw-bold',
+        className: 'row-index',
         render: function (data, type, row, meta) {
             return meta.row + meta.settings._iDisplayStart + 1;
         }
     };
 }
-
-/* -----------------------------------------------------------------
- * Create a function to add the buttons to the datatable
- * ------------------------------------------------------------------
- */
-let buttons = function(config) {
-    //  Return an empty buttons array if the config is empty
-    if (config.length === 0) {
-        return [];
-    }
-
-    //  Define the configurations
-    let buttonsConfigurations = [
-        {
-            extend: 'copy',
-            text: 'Copy to Clipboard',
-            footer: false
-        },
-        {
-            extend: 'csv',
-            text: 'Export as CSV',
-            footer: false
-        },
-        {
-            extend: 'excel',
-            text: 'Export as Excel',
-            footer: false
-        },
-        {
-            extend: 'colvis',
-            text: 'Column Visibility',
-            postfixButtons: ['colvisRestore'],
-        }
-    ];
-
-    //  Return the buttons
-    return [
-        {
-            extend: 'collection',
-            text: 'Table Actions',
-            className: 'btn btn-sm btn-primary',
-            buttons: Object.values(config).map((item) => {
-                return buttonsConfigurations.find(button => button.extend === item);
-            })
-        }
-    ];
-};
 
 /*-----------------------------------------------------------------
  * Create add an action button to the last column
@@ -93,6 +49,7 @@ let actionButtons = function (title) {
         title: title,
         orderable: false,
         searchable: false,
+        className: 'exclude-from-export',
         render: (data, type, row, meta) => {
             //  Check if the row has actions
             const html = Object.values(row.actions || {})
@@ -100,7 +57,7 @@ let actionButtons = function (title) {
                 .join('');
 
             //  Return the html
-            return `<div class="w-100 d-flex justify-content-center">${html}</div>`;
+            return `<div class="button-container">${html}</div>`;
         }
     };
 };
@@ -109,12 +66,12 @@ let actionButtons = function (title) {
  * Create a function to add a select filter to the column
  * ------------------------------------------------------------------
  */
-let createSelectFilter = function (column) {
+let createSelectFilter = function (column, className) {
     // Create select element and add event listener
     let select = document.createElement('select');
 
     //  Add a class to the select element
-    select.className = 'form-control form-control-sm';
+    select.className = className;
 
     //  Add a default option
     select.add(new Option('Show All', ''));
@@ -137,12 +94,12 @@ let createSelectFilter = function (column) {
  * Create a function to add an input filter to the column
  * ------------------------------------------------------------------
  */
-let createInputFilter = function (column) {
+let createInputFilter = function (column, className) {
     //  Create an input element
     let input = document.createElement('input');
 
     //  Add a class to the input element
-    input.className = 'form-control form-control-sm';
+    input.className = className;
 
     //  Add a placeholder to the input element
     input.placeholder = 'Search...';
@@ -160,31 +117,67 @@ let createInputFilter = function (column) {
  * Create a function to initialize the datatable
  * ------------------------------------------------------------------
  */
-window.setupDataTable = function (tableId) {
-    cloneHeader(tableId);
+window.setupDataTable = function (tableId, columns) {
+    if (columns.filter(column => column.search_type !== 'none').length > 0) {
+        cloneHeader(tableId);
+    }
 };
 
 /* -----------------------------------------------------------------
- * Create a function to initialize the datatable
+ * Create a function to add the buttons to the datatable
  * ------------------------------------------------------------------
  */
-window.layout = function(config) {
-    return {
-        top: {
-            className: 'top-row',
-            features: [ { buttons: buttons(config) }, 'pageLength' ]
+window.buttons = function(api, config, theme, title) {
+    //  Return an empty buttons array if the config is empty
+    if (config.length === 0) {
+        return [];
+    }
+
+    //  Define the configurations
+    let buttonsConfigurations = [
+        {
+            extend: 'copy',
+            text: 'Copy to Clipboard',
+            title: title,
+            footer: false
         },
-        
-        bottom: {
-            className: 'bottom-row',
-            features: ['info', 'paging']
+        {
+            extend: 'csv',
+            text: 'Export as CSV',
+            filename: title,
+            footer: false,
+            exportOptions: {
+                columns: ':visible:not(th.exclude-from-export)'
+            }
         },
-        
-        topStart: null,
-        topEnd: null,
-        bottomStart: null,
-        bottomEnd: null,
-    };
+        {
+            extend: 'excel',
+            text: 'Export as Excel',
+            filename: title,
+            title: title,
+            footer: false,
+            exportOptions: {
+                columns: ':visible:not(th.exclude-from-export)'
+            }
+        },
+        {
+            extend: 'colvis',
+            text: 'Column Visibility',
+            postfixButtons: ['colvisRestore'],
+        }
+    ];
+
+    //  Return the buttons
+    return [
+        {
+            extend: 'collection',
+            text: 'Table Actions',
+            className: theme.buttons,
+            buttons: Object.values(config).map((item) => {
+                return buttonsConfigurations.find(button => button.extend === item);
+            })
+        }
+    ];
 };
 
 /* -----------------------------------------------------------------
@@ -221,7 +214,7 @@ window.columns = function (tableID, config) {
         return {
             data: name,
             name: name,
-            type: configObj ? configObj.data_type : 'string',
+            className: configObj ? configObj.classes : '',
             render: function(data, type, row, meta) {
                 //  Deal with objects
                 if (typeof data === 'object') {
@@ -254,32 +247,34 @@ window.setupStyling = function () {
  * Set up the filters for the datatable
  * ------------------------------------------------------------------
  */
-window.setupFilters = function (api, config) {
+window.setupFilters = function (api, config, theme) {
     //  Loop through the columns and add a filter to each column
-    api.columns().every(function () {
-        //  Get the column
-        let column = this;
+    if (config.filter(column => column.search_type !== 'none').length > 0) {
+        api.columns().every(function () {
+            //  Get the column
+            let column = this;
 
-        //  Get the header element
-        column.header(1).innerHTML = '';
+            //  Get the header element
+            column.header(1).innerHTML = '';
 
-        //  Get the name of the column
-        let name = column.name();
+            //  Get the name of the column
+            let name = column.name();
 
-        //  Get the first config object that matches the name
-        let configObj = config.find(obj => obj.key === name);
+            //  Get the first config object that matches the name
+            let configObj = config.find(obj => obj.key === name);
 
-        //  Get the search type
-        let searchType = configObj ? configObj.search_type : null;
+            //  Get the search type
+            let searchType = configObj ? configObj.search_type : null;
 
-        //  Check if the column is in the select items
-        switch (searchType) {
-            case 'select':
-                createSelectFilter(column);
-                break;
-            case 'input':
-                createInputFilter(column);
-                break;
-        }
-    });
+            //  Check if the column is in the select items
+            switch (searchType) {
+                case 'select':
+                    createSelectFilter(column, theme.select);
+                    break;
+                case 'input':
+                    createInputFilter(column, theme.input);
+                    break;
+            }
+        });
+    }
 };

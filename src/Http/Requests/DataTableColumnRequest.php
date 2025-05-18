@@ -25,7 +25,6 @@ class DataTableColumnRequest extends FormRequest
         $this->merge([
             'key' => Str::slug($this->key, '_'),
             'search_type' => $this->search_type ?? 'none',
-            'data_type' => $this->data_type ?? 'string',
         ]);
     }
 
@@ -34,18 +33,24 @@ class DataTableColumnRequest extends FormRequest
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
-    public function rules(#[RouteParameter('data_table')] $dataTable): array
+    public function rules(
+        #[RouteParameter('data_table')] $dataTable,
+        #[RouteParameter('data_table_column')] $dataTableColumn = null
+    ): array
     {
+        //  Get the data table id
+        $dataTableId = $dataTable->id ?? ($dataTableColumn->id ?? null);
+
         //  Define the unique rule for the identifier
-        $uniqueRule = Rule::unique(DataTableColumn::class)->where(
-            fn (Builder $query) => $query->whereBelongsTo($dataTable)
-        );
+        $uniqueRule = Rule::unique(DataTableColumn::class)
+            ->where(fn (Builder $query) => $query->where('data_table_id', $dataTableId))
+            ->ignore($dataTableColumn);
 
         //  Return the rules
         return [
             'key' => ['required', 'string', 'max:255', $uniqueRule],
             'search_type' => ['required', Rule::in(config('dt-tables.columns.search_types'))],
-            'data_type' => ['required', Rule::in(config('dt-tables.columns.data_types'))],
+            'classes' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

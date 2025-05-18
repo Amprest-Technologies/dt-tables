@@ -9,27 +9,45 @@
     //  Get the payload
     let payload = @js($payload);
 
-    //  Build table config
-    let config = @js($table);
+    //  Get the buttons
+    let configButtons = @js($buttons);
+
+    //  Get the columns
+    let configColumns = @js($columns);
+
+    //  Get the theme options
+    let configTheme = @js($theme);
+
+    //  Get the title of the table
+    let title = @js($attributes->get('title', '*'));
     
     //  Initialize the datatable
-    setupDataTable(tableId);
+    setupDataTable(tableId, configColumns);
 
     //  Setup the datatable options
     let options = {
         responsive: true,
-        layout: layout(config.settings.buttons),
-        columns: columns(tableId, config.columns),
-        language: {
-            lengthMenu: '_MENU_ _ENTRIES_',
-            entries: { _: 'Entries', 1: 'Entry' }
+        layout: {
+            top: {
+                className: 'top-row',
+                features: [
+                    { buttons: buttons('hello', configButtons, configTheme, title) },
+                    'pageLength'
+                ]
+            },
+            bottom: { className: 'bottom-row', features: ['info', 'paging']},            
+            topStart: null,
+            topEnd: null,
+            bottomStart: null,
+            bottomEnd: null,
         },
+        columns: columns(tableId, configColumns),
         initComplete: function () {
             //  Set up styling
             setupStyling();
 
             //  Set up filters
-            setupFilters(this.api(), config.columns);
+            setupFilters(this.api(), configColumns, configTheme);
         },
     };
 

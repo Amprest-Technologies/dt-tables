@@ -24,7 +24,6 @@ class DataTableRequest extends FormRequest
         $this->merge(['identifier' => Str::slug($identifier)]);
     }
 
-
     /**
      * Return the rules for the request.
      *
@@ -38,7 +37,10 @@ class DataTableRequest extends FormRequest
         //  Return the rules
         return [
             'identifier' => ['required', 'string', 'max:255', $uniqueRule],
-            'type' => ['sometimes', 'required', Rule::in(['buttons'])],
+            'type' => ['sometimes', 'required', Rule::in(['buttons', 'theme'])],
+            'theme' => ['sometimes', 'required', Rule::in(array_keys(config('dt-tables.themes')))],
+            'buttons' => ['sometimes', 'array'],
+            'buttons.*' => ['sometimes', 'boolean'],
         ];
     }
 
@@ -51,8 +53,18 @@ class DataTableRequest extends FormRequest
     {
         return [
             'identifier' => $this->identifier,
-            "settings->{$this->type}" => $this->{$this->type}()
+            "settings->{$this->type}" => $this->{$this->type}(),
         ];
+    }
+
+    /**
+     * Format the theme
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    public function theme(): string
+    {
+        return $this->theme ?? config('dt-tables.settings.theme');
     }
 
     /**

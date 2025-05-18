@@ -18,7 +18,7 @@ class DataTableColumnResource extends JsonResource
             'id' => $this->getRouteKey(),
             'key' => $this->key,
             'search_type' => $this->search_type == 'none' ? null : $this->search_type,
-            'data_type' => $this->data_type,
+            'classes' => $this->classes,
         ];
     }
 }

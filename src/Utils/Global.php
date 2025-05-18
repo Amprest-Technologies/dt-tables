@@ -2,18 +2,6 @@
 
 use Illuminate\Support\HtmlString;
 
-if (! function_exists('package_name')) {
-    /**
-     * Generate a package resouce view name depending on the package.
-     *
-     * @author Alvin Gichira Kaburu <geekaburu@amprest.co.ke>
-     */
-    function package_name(): mixed
-    {
-        return 'dt-tables';
-    }
-}
-
 if (! function_exists('package_path')) {
     /**
      * Generate a package resouce view name depending on the package.
