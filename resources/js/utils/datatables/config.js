@@ -95,11 +95,9 @@ let actionButtons = function (title) {
         searchable: false,
         render: (data, type, row, meta) => {
             //  Check if the row has actions
-            const html = Object.values(row.actions || {}).map(button => {
-                return `<a href="${button.url}" class="btn btn-sm btn-primary me-1" data-id="${row.id}">
-                    ${button.label}
-                </a>`;
-            }).join('');
+            const html = Object.values(row.actions || {})
+                .map(button => `<a ${button.attributes}">${button.label}</a>`)
+                .join('');
 
             //  Return the html
             return `<div class="w-100 d-flex justify-content-center">${html}</div>`;
@@ -195,21 +193,26 @@ window.layout = function(config) {
  */
 window.columns = function (tableID, config) {
     return Array.from(document.querySelectorAll(`#${tableID} thead tr:first-of-type th`)).map(function (th) {
-        //  Get the inner html
-        let innerHTML = th.innerHTML;
+        //  Get the data title of the column.
+        let dtTitle = th.getAttribute('dtt-data-title');
+        
+        //  Get the title of the column
+        let title = dtTitle
+            ? dtTitle.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+            : th.innerHTML;
 
         //  Handle the case where the column is a row index
-        if (th.hasAttribute('ldt-row-index')) {
-            return rowIndex(innerHTML);
+        if (th.hasAttribute('dtt-row-index')) {
+            return rowIndex(title);
         }
 
         //  Handle the case where the column is an action button
-        if (th.hasAttribute('ldt-actions')) {
-            return actionButtons(innerHTML);
+        if (th.hasAttribute('dtt-actions')) {
+            return actionButtons(title);
         }
 
         //  Get the name of the column
-        let name = innerHTML ? innerHTML.replace(/\s+/g, '_').toLowerCase() : null;
+        let name = title ? title.replace(/\s+/g, '_').toLowerCase() : null;
 
         //  Get the first config object that matches the name
         let configObj = config.find(obj => obj.key === name);
@@ -218,8 +221,22 @@ window.columns = function (tableID, config) {
         return {
             data: name,
             name: name,
-            title: innerHTML,
             type: configObj ? configObj.data_type : 'string',
+            render: function(data, type, row, meta) {
+                //  Deal with objects
+                if (typeof data === 'object') {
+                    //  Check the object has a className property
+                    if (data?.class && type === 'display') {
+                        return `<span class="${data.class}">${data.value}</span>`;
+                    }
+
+                    //  Else return the value as is
+                    return data?.value ?? '';
+                }
+
+                //  Else return the data as is
+                return data;
+            }
         };
     });
 };

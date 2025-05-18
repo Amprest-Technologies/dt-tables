@@ -32,10 +32,7 @@
         td,th {
             white-space: nowrap;
             vertical-align: middle !important;
-        }
-
-        td {
-            font-size: 10.5pt;
+            font-size: 10pt;
         }
 
         & > thead > tr> th {

@@ -63,7 +63,7 @@ class DataTableAssets extends Component
 
         //  Get the assets
         $entryAssets = $assets->where('isEntry', true)
-            ->filter(fn($file, $asset) => str_contains($asset, "{$this->mode}."));
+            ->filter(fn($file, $key) => str_contains($key, "{$this->mode}."));
 
         //  Loop through the assets
         foreach($entryAssets as $asset) {
