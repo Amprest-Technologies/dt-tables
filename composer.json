@@ -1,7 +1,7 @@
 {
 	"name": "amprest/dt-tables",
 	"type": "library",
-	"description": "This is a package that provides a customizable datatables component for the Laravel Framework.",
+	"description": "This is a package that provides a customizable data tables component for the Laravel Framework.",
 	"homepage": "https://amprest.co.ke/",
 	"keywords": [ "laravel", "datatables" ],
 	"license": "MIT",
