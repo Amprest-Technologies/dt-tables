@@ -200,20 +200,21 @@ window.columns = function (tableID, config) {
             data: name,
             name: name,
             className: configObj ? configObj.classes : '',
-            render: function(data, type, row, meta) {
-                //  Deal with objects
-                if (typeof data === 'object') {
-                    //  Check the object has a className property
-                    if (data?.class && type === 'display') {
-                        return `<span class="${data.class}">${data.value}</span>`;
-                    }
+            data: function (row, type, val, meta) {
+                //  Get the value of the column
+                let data = row[name];
 
-                    //  Else return the value as is
-                    return data?.value ?? '';
+                //  Return the required value
+                return data?.value ?? data;
+            },
+            createdCell: function (td, data, rowData, row, col) {
+                //  Get the cell data
+                let cellData = rowData[name];
+
+                //  Check if the cell data is an object and add the classes if they exist
+                if (typeof cellData === 'object' && cellData?.classes) {
+                    td.classList.add(...cellData.classes);
                 }
-
-                //  Else return the data as is
-                return data;
             }
         };
     });
