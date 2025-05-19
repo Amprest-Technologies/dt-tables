@@ -10,7 +10,7 @@ return [
     |
     */
     'settings' => [
-        'buttons' => ['copy', 'colvis', 'csv', 'excel'],
+        'buttons' => ['copy', 'colvis', 'excel'],
         'theme' => 'bootstrap5',
     ],
 

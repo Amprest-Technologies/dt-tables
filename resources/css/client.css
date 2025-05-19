@@ -28,15 +28,27 @@
         }
     }
 
+    .dt-button-collection {
+        button {
+            background-color: initial !important;
+        }
+    }
+
     table {
         td,th {
             white-space: nowrap;
             vertical-align: middle !important;
-            font-size: 10pt;
         }
 
         & > thead > tr> th {
-            padding: 10px !important;
+            padding: 5px !important;
+            color: #6c757d;
+            font-size: 10.5pt;
+        }
+
+        & > tbody > tr> td {
+            color: #202021;
+            font-size: 11pt;            
         }
 
         .row-index {

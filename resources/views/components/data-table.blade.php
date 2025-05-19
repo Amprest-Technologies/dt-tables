@@ -31,7 +31,7 @@
             top: {
                 className: 'top-row',
                 features: [
-                    { buttons: buttons('hello', configButtons, configTheme, title) },
+                    { buttons: buttons(configButtons, configTheme, title) },
                     'pageLength'
                 ]
             },

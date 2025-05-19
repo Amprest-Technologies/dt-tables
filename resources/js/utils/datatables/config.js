@@ -127,57 +127,42 @@ window.setupDataTable = function (tableId, columns) {
  * Create a function to add the buttons to the datatable
  * ------------------------------------------------------------------
  */
-window.buttons = function(api, config, theme, title) {
+window.buttons = function(buttons, theme, title) {
     //  Return an empty buttons array if the config is empty
-    if (config.length === 0) {
+    if (buttons.length === 0) {
         return [];
     }
 
     //  Define the configurations
-    let buttonsConfigurations = [
+    let options = [
         {
             extend: 'copy',
-            text: 'Copy to Clipboard',
+            text: 'Copy',
             title: title,
-            footer: false
-        },
-        {
-            extend: 'csv',
-            text: 'Export as CSV',
-            filename: title,
             footer: false,
-            exportOptions: {
-                columns: ':visible:not(th.exclude-from-export)'
-            }
+            className: theme.buttons,
         },
         {
             extend: 'excel',
-            text: 'Export as Excel',
+            text: 'Excel',
             filename: title,
             title: title,
             footer: false,
+            className: theme.buttons,
             exportOptions: {
                 columns: ':visible:not(th.exclude-from-export)'
             }
         },
         {
             extend: 'colvis',
-            text: 'Column Visibility',
+            text: 'Hide Columns',
+            className: theme.buttons,
             postfixButtons: ['colvisRestore'],
         }
     ];
 
     //  Return the buttons
-    return [
-        {
-            extend: 'collection',
-            text: 'Table Actions',
-            className: theme.buttons,
-            buttons: Object.values(config).map((item) => {
-                return buttonsConfigurations.find(button => button.extend === item);
-            })
-        }
-    ];
+    return options.filter(option => buttons.includes(option.extend));
 };
 
 /* -----------------------------------------------------------------
@@ -187,7 +172,7 @@ window.buttons = function(api, config, theme, title) {
 window.columns = function (tableID, config) {
     return Array.from(document.querySelectorAll(`#${tableID} thead tr:first-of-type th`)).map(function (th) {
         //  Get the data title of the column.
-        let dtTitle = th.getAttribute('dtt-data-title');
+        let dtTitle = th.getAttribute('dtt-title');
         
         //  Get the title of the column
         let title = dtTitle
@@ -239,7 +224,6 @@ window.columns = function (tableID, config) {
  * ------------------------------------------------------------------
  */
 window.setupStyling = function () {
-    //  Handle buttons
     document.querySelectorAll('.dt-button').forEach(el => el.classList.remove('dt-button'));
 };
 
