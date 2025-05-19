@@ -5,7 +5,6 @@ namespace Amprest\DtTables\Views\Components;
 use Amprest\DtTables\Models\DataTable as DataTableModel;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
