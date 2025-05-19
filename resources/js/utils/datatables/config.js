@@ -212,7 +212,7 @@ window.columns = function (tableID, config) {
                 let cellData = rowData[name];
 
                 //  Check if the cell data is an object and add the classes if they exist
-                if (typeof cellData === 'object' && cellData?.classes) {
+                if (typeof cellData === 'object' && cellData?.classes && cellData.classes.length > 0) {
                     td.classList.add(...cellData.classes);
                 }
             }
