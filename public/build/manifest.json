@@ -4,12 +4,12 @@
     "name": "jquery"
   },
   "resources/css/admin.css": {
-    "file": "assets/admin-DWkQwFQz.css",
+    "file": "assets/admin-BmWFTPlb.css",
     "src": "resources/css/admin.css",
     "isEntry": true
   },
   "resources/css/client.css": {
-    "file": "assets/client-CEFjV6DJ.css",
+    "file": "assets/client-Ca9rrYDd.css",
     "src": "resources/css/client.css",
     "isEntry": true
   },
@@ -23,7 +23,7 @@
     ]
   },
   "resources/js/client.js": {
-    "file": "assets/client-DCMsFpM1.js",
+    "file": "assets/client-DVucqlW5.js",
     "name": "client",
     "src": "resources/js/client.js",
     "isEntry": true,
