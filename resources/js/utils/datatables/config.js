@@ -212,8 +212,12 @@ window.columns = function (tableID, config) {
                 let cellData = rowData[name];
 
                 //  Check if the cell data is an object and add the classes if they exist
-                if (typeof cellData === 'object' && cellData?.classes && cellData.classes.length > 0) {
-                    td.classList.add(...cellData.classes);
+                if (typeof cellData === 'object' && cellData?.classes) {
+                    //  Remove empty strings from the classes array
+                    const validClasses = cellData.classes.filter(c => c?.trim());
+
+                    //  Add the classes to the cell
+                    td.classList.add(...validClasses);
                 }
             }
         };
