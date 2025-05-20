@@ -57,7 +57,7 @@ class DatabaseServiceProvider extends ServiceProvider
     protected function createDatabase(): string
     {
         //  Check if the database file exists
-        if (! file_exists($path = base_path('dt-tables.sqlite'))) {
+        if (! file_exists($path = base_path('dt-tables/database.sqlite'))) {
             touch($path);
         }
 

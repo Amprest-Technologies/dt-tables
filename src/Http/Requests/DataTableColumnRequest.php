@@ -18,7 +18,7 @@ class DataTableColumnRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        //  Get the identifier from the request
+        //  Get the key from the request
         $this->errorBag = $this->{'_bag'} ?? $this->errorBag;
 
         //  Merge inexisting data with the request
@@ -41,7 +41,7 @@ class DataTableColumnRequest extends FormRequest
         //  Get the data table id
         $dataTableId = $dataTable->id ?? ($dataTableColumn->id ?? null);
 
-        //  Define the unique rule for the identifier
+        //  Define the unique rule for the key
         $uniqueRule = Rule::unique(DataTableColumn::class)
             ->where(fn (Builder $query) => $query->where('data_table_id', $dataTableId))
             ->ignore($dataTableColumn);

@@ -2,7 +2,7 @@
 
 namespace Amprest\DtTables\Views\Components;
 
-use Amprest\DtTables\Models\DataTable as DataTableModel;
+use Amprest\DtTables\Services\JsonService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\View\Component;
@@ -30,11 +30,19 @@ class DataTable extends Component
         //  Handle the payload
         $this->payload = collect(is_null($this->payload) ? [] : $this->payload)->toArray();
 
-        //  Get the table properties
-        $table = DataTableModel::query()
-            ->with('columns')
-            ->where('identifier', $this->tableId)
-            ->first()?->toResource() ?? null;
+        //  Set up the component
+        $this->setUp();
+    }
+
+    /**
+     * Method to set up the component.
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    protected function setUp(): void
+    {
+        //  Sync the table properties
+        $table = JsonService::sync($this->tableId);
 
         //  Get the columns
         $this->columns = $table->columns ?? [];

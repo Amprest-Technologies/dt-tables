@@ -15,9 +15,8 @@ class DataTableColumnResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->getRouteKey(),
             'key' => $this->key,
-            'search_type' => $this->search_type == 'none' ? null : $this->search_type,
+            'search_type' => $this->search_type,
             'classes' => $this->classes,
         ];
     }

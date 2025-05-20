@@ -18,10 +18,10 @@ class DataTableRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         //  Define the indentifier
-        $identifier = $this->identifier ?? ($this->route('data_table')->identifier ?? '');
+        $key = $this->key ?? ($this->route('data_table')->key ?? '');
 
-        //  Merge the identifier with the request
-        $this->merge(['identifier' => Str::slug($identifier)]);
+        //  Merge the key with the request
+        $this->merge(['key' => Str::slug($key)]);
     }
 
     /**
@@ -31,12 +31,12 @@ class DataTableRequest extends FormRequest
      */
     public function rules(#[RouteParameter('data_table')] $dataTable): array
     {
-        //  Define the unique rule for the identifier
+        //  Define the unique rule for the key
         $uniqueRule = Rule::unique(DataTable::class)->ignore($dataTable);
 
         //  Return the rules
         return [
-            'identifier' => ['required', 'string', 'max:255', $uniqueRule],
+            'key' => ['required', 'string', 'max:255', $uniqueRule],
             'type' => ['sometimes', 'required', Rule::in(['buttons', 'theme'])],
             'theme' => ['sometimes', 'required', Rule::in(array_keys(config('dt-tables.themes')))],
             'buttons' => ['sometimes', 'array'],
@@ -52,7 +52,7 @@ class DataTableRequest extends FormRequest
     public function updateData(): array
     {
         return [
-            'identifier' => $this->identifier,
+            'key' => $this->key,
             "settings->{$this->type}" => $this->{$this->type}(),
         ];
     }

@@ -15,9 +15,8 @@ class DataTableResource extends JsonResource
     public function toArray(Request $request): array
     {
          return [
-            'id' => $this->getRouteKey(),
-            'identifier' => $this->identifier,
-            'settings' => $this->settings->toArray(),
+            'key' => $this->key,
+            'settings' => $this->settings,
             'columns' => DataTableColumnResource::collection($this->columns),
         ];
     }

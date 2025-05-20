@@ -6,10 +6,10 @@
         <form action="{{ route('dt-tables.data-tables.store') }}" method="POST">
             @csrf
             <div class="element-group">
-                <input name="identifier" type="text" class="@error('identifier') border border-red-800 @enderror" placeholder="The table identifier eg. shoes-table" value="{{ old('identifier') }}">
+                <input name="key" type="text" class="@error('key') border border-red-800 @enderror" placeholder="The table key eg. shoes-table" value="{{ old('key') }}">
                 <button class="btn">Submit</button>
             </div>
-            @error('identifier')
+            @error('key')
                 <small class="text-red-900">{{ $message }}</small>
             @enderror
         </form>
@@ -29,15 +29,15 @@
                     @foreach($dataTables as $dataTable)
                         <tr>
                             <th class="text-center">{{ $loop->iteration }}</th>
-                            <td>{{ $dataTable->identifier }}</td>
+                            <td>{{ $dataTable->key }}</td>
                             <td>
                                 <div class="element-group justify-center">
-                                    <a href="{{ route('dt-tables.data-tables.edit', ['data_table' => $dataTable]) }}" class="btn">Edit</a>
-                                    <button type="submit" form="{{ $form = 'delete-'.$dataTable->getRouteKey().'-form' }}" class="btn">Delete</button>
+                                    <a href="{{ route('dt-tables.data-tables.edit', ['data_table' => $dataTable->id]) }}" class="btn">Edit</a>
+                                    <button type="submit" form="{{ $form = 'delete-'.$dataTable->id.'-form' }}" class="btn">Delete</button>
                                 </div>
                             </td>
                         </tr>
-                        <form id="{{ $form }}" action="{{ route('dt-tables.data-tables.destroy', ['data_table' => $dataTable]) }}" method="POST">
+                        <form id="{{ $form }}" action="{{ route('dt-tables.data-tables.destroy', ['data_table' => $dataTable->id]) }}" method="POST">
                             @csrf
                             @method('DELETE')
                         </form>

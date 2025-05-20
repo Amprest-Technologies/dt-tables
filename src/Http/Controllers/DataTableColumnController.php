@@ -5,6 +5,7 @@ namespace Amprest\DtTables\Http\Controllers;
 use Amprest\DtTables\Http\Requests\DataTableColumnRequest;
 use Amprest\DtTables\Models\DataTable;
 use Amprest\DtTables\Models\DataTableColumn;
+use Amprest\DtTables\Services\JsonService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 
@@ -57,6 +58,12 @@ class DataTableColumnController extends Controller
     {
         //  Delete the table column
         $dataTableColumn->delete();
+
+        //  Get the data table
+        $dataTable = $dataTableColumn->dataTable;
+
+        //  Update the json file
+        JsonService::set($dataTable);
 
         //  Return the view on the data table edit page
         return redirect()->back()->with([

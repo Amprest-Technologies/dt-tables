@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::connection('dt-tables')->create('data_tables', function (Blueprint $table) {
             $table->id();
             $table->ulid('ulid')->unique();
-            $table->string('identifier')->unique();
+            $table->string('key')->unique();
             $table->json('settings');
             $table->timestamps();
         });

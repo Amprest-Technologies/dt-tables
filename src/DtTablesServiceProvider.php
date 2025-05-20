@@ -5,6 +5,7 @@ namespace Amprest\DtTables;
 use Amprest\DtTables\Console\Commands\SchemaSeeder;
 use Amprest\DtTables\Http\Middleware\AutoInjectDtTableAssets;
 use Amprest\DtTables\Providers\DatabaseServiceProvider;
+use Amprest\DtTables\Providers\RouteServiceProvider;
 use Amprest\DtTables\Views\Components\DataTable;
 use Amprest\DtTables\Views\Components\DataTableAssets;
 use Illuminate\Contracts\Http\Kernel;
@@ -26,6 +27,7 @@ class DtTablesServiceProvider extends ServiceProvider
 
         //  Register other service providers
         $this->app->register(DatabaseServiceProvider::class);
+        $this->app->register(RouteServiceProvider::class);
     }
 
     /**
@@ -63,6 +65,9 @@ class DtTablesServiceProvider extends ServiceProvider
             SchemaSeeder::prohibit(! $this->app->environment('local'));
         }
 
+        //  Create the package assets
+        $this->createAssets();
+
         //  Load the blade components
         Blade::component('data-table', DataTable::class);
         Blade::component('data-table-assets', DataTableAssets::class);
@@ -77,6 +82,29 @@ class DtTablesServiceProvider extends ServiceProvider
     {
         foreach (glob("$path/*.php") as $helper) {
             require_once $helper;
+        }
+    }
+
+    /**
+     * Create the package folder if it doesn't exist.
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    protected function createAssets(): void
+    {
+        //  Create the package folder if it doesn't exist
+        if (! file_exists($path = base_path('dt-tables'))) {
+            mkdir($path, 0755, true);
+        }
+
+        //  Create the package json file if it doesn't exist
+        if (! file_exists($path = base_path('dt-tables/config.json'))) {
+            touch($path);
+        }
+
+        //  Create a git ignore file for .sqlite
+        if (! file_exists($path = base_path('dt-tables/.gitignore'))) {
+            file_put_contents($path, "*.sqlite*\n");
         }
     }
 }

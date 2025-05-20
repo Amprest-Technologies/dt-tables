@@ -2,8 +2,10 @@
 
 namespace Amprest\DtTables\Models;
 
-use Amprest\DtTables\Casts\AsFluent;
+use Amprest\DtTables\Services\JsonService;
 use Amprest\DtTables\Traits\HasUlids;
+use Exception;
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -24,7 +26,7 @@ class DataTable extends Model
      * @var array
      */
     protected $fillable = [
-        'identifier',
+        'key',
         'settings',
         'settings->theme',
         'settings->buttons',
@@ -36,8 +38,28 @@ class DataTable extends Model
      * @var array
      */
     protected $casts = [
-        'settings' => AsFluent::class
+        'settings' => AsArrayObject::class,
     ];
+
+    /**
+     * Add observers to the model
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    protected static function boot(): void
+    {
+        //  Call the parent boot method
+        parent::boot();
+
+        //  Create an auto incrementing invoice number
+        static::saved(function ($model) {
+            //  Check if the json was set
+            $success = JsonService::set($model);
+
+            //  Abort if the json was not set
+            throw_if(!$success, new Exception('Failed to set the json data to the file'));
+        });
+    }
     
     /**
      * Get the columns for the data table.
@@ -47,5 +69,5 @@ class DataTable extends Model
     public function columns(): HasMany
     {
         return $this->hasMany(DataTableColumn::class);
-    }  
+    }
 }

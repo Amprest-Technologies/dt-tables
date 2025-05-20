@@ -4,6 +4,7 @@ namespace Amprest\DtTables\Http\Controllers;
 
 use Amprest\DtTables\Http\Requests\DataTableRequest;
 use Amprest\DtTables\Models\DataTable;
+use Amprest\DtTables\Services\JsonService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
@@ -18,7 +19,7 @@ class DataTableController extends Controller
     public function index(): View
     {
         //  Get the list of tables
-        $dataTables = DataTable::latest()->get();
+        $dataTables = JsonService::all();
 
         //  Return the view with the list of tables
         return view('dt-tables::pages.data-tables.index', [
@@ -52,11 +53,12 @@ class DataTableController extends Controller
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
-    public function edit(DataTable $dataTable): View
+    public function edit(JsonService $dataTable): View
     {
         return view('dt-tables::pages.data-tables.edit', [
             'dataTable' => $dataTable,
             'columns' => $dataTable->columns,
+            'settings' => $dataTable->settings,
         ]);
     }
 
@@ -84,13 +86,10 @@ class DataTableController extends Controller
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
-    public function destroy(DataTable $dataTable): RedirectResponse
+    public function destroy(JsonService $dataTable): RedirectResponse
     {
-        //  Delete the table columns
-        $dataTable->columns()->delete();
-
-        //  Delete the table
-        $dataTable->delete();
+        //  Update the json file
+        JsonService::destroy($dataTable);
 
         //  Return the view with the list of tables  
         return redirect()->back()->with([

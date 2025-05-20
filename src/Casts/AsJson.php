@@ -4,9 +4,8 @@ namespace Amprest\DtTables\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Fluent;
 
-class AsFluent implements CastsAttributes
+class AsJson implements CastsAttributes
 {
     /**
      * Cast the given value.
@@ -15,7 +14,7 @@ class AsFluent implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return Fluent::make(json_decode($value, true));
+        return json_decode($value);
     }
 
     /**
