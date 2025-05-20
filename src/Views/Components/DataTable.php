@@ -2,7 +2,7 @@
 
 namespace Amprest\DtTables\Views\Components;
 
-use Amprest\DtTables\Services\JsonService;
+use Amprest\DtTables\Models\DataTable as DataTableModel;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\View\Component;
@@ -22,8 +22,7 @@ class DataTable extends Component
         public array|Collection $columns = [],
         public array|Collection $buttons = [],
         public array $theme = [],
-    )
-    {
+    ) {
         //  Set the tableId to the id if not provided
         $this->tableId ??= $this->id;
 
@@ -42,7 +41,7 @@ class DataTable extends Component
     protected function setUp(): void
     {
         //  Sync the table properties
-        $table = JsonService::sync($this->tableId);
+        $table = DataTableModel::sync($this->tableId);
 
         //  Get the columns
         $this->columns = $table->columns ?? [];

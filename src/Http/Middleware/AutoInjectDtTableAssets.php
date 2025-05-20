@@ -35,7 +35,7 @@ class AutoInjectDtTableAssets
         //  Only inject if </head> exists
         if (str_contains($html, '</head>')) {
             //  Render the blade component
-            $injection = Blade::render("<x-data-table-assets />");
+            $injection = Blade::render('<x-data-table-assets />');
 
             //  Inject just before closing </head>
             $html = str_replace('</head>', "$injection\n</head>", $html);

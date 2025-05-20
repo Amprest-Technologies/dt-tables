@@ -16,7 +16,7 @@ class AssetController extends Controller
     public function __invoke(AssetService $service, string $name): mixed
     {
         //  Get the file path
-        $filePath = package_path('public/build/assets/' . $name);
+        $filePath = package_path('public/build/assets/'.$name);
 
         //  Load the file
         return $service->load($filePath);

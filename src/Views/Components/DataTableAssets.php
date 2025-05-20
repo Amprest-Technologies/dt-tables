@@ -11,8 +11,6 @@ class DataTableAssets extends Component
 {
     /**
      * The Vite instance.
-     *
-     * @var \Illuminate\Foundation\Vite
      */
     public Vite $vite;
 
@@ -25,7 +23,7 @@ class DataTableAssets extends Component
     {
         //  Get the path of the hot file
         $path = package_path('public/hot');
-        
+
         //  Build the vite instance
         $this->vite = app(Vite::class)
             ->useHotFile(is_file($path) ? $path : null)
@@ -42,7 +40,7 @@ class DataTableAssets extends Component
      */
     public function assets()
     {
-        return collect($this->parseManifest())->map(fn($file) => new Fluent([
+        return collect($this->parseManifest())->map(fn ($file) => new Fluent([
             'path' => route('dt-tables.asset.show', ['name' => basename($file)]),
             'type' => pathinfo($file, PATHINFO_EXTENSION),
         ]));
@@ -63,15 +61,15 @@ class DataTableAssets extends Component
 
         //  Get the assets
         $entryAssets = $assets->where('isEntry', true)
-            ->filter(fn($file, $key) => str_contains($key, "{$this->mode}."));
+            ->filter(fn ($file, $key) => str_contains($key, "{$this->mode}."));
 
         //  Loop through the assets
-        foreach($entryAssets as $asset) {
+        foreach ($entryAssets as $asset) {
             //  Get the asset path
             $files[] = package_path("public/build/assets/{$asset->file}");
 
             //  Get the imports
-            foreach($asset->imports ?? [] as $file) {
+            foreach ($asset->imports ?? [] as $file) {
                 //  Get the asset path
                 $path = $assets->get($file);
 
@@ -82,7 +80,7 @@ class DataTableAssets extends Component
             }
 
             //  Get the css files
-            foreach($asset->css ?? [] as $file) {
+            foreach ($asset->css ?? [] as $file) {
                 $files[] = package_path("public/build/assets/{$file}");
             }
         }

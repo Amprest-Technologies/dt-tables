@@ -3,6 +3,7 @@
 namespace Amprest\DtTables\Http\Requests;
 
 use Amprest\DtTables\Models\DataTable;
+use Amprest\DtTables\Rules\EnsureTableNameIsUnique;
 use Illuminate\Container\Attributes\RouteParameter;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -32,7 +33,7 @@ class DataTableRequest extends FormRequest
     public function rules(#[RouteParameter('data_table')] $dataTable): array
     {
         //  Define the unique rule for the key
-        $uniqueRule = Rule::unique(DataTable::class)->ignore($dataTable);
+        $uniqueRule = new EnsureTableNameIsUnique($this->key, $dataTable);
 
         //  Return the rules
         return [
@@ -49,12 +50,13 @@ class DataTableRequest extends FormRequest
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
-    public function updateData(): array
+    public function updateData(DataTable $dataTable): array
     {
-        return [
-            'key' => $this->key,
-            "settings->{$this->type}" => $this->{$this->type}(),
-        ];
+        //  Get the type of data to update
+        $dataTable->settings->{$this->type} = $this->{$this->type}();
+
+        //  Return the data as an array
+        return $dataTable->toArray();
     }
 
     /**

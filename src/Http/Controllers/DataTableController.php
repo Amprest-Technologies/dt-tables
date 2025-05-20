@@ -4,9 +4,9 @@ namespace Amprest\DtTables\Http\Controllers;
 
 use Amprest\DtTables\Http\Requests\DataTableRequest;
 use Amprest\DtTables\Models\DataTable;
-use Amprest\DtTables\Services\JsonService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class DataTableController extends Controller
@@ -19,7 +19,7 @@ class DataTableController extends Controller
     public function index(): View
     {
         //  Get the list of tables
-        $dataTables = JsonService::all();
+        $dataTables = DataTable::all();
 
         //  Return the view with the list of tables
         return view('dt-tables::pages.data-tables.index', [
@@ -36,11 +36,13 @@ class DataTableController extends Controller
     {
         //  Create the table
         $dataTable = DataTable::create(array_merge($request->validated(), [
+            'id' => strtolower(Str::ulid()),
             'settings' => config('dt-tables.settings'),
+            'columns' => [],
         ]));
 
-        //  Return the view with the list of tables  
-        return redirect()->route('dt-tables.data-tables.edit', ['data_table' => $dataTable])->with([
+        //  Return the view with the list of tables
+        return redirect()->route('dt-tables.data-tables.edit', ['data_table' => $dataTable->id])->with([
             'alert' => [
                 'type' => 'success',
                 'message' => trans('dt-tables::alerts.data-table.created'),
@@ -53,7 +55,7 @@ class DataTableController extends Controller
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
-    public function edit(JsonService $dataTable): View
+    public function edit(DataTable $dataTable): View
     {
         return view('dt-tables::pages.data-tables.edit', [
             'dataTable' => $dataTable,
@@ -69,16 +71,17 @@ class DataTableController extends Controller
      */
     public function update(DataTableRequest $request, DataTable $dataTable): RedirectResponse
     {
-        //  Update the table
-        $dataTable->update($request->updateData());
+        //  Get the validated data
+        $validated = $request->updateData($dataTable);
 
-        //  Return the view with the list of tables  
-        return redirect()->back()->with([
-            'alert' => [
-                'type' => 'success',
-                'message' => trans('dt-tables::alerts.data-table.updated'),
-            ],
-        ]);
+        //  Update the table
+        $dataTable->update($validated);
+
+        //  Return the view with the list of tables
+        return redirect()->back()->with(['alert' => [
+            'type' => 'success',
+            'message' => trans('dt-tables::alerts.data-table.updated'),
+        ]]);
     }
 
     /**
@@ -86,12 +89,12 @@ class DataTableController extends Controller
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
-    public function destroy(JsonService $dataTable): RedirectResponse
+    public function destroy(DataTable $dataTable): RedirectResponse
     {
         //  Update the json file
-        JsonService::destroy($dataTable);
+        DataTable::destroy($dataTable);
 
-        //  Return the view with the list of tables  
+        //  Return the view with the list of tables
         return redirect()->back()->with([
             'alert' => [
                 'type' => 'success',

@@ -36,8 +36,7 @@ class DataTableColumnRequest extends FormRequest
     public function rules(
         #[RouteParameter('data_table')] $dataTable,
         #[RouteParameter('data_table_column')] $dataTableColumn = null
-    ): array
-    {
+    ): array {
         //  Get the data table id
         $dataTableId = $dataTable->id ?? ($dataTableColumn->id ?? null);
 

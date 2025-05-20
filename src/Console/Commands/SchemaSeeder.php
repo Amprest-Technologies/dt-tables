@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class SchemaSeeder extends Command
 {
     use Prohibitable;
-    
+
     /**
      * The name and signature of the console command.
      *
@@ -37,15 +37,15 @@ class SchemaSeeder extends Command
         DB::transaction(function () {
             //  Get the json file from the config
             $tables = file_get_contents(package_path('database/data/data-tables.json'));
-    
+
             //  Decode the json file
             $tables = collect(json_decode($tables, true));
-    
+
             //  Get the tables from the json file
-            foreach($tables as $table) {
+            foreach ($tables as $table) {
                 //  Set the table details
                 $currentTable = DataTable::create($table['details']);
-    
+
                 //  Create the columns
                 $currentTable->columns()->createMany($table['columns']);
             }

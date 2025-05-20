@@ -10,12 +10,10 @@ class DatabaseServiceProvider extends ServiceProvider
 {
     /**
      * Get the schema tables for the package.
-     *
-     * @var array
      */
     protected array $schemaTables = [
         'data_tables',
-        'data_table_columns'
+        'data_table_columns',
     ];
 
     /**
@@ -39,7 +37,7 @@ class DatabaseServiceProvider extends ServiceProvider
         $path = $this->createDatabase();
 
         //  Set the connection config early
-        config()->set("database.connections.dt-tables", [
+        config()->set('database.connections.dt-tables', [
             'driver' => 'sqlite',
             'database' => $path,
             'foreign_key_constraints' => true,

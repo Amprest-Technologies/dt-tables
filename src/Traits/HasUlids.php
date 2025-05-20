@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 
 trait HasUlids
 {
-   /**
+    /**
      * Create a hook in the boot method
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>

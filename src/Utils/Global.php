@@ -10,7 +10,7 @@ if (! function_exists('package_path')) {
      */
     function package_path($path): mixed
     {
-        return base_path('vendor/amprest/dt-tables/' . $path);
+        return base_path('vendor/amprest/dt-tables/'.$path);
     }
 }
 

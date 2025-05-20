@@ -2,7 +2,7 @@
 
 namespace Amprest\DtTables\Providers;
 
-use Amprest\DtTables\Services\JsonService;
+use Amprest\DtTables\Models\DataTable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,7 +28,7 @@ class RouteServiceProvider extends ServiceProvider
         //  Define the route bindings for the data table
         Route::bind('data_table', function (string $value) {
             //  Return the result of the find
-            $dataTable = JsonService::find($value);
+            $dataTable = DataTable::find($value);
 
             //  Abort if no result is found
             abort_if(is_null($dataTable), 404, 'Data table not found');
