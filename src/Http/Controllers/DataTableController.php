@@ -5,11 +5,10 @@ namespace Amprest\DtTables\Http\Controllers;
 use Amprest\DtTables\Http\Requests\DataTableRequest;
 use Amprest\DtTables\Models\DataTable;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
-class DataTableController extends Controller
+class DataTableController
 {
     /**
      * Show a list of tables.

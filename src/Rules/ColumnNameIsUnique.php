@@ -3,19 +3,20 @@
 namespace Amprest\DtTables\Rules;
 
 use Amprest\DtTables\Models\DataTable;
+use Amprest\DtTables\Models\DataTableColumn;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class EnsureTableNameIsUnique implements ValidationRule
+class ColumnNameIsUnique implements ValidationRule
 {
     /**
-     * Define the constructor for the EnsureTableNameIsUnique class.
+     * Define the constructor for the TableNameIsUnique class.
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
     public function __construct(
-        public string $key,
-        public ?DataTable $ignore = null,
+        public DataTable $dataTable,
+        public ?DataTableColumn $ignore = null,
     ) {}
 
     /**
@@ -26,7 +27,8 @@ class EnsureTableNameIsUnique implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         //  Define the exists rule
-        $exists = DataTable::where('key', $this->key)
+        $exists = $this->dataTable->columns
+            ->where($attribute, $value)
             ->when($this->ignore, fn ($query) => $query->where('id', '!=', $this->ignore->id))
             ->isNotEmpty();
 

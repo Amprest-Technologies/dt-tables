@@ -3,10 +3,8 @@
 namespace Amprest\DtTables\Http\Controllers;
 
 use Amprest\DtTables\Services\AssetService;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\File;
 
-class AssetController extends Controller
+class AssetController
 {
     /**
      * Load the datatable assets.

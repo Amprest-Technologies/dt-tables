@@ -20,10 +20,10 @@ Route::middleware(PreventIfEnvironmentIsNotLocal::class)->group(function () {
         Route::delete('{data_table}/destroy', [DataTableController::class, 'destroy'])->name('destroy');
     });
 
-    // Route::resource('data-tables', DataTableController::class)->except(['show']);
-
-    //  Define the route for the data table columns
-    Route::resource('data-tables.data-table-columns', DataTableColumnController::class)
-        ->only(['store', 'update', 'destroy'])
-        ->shallow();
+    //  Define the route for the data table column model
+    Route::name('data-tables.columns.')->prefix('data-tables/columns')->group(function () {
+        Route::post('{data_table}', [DataTableColumnController::class, 'store'])->name('store');
+        Route::put('{data_table}/{data_table_column}', [DataTableColumnController::class, 'update'])->name('update');
+        Route::delete('{data_table}/{data_table_column}', [DataTableColumnController::class, 'destroy'])->name('destroy');
+    });
 });

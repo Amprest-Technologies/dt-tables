@@ -28,6 +28,19 @@ if (! function_exists('prettify')) {
     }
 }
 
+if (! function_exists('to_object')) {
+    /**
+     * Convert a string to an object
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    function to_object(mixed $value, ?bool $associative = null): array|object
+    {
+        return json_decode(json_encode($value), $associative);
+    }
+}
+    
+
 if (! function_exists('bag')) {
     /**
      * Return an error bag instance

@@ -14,7 +14,7 @@
     <section class="p-4 mb-3 bg-gray-50 rounded-sm drop-shadow-sm">
         <div class="mb-3 font-semibold">Column Configurations</div>
         <div>
-            <form action="#" method="POST" class="mb-1">
+            <form action="{{ route('dt-tables.data-tables.columns.store', ['data_table' => $dataTable->id]) }}" method="POST" class="mb-1">
                 @csrf
                 @php $id = 'new-column' @endphp
                 {!! bag($id) !!}
@@ -26,7 +26,7 @@
                     <small class="text-red-900">{{ $message }}</small>
                 @enderror
             </form>
-            @if(collect($columns)->isNotEmpty())
+            @if($columns->isNotEmpty())
                 <table class="table">
                     <thead>
                         <tr>
@@ -42,8 +42,8 @@
                             <tr>
                                 <td class="text-center">{{ $loop->iteration }}</td>
                                 <td>
-                                    @php $id = $column->key @endphp
-                                    <input name="key" type="text" value="{{ old('key', $column->key) }}" placeholder="Column Name" class="@error('key', $id) border border-red-800 @enderror" form="{{ $form = 'update-'.$id.'-form' }}">
+                                    @php $id = $column->id @endphp
+                                    <input name="key" type="text" value="{{ old('key', prettify($column->key)) }}" placeholder="Column Name" class="@error('key', $id) border border-red-800 @enderror" form="{{ $form = 'update-'.$id.'-form' }}">
                                     @error('key', $id)
                                         <small class="text-red-900">{{ $message }}</small>
                                     @enderror
@@ -59,7 +59,7 @@
                                     @enderror
                                 </td>
                                 <td>
-                                    <input name="classes" type="text" value="{{ old('classes', $column->classes) }}" placeholder="Valid html class syntax..." class="@error('key', $id) border border-red-800 @enderror" form="{{ $form = 'update-'.$id.'-form' }}">
+                                    <input name="classes" type="text" value="{{ old('classes', $column->classes) }}" placeholder="Valid html class syntax..." class="@error('classes', $id) border border-red-800 @enderror" form="{{ $form = 'update-'.$id.'-form' }}">
                                     @error('classes', $id)
                                         <small class="text-red-900">{{ $message }}</small>
                                     @enderror
@@ -71,12 +71,12 @@
                                     </div>
                                 </td>
                             </tr>
-                            <form id="{{ $form }}" action="#" method="POST">
+                            <form id="{{ $form }}" action="{{ route('dt-tables.data-tables.columns.update', ['data_table' => $dataTable->id, 'data_table_column' => $id])  }}" method="POST">
                                 @csrf
                                 {!! bag($id) !!}
                                 @method('PUT')
                             </form>
-                            <form id="{{ $deleteForm }}" action="#" method="POST">
+                            <form id="{{ $deleteForm }}" action="{{ route('dt-tables.data-tables.columns.destroy', ['data_table' => $dataTable->id, 'data_table_column' => $id])  }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                             </form>

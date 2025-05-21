@@ -2,9 +2,8 @@
 
 namespace Amprest\DtTables\Http\Requests;
 
-use Amprest\DtTables\Models\DataTableColumn;
+use Amprest\DtTables\Rules\ColumnNameIsUnique;
 use Illuminate\Container\Attributes\RouteParameter;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -25,6 +24,7 @@ class DataTableColumnRequest extends FormRequest
         $this->merge([
             'key' => Str::slug($this->key, '_'),
             'search_type' => $this->search_type ?? 'none',
+            'classes' => $this->classes ?? null,
         ]);
     }
 
@@ -36,14 +36,10 @@ class DataTableColumnRequest extends FormRequest
     public function rules(
         #[RouteParameter('data_table')] $dataTable,
         #[RouteParameter('data_table_column')] $dataTableColumn = null
-    ): array {
-        //  Get the data table id
-        $dataTableId = $dataTable->id ?? ($dataTableColumn->id ?? null);
-
+    ): array
+    {        
         //  Define the unique rule for the key
-        $uniqueRule = Rule::unique(DataTableColumn::class)
-            ->where(fn (Builder $query) => $query->where('data_table_id', $dataTableId))
-            ->ignore($dataTableColumn);
+        $uniqueRule = new ColumnNameIsUnique($dataTable, ignore: $dataTableColumn);
 
         //  Return the rules
         return [

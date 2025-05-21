@@ -3,6 +3,7 @@
 namespace Amprest\DtTables\Providers;
 
 use Amprest\DtTables\Models\DataTable;
+use Amprest\DtTables\Models\DataTableColumn;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -35,6 +36,18 @@ class RouteServiceProvider extends ServiceProvider
 
             //  Return the data table
             return $dataTable;
+        });
+
+        //  Define the route bindings for the data table
+        Route::bind('data_table_column', function (string $value) {
+            //  Return the result of the find
+            $column = DataTableColumn::find($value);
+
+            //  Abort if no result is found
+            abort_if(is_null($column), 404, 'Data table not found');
+
+            //  Return the data table
+            return $column;
         });
     }
 }

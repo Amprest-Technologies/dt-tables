@@ -5,11 +5,10 @@ namespace Amprest\DtTables\Http\Controllers;
 use Amprest\DtTables\Http\Requests\DataTableColumnRequest;
 use Amprest\DtTables\Models\DataTable;
 use Amprest\DtTables\Models\DataTableColumn;
-use Amprest\DtTables\Models\DataTable;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 
-class DataTableColumnController extends Controller
+class DataTableColumnController
 {
     /**
      * Store a new table column
@@ -19,7 +18,10 @@ class DataTableColumnController extends Controller
     public function store(DataTableColumnRequest $request, DataTable $dataTable): RedirectResponse
     {
         //  Create the table columns
-        $dataTable->columns()->create($request->validated());
+        DataTableColumn::create(array_merge($request->validated(), [
+            'id' => strtolower(Str::ulid()),
+            'data_table' => $dataTable,
+        ]));
 
         //  Return the view on the data table edit page
         return redirect()->back()->with([
@@ -35,10 +37,12 @@ class DataTableColumnController extends Controller
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
-    public function update(DataTableColumnRequest $request, DataTableColumn $dataTableColumn): RedirectResponse
+    public function update(DataTableColumnRequest $request, DataTable $dataTable, DataTableColumn $dataTableColumn): RedirectResponse
     {
         //  Update the table
-        $dataTableColumn->update($request->validated());
+        $dataTableColumn->update(array_merge($request->validated(), [
+            'data_table' => $dataTable
+        ]));
 
         //  Return the view on the data table edit page
         return redirect()->back()->with([
@@ -54,16 +58,10 @@ class DataTableColumnController extends Controller
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
-    public function destroy(DataTableColumn $dataTableColumn): RedirectResponse
+    public function destroy(DataTable $dataTable, DataTableColumn $dataTableColumn): RedirectResponse
     {
         //  Delete the table column
-        $dataTableColumn->delete();
-
-        //  Get the data table
-        $dataTable = $dataTableColumn->dataTable;
-
-        //  Update the json file
-        DataTable::set($dataTable);
+        $dataTableColumn->delete($dataTable);
 
         //  Return the view on the data table edit page
         return redirect()->back()->with([
