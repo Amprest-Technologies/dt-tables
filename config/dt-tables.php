@@ -3,6 +3,16 @@
 return [
     /*
     |--------------------------------------------------------------------------
+    | Json File Path
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the path to the JSON file that will be used to
+    |
+    */
+    'data_source' => base_path('dt-tables.json'),
+
+    /*
+    |--------------------------------------------------------------------------
     | DT Table Settings
     |--------------------------------------------------------------------------
     |
@@ -11,7 +21,7 @@ return [
     */
     'settings' => [
         'buttons' => ['copy', 'colvis', 'excel'],
-        'theme' => 'bootstrap5',
+        'theme' => 'bootstrap',
     ],
 
     /*
@@ -24,7 +34,7 @@ return [
     |
     */
     'themes' => [
-        'bootstrap5' => [
+        'bootstrap' => [
             'buttons' => 'btn btn-primary btn-sm',
             'input' => 'form-control form-control-sm',
             'select' => 'form-control form-control-sm',

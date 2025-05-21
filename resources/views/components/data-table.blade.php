@@ -32,7 +32,7 @@
                 className: 'top-row',
                 features: [
                     { buttons: buttons(configButtons, configTheme, title) },
-                    'pageLength'
+                    { search: { placeholder: 'Type to search', text: '_INPUT_' } }
                 ]
             },
             bottom: { className: 'bottom-row', features: ['info', 'paging']},            
@@ -44,7 +44,7 @@
         columns: columns(tableId, configColumns),
         initComplete: function () {
             //  Set up styling
-            setupStyling();
+            setupStyling(configTheme);
 
             //  Set up filters
             setupFilters(this.api(), configColumns, configTheme);

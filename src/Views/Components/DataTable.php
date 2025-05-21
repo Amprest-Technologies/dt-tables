@@ -41,7 +41,7 @@ class DataTable extends Component
     protected function setUp(): void
     {
         //  Sync the table properties
-        $table = DataTableModel::sync($this->tableId);
+        $table = DataTableModel::where('key', $this->tableId)->first();
 
         //  Get the columns
         $this->columns = $table->columns ?? [];
@@ -52,10 +52,13 @@ class DataTable extends Component
 
         //  Get the theme framework
         $framework = $table->settings->theme
-            ?? config('dt-tables.settings.theme', 'bootstrap5');
+            ?? config('dt-tables.settings.theme', 'bootstrap');
 
         //  Get the theme
-        $this->theme = config("dt-tables.themes.{$framework}", []);
+        $this->theme = array_merge(
+            ['name' => $framework],
+            config("dt-tables.themes.{$framework}", [])
+        );
     }
 
     /**

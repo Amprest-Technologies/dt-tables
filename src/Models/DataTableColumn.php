@@ -122,7 +122,9 @@ class DataTableColumn extends Model
         }
 
         //  Remove the column
-        $dataTable->columns = $dataTable->columns->reject(fn ($column) => $column->id === $this->id);
+        $dataTable->columns = $dataTable->columns
+            ->reject(fn ($column) => $column->id === $this->id)
+            ->values();
 
         //  Update the table
         return $dataTable->update();

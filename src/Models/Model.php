@@ -11,7 +11,7 @@ class Model
     /**
      * Define the json file path.
      */
-    protected string $jsonPath = '';
+    protected string $jsonPath;
 
     /**
      * Define the constructor for the DataTable class.
@@ -21,7 +21,7 @@ class Model
     public function __construct(array $items = [])
     {
         //  Define the json file path
-        $this->jsonPath = base_path('dt-tables/config.json');
+        $this->jsonPath = config('dt-tables.data_source');
 
         //  Set attributes
         $this->setAttributes($items);

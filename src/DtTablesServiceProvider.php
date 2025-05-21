@@ -26,7 +26,6 @@ class DtTablesServiceProvider extends ServiceProvider
         $this->loadHelpersFrom(__DIR__.'/../src/Utils');
 
         //  Register other service providers
-        $this->app->register(DatabaseServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
     }
 
@@ -56,15 +55,6 @@ class DtTablesServiceProvider extends ServiceProvider
         //  Register global middleware
         $this->app[Kernel::class]->pushMiddleware(AutoInjectDtTableAssets::class);
 
-        //  Load custom commands
-        if ($this->app->runningInConsole()) {
-            //  Add the package commands
-            $this->commands([SchemaSeeder::class]);
-
-            //  Prohibit the schema seeder in production
-            SchemaSeeder::prohibit(! $this->app->environment('local'));
-        }
-
         //  Create the package assets
         $this->createAssets();
 
@@ -92,19 +82,8 @@ class DtTablesServiceProvider extends ServiceProvider
      */
     protected function createAssets(): void
     {
-        //  Create the package folder if it doesn't exist
-        if (! file_exists($path = base_path('dt-tables'))) {
-            mkdir($path, 0755, true);
-        }
-
-        //  Create the package json file if it doesn't exist
-        if (! file_exists($path = base_path('dt-tables/config.json'))) {
+        if (! file_exists($path = base_path('dt-tables.json'))) {
             touch($path);
-        }
-
-        //  Create a git ignore file for .sqlite
-        if (! file_exists($path = base_path('dt-tables/.gitignore'))) {
-            file_put_contents($path, "*.sqlite*\n");
         }
     }
 }

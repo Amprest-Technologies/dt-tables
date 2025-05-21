@@ -21,9 +21,9 @@ Route::middleware(PreventIfEnvironmentIsNotLocal::class)->group(function () {
     });
 
     //  Define the route for the data table column model
-    Route::name('data-tables.columns.')->prefix('data-tables/columns')->group(function () {
-        Route::post('{data_table}', [DataTableColumnController::class, 'store'])->name('store');
-        Route::put('{data_table}/{data_table_column}', [DataTableColumnController::class, 'update'])->name('update');
-        Route::delete('{data_table}/{data_table_column}', [DataTableColumnController::class, 'destroy'])->name('destroy');
+    Route::name('data-tables.columns.')->prefix('data-tables/columns/{data_table}')->group(function () {
+        Route::post('/', [DataTableColumnController::class, 'store'])->name('store');
+        Route::put('{data_table_column}', [DataTableColumnController::class, 'update'])->name('update');
+        Route::delete('{data_table_column}', [DataTableColumnController::class, 'destroy'])->name('destroy');
     });
 });

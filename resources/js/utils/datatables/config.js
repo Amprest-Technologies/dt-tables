@@ -228,8 +228,21 @@ window.columns = function (tableID, config) {
  * Set up the styling for the datatable
  * ------------------------------------------------------------------
  */
-window.setupStyling = function () {
+window.setupStyling = function (theme) {
+    //  Remove the classes from the buttons
     document.querySelectorAll('.dt-button').forEach(el => el.classList.remove('dt-button'));
+
+    //  Remove dt-search and dt-input classes from the search input
+    document.querySelectorAll('.dt-search').forEach(el => {
+        el.classList.remove('dt-search');
+        el.style.display = 'flex';
+    });
+
+    //  Add the classes from the datatable search input
+    document.querySelectorAll('.dt-input').forEach(el => {
+        el.classList.remove('dt-input')
+        el.classList.add(...theme.input.split(' '));
+    });
 };
 
 /* -----------------------------------------------------------------

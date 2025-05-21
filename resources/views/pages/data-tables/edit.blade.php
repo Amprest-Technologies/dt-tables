@@ -98,7 +98,7 @@
             <div class="mb-3">
                 <label class="mb-1.5 font-bold">Table Theme</label>
                 <select name="theme">
-                    <option value="bootstrap5" @selected($settings->theme === 'bootstrap5')>Bootstrap5</option>
+                    <option value="bootstrap" @selected($settings->theme === 'bootstrap')>Bootstrap5</option>
                     <option value="tailwind" @selected($settings->theme === 'tailwind')>Tailwind</option>
                 </select>
             </div>

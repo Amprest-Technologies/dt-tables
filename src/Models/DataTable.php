@@ -37,13 +37,10 @@ class DataTable extends Model
         }
 
         //  Get the contents of the json file
-        $json = json_decode(file_get_contents($this->jsonPath), true);
-
-        //  Set the key
-        $json[] = $data;
+        $tables = $this->all()->push($data)->toArray();
 
         //  Store the items into the json file
-        $this->storeInFile($json);
+        $this->storeInFile($tables);
 
         //  Check if the json data was written to the file
         return new self($data);
@@ -61,11 +58,8 @@ class DataTable extends Model
             return null;
         }
 
-        //  Get the item from the json file
-        $tables = $this->all();
-
-        //  Get the item
-        $table = $tables->firstWhere('id', $key);
+        //  Get the table from the json file
+        $table = $this->all()->firstWhere('id', $key);
 
         //  If no items exist, return null
         if (! $table) {
@@ -94,14 +88,14 @@ class DataTable extends Model
         //  Get the contents of the json file
         $tables = $this->all();
 
+        //  Get the index
+        $index = $tables->search(fn ($item) => $item->id === $this->id);
+
         //  Check the remaining items
-        $items = $tables->reject(fn ($item) => $item->id === $this->id);
+        $tables = $tables->replace([$index => $data ?: $this->toArray()]);
 
-        //  Set the new item
-        $items->push($data ?: $this->toArray());
-
-        //  Store the items into the json file
-        return $this->storeInFile($items->toArray());
+        //  Store the tables into the json file
+        return $this->storeInFile($tables->toArray());
     }
 
     /**
@@ -120,7 +114,7 @@ class DataTable extends Model
         $tables = $this->all();
 
         //  Check the remaining items
-        $tables = $tables->reject(fn ($table) => $table->id === $dataTable->id);
+        $tables = $tables->reject(fn ($table) => $table->id === $dataTable->id)->values();
 
         //  Store the items into the json file
         return $this->storeInFile($tables->toArray());

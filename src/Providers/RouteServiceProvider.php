@@ -44,7 +44,7 @@ class RouteServiceProvider extends ServiceProvider
             $column = DataTableColumn::find($value);
 
             //  Abort if no result is found
-            abort_if(is_null($column), 404, 'Data table not found');
+            abort_if(is_null($column), 404, 'Data table column not found');
 
             //  Return the data table
             return $column;
