@@ -41,6 +41,12 @@
             bottomStart: null,
             bottomEnd: null,
         },
+        language: {
+            paginate: {
+                next: 'Next',
+                previous: 'Previous'
+            }
+        },
         columns: columns(tableId, configColumns),
         initComplete: function () {
             //  Set up styling
