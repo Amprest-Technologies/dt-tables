@@ -17,6 +17,26 @@
                     align-items: center;
                     gap: 0.5rem;
                 }
+
+                .dt-buttons {
+                    display: flex;
+                    gap: 0.3rem;
+                    align-items: center;
+                    justify-content: start;
+                    margin-right: 1rem;
+
+                    button {
+                        white-space: nowrap;
+                    }
+                }
+
+                .dt-tables-search {
+                    display: flex;
+
+                    @media (max-width: 640px) {
+                        display: none;
+                    }
+                }
             }
     
             .bottom-row {
@@ -26,6 +46,16 @@
                 align-items: center;
                 padding: .5rem 1rem;
                 font-size: 11pt;
+
+                * {
+                    white-space: nowrap;
+                }
+
+                .dt-info {
+                    @media (max-width: 640px) {
+                        display: none;
+                    }
+                }
             }
         }
     

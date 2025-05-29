@@ -284,7 +284,7 @@ window.setupStyling = function (theme) {
     //  Remove dt-search and dt-input classes from the search input
     document.querySelectorAll('.dt-search').forEach(el => {
         el.classList.remove('dt-search');
-        el.style.display = 'flex';
+        el.classList.add('dt-tables-search');
     });
 
     //  Add the classes from the datatable search input
