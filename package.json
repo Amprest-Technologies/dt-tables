@@ -17,6 +17,7 @@
     "dependencies": {
         "datatables.net-buttons-dt": "^3.2.3",
         "datatables.net-dt": "^2.3.1",
+        "eta": "^3.5.0",
         "jszip": "^3.10.1",
         "toastr": "^2.1.4"
     }

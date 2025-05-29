@@ -2,10 +2,9 @@
 
 namespace Amprest\DtTables;
 
-use Amprest\DtTables\Console\Commands\SchemaSeeder;
 use Amprest\DtTables\Http\Middleware\AutoInjectDtTableAssets;
-use Amprest\DtTables\Providers\DatabaseServiceProvider;
 use Amprest\DtTables\Providers\RouteServiceProvider;
+use Amprest\DtTables\Services\HelpersService;
 use Amprest\DtTables\Views\Components\DataTable;
 use Amprest\DtTables\Views\Components\DataTableAssets;
 use Illuminate\Contracts\Http\Kernel;
@@ -27,6 +26,11 @@ class DtTablesServiceProvider extends ServiceProvider
 
         //  Register other service providers
         $this->app->register(RouteServiceProvider::class);
+
+        //  Register the helpers service
+        $this->app->singleton('dtTableHelper', function ($app) {
+            return new HelpersService;
+        });
     }
 
     /**

@@ -1,3 +1,14 @@
+import { Eta } from "eta"
+
+/* -----------------------------------------------------------------
+ * Create a function to clone the header so as to allow filtering
+ * ------------------------------------------------------------------
+ */
+const eta = new Eta({
+    cache: true,
+    functionHeader: "Object.entries({...it}||{}).forEach(([k,v])=>globalThis[k]=v)"
+});
+
 /* -----------------------------------------------------------------
  * Create a function to clone the header so as to allow filtering
  * ------------------------------------------------------------------
@@ -51,13 +62,38 @@ let actionButtons = function (title) {
         searchable: false,
         className: 'exclude-from-export',
         render: (data, type, row, meta) => {
-            //  Check if the row has actions
-            const html = Object.values(row.actions || {})
-                .map(button => `<a ${button.attributes}">${button.label}</a>`)
-                .join('');
+            //  Define the actions array
+            let buttons = [];
+
+            //  Define the modal array
+            let modals = [];
+
+            //  Loop through the actions in the row
+            for (const button of Object.values(row.actions || {})) {
+                //  Handle action buttons
+                buttons.push(`<a ${button.attributes}">${button.label}</a>`);
+
+                //  Get the modal if it exists
+                let modal = button.modal;
+
+                //  If the modal is not defined, skip it
+                if (![undefined, null].includes(modal)) {
+                    //  Get the parameters of the modal
+                    let params = {
+                        row: row,
+                        routes: button.modal.routes
+                    };
+    
+                    //  Handle any rendered modals
+                    modals.push(eta.renderString(button.modal.html, params));
+                }
+            }
 
             //  Return the html
-            return `<div class="button-container">${html}</div>`;
+            return `
+                <div class="button-container">${buttons.join('')}</div>
+                <div class="modal-container">${modals.join('')}</div>
+            `;
         }
     };
 };
@@ -214,7 +250,7 @@ window.columns = function (tableID, config) {
                 //  Check if the cell data is an object and add the classes if they exist
                 if (typeof cellData === 'object' && cellData?.classes) {
                     //  Remove empty strings from the classes array
-                    const validClasses = cellData.classes.filter(c => c?.trim());
+                    const validClasses = cellData.classes.split(/\s+/).filter(c => c?.trim());
 
                     //  Add the classes to the cell
                     td.classList.add(...validClasses);

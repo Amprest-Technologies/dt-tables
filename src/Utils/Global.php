@@ -39,7 +39,7 @@ if (! function_exists('to_object')) {
         return json_decode(json_encode($value), $associative);
     }
 }
-    
+
 if (! function_exists('bag')) {
     /**
      * Return an error bag instance

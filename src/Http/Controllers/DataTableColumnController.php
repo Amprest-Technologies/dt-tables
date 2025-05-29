@@ -41,7 +41,7 @@ class DataTableColumnController
     {
         //  Update the table
         $dataTableColumn->update(array_merge($request->validated(), [
-            'data_table' => $dataTable
+            'data_table' => $dataTable,
         ]));
 
         //  Return the view on the data table edit page

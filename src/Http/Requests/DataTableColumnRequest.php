@@ -36,8 +36,7 @@ class DataTableColumnRequest extends FormRequest
     public function rules(
         #[RouteParameter('data_table')] $dataTable,
         #[RouteParameter('data_table_column')] $dataTableColumn = null
-    ): array
-    {        
+    ): array {
         //  Define the unique rule for the key
         $uniqueRule = new ColumnNameIsUnique($dataTable, ignore: $dataTableColumn);
 
