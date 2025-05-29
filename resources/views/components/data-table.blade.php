@@ -1,6 +1,22 @@
-<table id="{{ $tableId }}" {{ $attributes }}>
-    {{ $slot }}
-</table>
+<div class="dt-tables-container" @style(['display: none' => $loader->enabled ?? false])>
+    <table id="{{ $tableId }}" {{ $attributes }}>
+        {{ $slot }}
+    </table>
+</div>
+@if($loader->enabled ?? false)
+    <div class="dt-tables-loader">
+        <div>
+            @if($loader->image ?? false)
+                <div class="loader-image">
+                    <img style="text-center" src="{{ asset($loader->image) }}" alt="Loading...">
+                </div>
+            @endif
+            <div class="loader-text">
+                {{ $loader->message ?? 'Loading...' }}
+            </div>
+        </div>
+    </div>
+@endif
 
 <script type="module" defer>
     //  Get the table ID
@@ -54,6 +70,9 @@
 
             //  Set up filters
             setupFilters(this.api(), configColumns, configTheme);
+
+            //  Hide loader once the table is initialized
+            hideLoader();
         },
     };
 

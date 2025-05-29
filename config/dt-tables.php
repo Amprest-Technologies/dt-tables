@@ -22,6 +22,11 @@ return [
     'settings' => [
         'buttons' => ['copy', 'colvis', 'excel'],
         'theme' => 'bootstrap',
+        'loader' => [
+            'enabled' => true,
+            'message' => 'Loading data, please wait...',
+            'image' => null,
+        ],
     ],
 
     /*

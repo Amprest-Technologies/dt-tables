@@ -1,67 +1,99 @@
-.dt-container {
-    .dt-layout-row {
-        margin: 0 !important;
-
-        .top-row {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            align-items: center;
-            padding: .5rem 1rem;
-            border-bottom: 1px solid #ddd;
-            font-size: 11pt;
-
-            .dt-length {
+.dt-tables-container {
+    .dt-container {
+        .dt-layout-row {
+            margin: 0 !important;
+    
+            .top-row {
                 display: flex;
+                width: 100%;
+                justify-content: space-between;
                 align-items: center;
-                gap: 0.5rem;
+                padding: .5rem 1rem;
+                border-bottom: 1px solid #ddd;
+                font-size: 11pt;
+    
+                .dt-length {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+            }
+    
+            .bottom-row {
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+                padding: .5rem 1rem;
+                font-size: 11pt;
             }
         }
+    
+        .dt-button-collection {
+            button {
+                background-color: initial !important;
+            }
+        }
+    
+        table {
+            td,th {
+                white-space: nowrap;
+                vertical-align: middle !important;
+            }
+    
+            & > thead > tr> th {
+                padding: 5px !important;
+                color: #6c757d;
+                font-size: 10.5pt;
+            }
+    
+            & > tbody > tr> td {
+                color: #202021;
+                font-size: 11pt;            
+            }
+    
+            .row-index {
+                font-weight: bold;
+                text-align: center;
+            }
+    
+            .button-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                gap: .25rem;
+            }
+        }
+    }
+}
 
-        .bottom-row {
-            display: flex;
+.dt-tables-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    padding: 2rem;
+    height: 30rem;
+
+    .loader-image {
+        height: 8rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
             width: 100%;
-            justify-content: space-between;
-            align-items: center;
-            padding: .5rem 1rem;
-            font-size: 11pt;
+            height: 100%;
+            object-fit: contain;
         }
     }
 
-    .dt-button-collection {
-        button {
-            background-color: initial !important;
-        }
-    }
-
-    table {
-        td,th {
-            white-space: nowrap;
-            vertical-align: middle !important;
-        }
-
-        & > thead > tr> th {
-            padding: 5px !important;
-            color: #6c757d;
-            font-size: 10.5pt;
-        }
-
-        & > tbody > tr> td {
-            color: #202021;
-            font-size: 11pt;            
-        }
-
-        .row-index {
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            gap: .25rem;
-        }
+    .loader-text {
+        text-align: center;
+        color: #989898;
+        font-weight: 500;
+        font-size: 1rem;
     }
 }

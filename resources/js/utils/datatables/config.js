@@ -1,4 +1,5 @@
 import { Eta } from "eta"
+import { ulid } from 'ulid'
 
 /* -----------------------------------------------------------------
  * Create a function to clone the header so as to allow filtering
@@ -6,7 +7,6 @@ import { Eta } from "eta"
  */
 const eta = new Eta({
     cache: true,
-    functionHeader: "Object.entries({...it}||{}).forEach(([k,v])=>globalThis[k]=v)"
 });
 
 /* -----------------------------------------------------------------
@@ -65,34 +65,38 @@ let actionButtons = function (title) {
             //  Define the actions array
             let buttons = [];
 
-            //  Define the modal array
-            let modals = [];
+            //  Define the template array
+            let templates = [];
 
             //  Loop through the actions in the row
             for (const button of Object.values(row.actions || {})) {
                 //  Handle action buttons
                 buttons.push(`<a ${button.attributes}">${button.label}</a>`);
 
-                //  Get the modal if it exists
-                let modal = button.modal;
+                //  Get the template if it exists
+                let template = button.template;
 
-                //  If the modal is not defined, skip it
-                if (![undefined, null].includes(modal)) {
-                    //  Get the parameters of the modal
-                    let params = {
+                //  If the template is not defined, skip it
+                if (![undefined, null].includes(template)) {
+                    //  Get the raw html
+                    let rawHtml = template.html || '';
+
+                    //  Generate the html for the template
+                    let html = (template.rendered || false) ? rawHtml : eta.renderString(rawHtml, {
+                        id: ulid().toLowerCase(),
                         row: row,
-                        routes: button.modal.routes
-                    };
-    
-                    //  Handle any rendered modals
-                    modals.push(eta.renderString(button.modal.html, params));
+                        params: button.template.parameters || {}
+                    });
+
+                    //  Push the template html to the templates array
+                    templates.push(html);
                 }
             }
 
             //  Return the html
             return `
                 <div class="button-container">${buttons.join('')}</div>
-                <div class="modal-container">${modals.join('')}</div>
+                <div class="template-container">${templates.join('')}</div>
             `;
         }
     };
@@ -157,6 +161,15 @@ window.setupDataTable = function (tableId, columns) {
     if (columns.filter(column => column.search_type !== 'none').length > 0) {
         cloneHeader(tableId);
     }
+};
+
+/* -----------------------------------------------------------------
+ * Create a function to hide the loader and show the datatable
+ * ------------------------------------------------------------------
+ */
+window.hideLoader = function() {
+    document.querySelector('.dt-tables-loader').style.display = 'none';
+    document.querySelector('.dt-tables-container').style.display = 'block';
 };
 
 /* -----------------------------------------------------------------

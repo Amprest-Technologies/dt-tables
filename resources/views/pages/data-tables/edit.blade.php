@@ -122,4 +122,31 @@
             <button class="btn w-full">Submit</button>
         </form>
     </section>
+    <section class="p-4 mb-3 bg-gray-50 rounded-sm drop-shadow-sm">
+        <div class="mb-3 font-semibold">Loader Configurations</div>
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'loader']) }}" method="POST">
+            @csrf
+            @method('PUT')
+            @php $loader = $settings->loader ?? null; @endphp
+            <div class="mb-3">
+                <label class="mb-1.5 font-bold">Loader Enabled</label>
+                <select name="loader[enabled]">
+                    @php $enabled = old('loader.enabled',(bool) ($loader->enabled ?? 0)); @endphp
+                    <option value="1" @selected($enabled)>Yes</option>
+                    <option value="0" @selected(!$enabled)>No</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                @php $message = old('loader.message', $loader->message ?? null); @endphp
+                <label class="mb-1.5 font-bold">Loader Message</label>
+                <input type="text" name="loader[message]" value="{{ $message }}" placeholder="Message to display when loading...">  
+            </div>
+            <div class="mb-3">
+                @php $image = old('loader.image', $loader->image ?? null); @endphp
+                <label class="mb-1.5 font-bold">Loader Image</label>
+                <input type="text" name="loader[image]" value="{{ $image }}" placeholder="Image to display when loading...">  
+            </div>
+            <button class="btn w-full">Submit</button>
+        </form>
+    </section>
 @endsection

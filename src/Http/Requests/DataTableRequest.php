@@ -24,7 +24,7 @@ class DataTableRequest extends FormRequest
         //  Merge the key with the request
         $this->merge(['key' => Str::slug($key)]);
     }
-
+    
     /**
      * Return the rules for the request.
      *
@@ -38,10 +38,14 @@ class DataTableRequest extends FormRequest
         //  Return the rules
         return [
             'key' => ['required', 'string', 'max:255', $uniqueRule],
-            'type' => ['sometimes', 'required', Rule::in(['buttons', 'theme'])],
+            'type' => ['sometimes', 'required', Rule::in(['buttons', 'theme', 'loader'])],
             'theme' => ['sometimes', 'required', Rule::in(array_keys(config('dt-tables.themes')))],
-            'buttons' => ['sometimes', 'array'],
+            'buttons' => ['sometimes', 'required', 'array'],
             'buttons.*' => ['sometimes', 'boolean'],
+            'loader' => ['sometimes', 'required', 'array'],
+            'loader.enabled' => ['sometimes', 'boolean'],
+            'loader.message' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'loader.image' => ['sometimes', 'nullable', 'string', 'max:255'],
         ];
     }
 
@@ -60,16 +64,6 @@ class DataTableRequest extends FormRequest
     }
 
     /**
-     * Format the theme
-     *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
-     */
-    public function theme(): string
-    {
-        return $this->theme ?? config('dt-tables.settings.theme');
-    }
-
-    /**
      * Format the buttons
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
@@ -80,5 +74,29 @@ class DataTableRequest extends FormRequest
             ->filter()
             ->keys()
             ->toArray();
+    }
+
+    /**
+     * Format the theme
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    public function theme(): string
+    {
+        return $this->theme ?? config('dt-tables.settings.theme');
+    }
+
+    /**
+     * Format the loader settings.
+     *
+     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     */
+    public function loader(): array
+    {
+        return [
+            'enabled' => $this->boolean('loader.enabled', config('dt-tables.settings.loader.enabled')),
+            'message' => $this->string('loader.message', config('dt-tables.settings.loader.message')),
+            'image' => $this->string('loader.image', config('dt-tables.settings.loader.image')),
+        ];
     }
 }

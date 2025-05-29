@@ -22,10 +22,10 @@ class HelpersService
      *
      * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
      */
-    public function renderTemplate(string $view): string
+    public function renderTemplate(string $view, array $params = []): string
     {
         //  Render the view
-        $content = view($view)->render();
+        $content = view($view, $params)->render();
 
         //  Remove new lines and spaces
         $content = preg_replace('/>\s+</', '><', $content);

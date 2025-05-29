@@ -5,6 +5,7 @@ namespace Amprest\DtTables\Views\Components;
 use Amprest\DtTables\Models\DataTable as DataTableModel;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Fluent;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
@@ -22,6 +23,7 @@ class DataTable extends Component
         public array|Collection $columns = [],
         public array|Collection $buttons = [],
         public array $theme = [],
+        public array|Fluent $loader = [],
     ) {
         //  Set the tableId to the id if not provided
         $this->tableId ??= $this->id;
@@ -59,6 +61,10 @@ class DataTable extends Component
             ['name' => $framework],
             config("dt-tables.themes.{$framework}", [])
         );
+
+        //  Set the loader
+        $this->loader = Fluent::make($table->settings->loader
+            ?? config('dt-tables.settings.loader', []));
     }
 
     /**
