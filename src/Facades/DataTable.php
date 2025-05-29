@@ -4,6 +4,9 @@ namespace Amprest\DtTables\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * @see \Amprest\DtTables\DataTableHelper
+ */
 class DataTable extends Facade
 {
     /**

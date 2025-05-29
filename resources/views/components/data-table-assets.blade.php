@@ -1,4 +1,4 @@
-@if($vite->isRunningHot())
+@if(is_file(package_path('public/hot')))
     {{ $vite }}
 @else
     @foreach ($assets() as $asset)
