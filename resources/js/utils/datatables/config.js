@@ -290,7 +290,7 @@ window.setupStyling = function (theme) {
     //  Add the classes from the datatable search input
     document.querySelectorAll('.dt-input').forEach(el => {
         el.classList.remove('dt-input')
-        el.classList.add(...theme.input.split(' '));
+        el.classList.add(...theme.input.split(/\s+/).filter(c => c?.trim()));
     });
 };
 
