@@ -9,8 +9,8 @@
                 justify-content: space-between;
                 align-items: center;
                 padding: .5rem 1rem;
-                border-bottom: 1px solid #ddd;
                 font-size: 11pt;
+                box-shadow: inset 0px -2px 2px #e4e4e4 !important;
     
                 .dt-length {
                     display: flex;
@@ -46,6 +46,7 @@
                 align-items: center;
                 padding: .5rem 1rem;
                 font-size: 11pt;
+                box-shadow: 0 -2px 1px #e4e4e4;
 
                 * {
                     white-space: nowrap;
@@ -70,12 +71,24 @@
                 white-space: nowrap;
                 vertical-align: middle !important;
             }
-    
-            & > thead > tr> th {
-                padding: 5px !important;
-                color: #6c757d;
-                font-size: 10.5pt;
+
+            tbody > tr:last-child>* {
+                border-bottom: none !important;
             }
+    
+            & > thead {
+                & > tr > th {
+                    padding: 5px !important;
+                    color: #6c757d;
+                    font-size: 10.5pt;
+                }
+
+                & > tr:not(.selection-row) > th {
+                    padding-top: 10px !important;
+                    padding-bottom: 8px !important;
+                }
+            }
+                
     
             & > tbody > tr> td {
                 color: #202021;
