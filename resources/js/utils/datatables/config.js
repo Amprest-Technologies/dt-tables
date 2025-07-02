@@ -63,18 +63,23 @@ let actionButtons = function (title) {
         className: 'exclude-from-export',
         render: (data, type, row, meta) => {
             //  Define the actions array
-            let buttons = [];
-
-            //  Define the template array
-            let templates = [];
+            let actions = [];
 
             //  Loop through the actions in the row
-            for (const button of Object.values(row.actions || {})) {
-                //  Handle action buttons
-                buttons.push(`<a ${button.attributes}">${button.label}</a>`);
+            for (const action of Object.values(row.actions || {})) {
+                //  Build the action container
+                let htmlString = `<div ${action.containerAttributes || ''}>`;
+
+                //  Get the button if it exists
+                let button = action.button;
 
                 //  Get the template if it exists
-                let template = button.template;
+                let template = action.template;
+
+                //  Append the buttons to the html string if it exists
+                if (![undefined, null].includes(button)) {
+                    htmlString += `<a ${button.attributes}">${button.label}</a>`;
+                }
 
                 //  If the template is not defined, skip it
                 if (![undefined, null].includes(template)) {
@@ -82,22 +87,19 @@ let actionButtons = function (title) {
                     let rawHtml = template.html || '';
 
                     //  Generate the html for the template
-                    let html = (template.rendered || false) ? rawHtml : eta.renderString(rawHtml, {
+                    htmlString += (template.rendered || false) ? rawHtml : eta.renderString(rawHtml, {
                         id: ulid().toLowerCase(),
                         row: row,
-                        params: button.template.parameters || {}
+                        params: template.parameters || {}
                     });
-
-                    //  Push the template html to the templates array
-                    templates.push(html);
                 }
+
+                //  Add the html string to the actions array
+                actions.push(htmlString += '</div>');
             }
 
             //  Return the html
-            return `
-                <div class="button-container">${buttons.join('')}</div>
-                <div class="template-container">${templates.join('')}</div>
-            `;
+            return `<div class="action-container">${actions.join('')}</div>`;
         }
     };
 };
