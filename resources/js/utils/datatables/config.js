@@ -115,6 +115,9 @@ let createSelectFilter = function (column, className) {
     //  Add a class to the select element
     select.className = className;
 
+    //  Add a data-dt-column attribute to the select element
+    select.setAttribute('dtt-search-filter', column.index());
+
     //  Add a default option
     select.add(new Option('Show All', ''));
         
@@ -142,6 +145,9 @@ let createInputFilter = function (column, className) {
 
     //  Add a class to the input element
     input.className = className;
+
+    //  Add a data-dt-column attribute to the input element
+    input.setAttribute('dtt-search-filter', column.index());
 
     //  Add a placeholder to the input element
     input.placeholder = 'Search...';
@@ -336,6 +342,9 @@ window.setupFilters = function (api, config, theme) {
  * ------------------------------------------------------------------
  */
 window.setupSearchParams = function (api) {
+    //  Get the table id
+    let tableId = api.table().node().id;
+
     //  Get the columns in the table
     let columns = api.settings()[0].aoColumns;
 
@@ -347,8 +356,15 @@ window.setupSearchParams = function (api) {
         //  Get the column
         let column = api.column(index);
 
-        //  If the column is found, set the value
-        if (column.any()) {
+        //  Get the element
+        let element = document.querySelector(`#${tableId} [dtt-search-filter="${index}"]`);
+
+        //  If the element is found, set the value
+        if (element) {
+            //  Set the value of the element
+            element.value = value;
+
+            //  Dispatch the event
             column.search(value).draw();
         }
     });
