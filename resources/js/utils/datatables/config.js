@@ -248,8 +248,7 @@ window.columns = function (tableID, config) {
 
         //  Handle the rest of the columns
         return {
-            data: name,
-            name: name,
+            name: name.replace(/[ ]/g, '_'),
             className: configObj ? configObj.classes : '',
             data: function (row, type, val, meta) {
                 //  Get the value of the column
@@ -330,4 +329,27 @@ window.setupFilters = function (api, config, theme) {
             }
         });
     }
+};
+
+/* -----------------------------------------------------------------
+ * Set up the search params for the datatable
+ * ------------------------------------------------------------------
+ */
+window.setupSearchParams = function (api) {
+    //  Get the columns in the table
+    let columns = api.settings()[0].aoColumns;
+
+    //  Loop through the search params
+    new URLSearchParams(window.location.search).forEach((value, key) => {
+        //  Get the column index
+        let index = columns.findIndex(col => col.name === key.replace(/-/g, '_'));
+
+        //  Get the column
+        let column = api.column(index);
+
+        //  If the column is found, set the value
+        if (column.any()) {
+            column.search(value).draw();
+        }
+    });
 };

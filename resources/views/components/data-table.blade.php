@@ -65,11 +65,17 @@
         },
         columns: columns(tableId, configColumns),
         initComplete: function () {
+            //  Get the api
+            let api = this.api();
+
             //  Set up styling
             setupStyling(configTheme);
 
             //  Set up filters
-            setupFilters(this.api(), configColumns, configTheme);
+            setupFilters(api, configColumns, configTheme);
+
+            //  Setup the search params
+            setupSearchParams(api);
 
             //  Hide loader once the table is initialized
             hideLoader();

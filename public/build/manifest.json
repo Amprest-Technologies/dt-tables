@@ -4,14 +4,20 @@
     "name": "jquery"
   },
   "resources/css/admin.css": {
-    "file": "assets/admin-BmWFTPlb.css",
+    "file": "assets/admin-Bm_fJkvW.css",
     "src": "resources/css/admin.css",
-    "isEntry": true
+    "isEntry": true,
+    "names": [
+      "admin.css"
+    ]
   },
   "resources/css/client.css": {
     "file": "assets/client-BBwXcssI.css",
     "src": "resources/css/client.css",
-    "isEntry": true
+    "isEntry": true,
+    "names": [
+      "client.css"
+    ]
   },
   "resources/js/admin.js": {
     "file": "assets/admin-DuwivULP.js",
@@ -23,7 +29,7 @@
     ]
   },
   "resources/js/client.js": {
-    "file": "assets/client-jZuF3YyM.js",
+    "file": "assets/client-DQvRHWe4.js",
     "name": "client",
     "src": "resources/js/client.js",
     "isEntry": true,
@@ -31,7 +37,7 @@
       "_jquery-DnkM0RDw.js"
     ],
     "css": [
-      "assets/client-C2tT0iGQ.css"
+      "assets/client-BYnXwBg0.css"
     ]
   }
 }
