@@ -95,6 +95,11 @@
 
     //  Launch an event when the table buttons are clicked
     table.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
+        //  If the button is not a copy or excel button, do nothing
+        if (!['copy', 'excel'].includes(config.name)) {
+            return;
+        }
+        
         //  Get button action
         let action = @js(route('dt-tables.api.button-triggered'));
 
