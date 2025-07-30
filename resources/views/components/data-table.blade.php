@@ -104,7 +104,7 @@
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({
                 tableId: tableId,
-                trigger: config.name,
+                action: config.name,
                 params: tableParams.buttonTrigger || {},
             }),
         })
