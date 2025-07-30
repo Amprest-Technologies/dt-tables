@@ -1,4 +1,4 @@
-<div class="dt-tables-container" @style(['display: none' => $loader->enabled ?? false])>
+<div class="dt-tables-container" @style(['display: none' => ($loader = fluent($loader))->enabled ?? false])>
     <table id="{{ $tableId }}" {{ $attributes }}>
         {{ $slot }}
     </table>
@@ -22,8 +22,11 @@
     //  Get the table ID
     let tableId = @js($tableId);
 
-    //  Get the payload
-    let payload = @js($payload);
+    //  Get the table data
+    let tableData = @js($tableData);
+
+    //  Get the table parameters
+    let tableParams = @js($tableParams);
 
     //  Get the buttons
     let configButtons = @js($buttons);
@@ -36,7 +39,7 @@
 
     //  Get the title of the table
     let title = @js($attributes->get('title', '*'));
-    
+
     //  Initialize the datatable
     setupDataTable(tableId, configColumns);
 
@@ -82,9 +85,9 @@
         },
     };
 
-    //  If the payload is not empty, set the data
-    if (payload.length > 0) {
-        options.data = payload;
+    //  If the table data is not empty, set the data
+    if (tableData.length > 0) {
+        options.data = tableData;
     }
     
     //  Define the table
@@ -101,7 +104,8 @@
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({
                 tableId: tableId,
-                buttonName: config.name,
+                trigger: config.name,
+                params: tableParams.buttonTrigger || {},
             }),
         })
         .then(response => response.json())

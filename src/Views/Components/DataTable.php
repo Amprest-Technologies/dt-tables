@@ -3,7 +3,6 @@
 namespace Amprest\DtTables\Views\Components;
 
 use Amprest\DtTables\Models\DataTable as DataTableModel;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Fluent;
 use Illuminate\View\Component;
@@ -19,17 +18,25 @@ class DataTable extends Component
     public function __construct(
         public ?string $id = null,
         public ?string $tableId = null,
-        public array|Collection|null $payload = [],
-        public array|Collection $columns = [],
-        public array|Collection $buttons = [],
+        public array $payload = [],
+        public array $tableData = [],
+        public array $tableParams = [],
+        public array $columns = [],
+        public array $buttons = [],
         public array $theme = [],
-        public array|Fluent $loader = [],
+        public array $loader = [],
     ) {
         //  Set the tableId to the id if not provided
         $this->tableId ??= $this->id;
 
-        //  Handle the payload
-        $this->payload = collect(is_null($this->payload) ? [] : $this->payload)->toArray();
+        //  Get the payload
+        $payload = is_null($this->payload) ? [] : $this->payload;
+
+        //  Define the payload
+        $this->tableData = collect($payload['table'] ?? [])->toArray();
+
+        //  Define the parameters
+        $this->tableParams = $payload['parameters'] ?? [];
 
         //  Set up the component
         $this->setUp();
@@ -45,26 +52,28 @@ class DataTable extends Component
         //  Sync the table properties
         $table = DataTableModel::where('key', $this->tableId)->first();
 
+        //  Get the settings
+        $settings = $table->settings;
+
         //  Get the columns
         $this->columns = $table->columns ?? [];
 
         //  Get the buttons
-        $this->buttons = $table->settings->buttons
-            ?? config('dt-tables.settings.buttons', []);
+        $this->buttons = $settings->buttons ?? config('dt-tables.settings.buttons', []);
 
         //  Get the theme framework
-        $framework = $table->settings->theme
-            ?? config('dt-tables.settings.theme', 'bootstrap');
+        $framework = $settings->theme ?? config('dt-tables.settings.theme', 'bootstrap');
+
+        //  Get the theme configuration
+        $themeConfig = config("dt-tables.themes.{$framework}", []);
 
         //  Get the theme
-        $this->theme = array_merge(
-            ['name' => $framework],
-            config("dt-tables.themes.{$framework}", [])
-        );
+        $this->theme = array_merge(['name' => $framework], $themeConfig);
 
         //  Set the loader
-        $this->loader = Fluent::make($table->settings->loader
-            ?? config('dt-tables.settings.loader', []));
+        $this->loader = isset($settings->loader)
+            ? (array) $settings->loader 
+            : config('dt-tables.settings.loader', []);
     }
 
     /**
