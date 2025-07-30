@@ -88,5 +88,24 @@
     }
     
     //  Define the table
-    new DataTable(`#${tableId}`, options);
+    let table = new DataTable(`#${tableId}`, options);
+
+    //  Launch an event when the table buttons are clicked
+    table.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
+        //  Get button action
+        let action = @js(route('dt-tables.api.button-triggered'));
+
+        //  Trigger the button event
+        fetch(action, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+                tableId: tableId,
+                buttonName: config.name,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error(error));
+    });
 </script>

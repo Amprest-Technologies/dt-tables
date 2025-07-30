@@ -14,7 +14,7 @@ class DataTable extends Component
     /**
      * Initialize a new component instance.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function __construct(
         public ?string $id = null,
@@ -38,7 +38,7 @@ class DataTable extends Component
     /**
      * Method to set up the component.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function setUp(): void
     {
@@ -70,7 +70,7 @@ class DataTable extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function render(): View
     {

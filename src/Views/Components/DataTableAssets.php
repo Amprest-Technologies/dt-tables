@@ -17,7 +17,7 @@ class DataTableAssets extends Component
     /**
      * Create a new component instance.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function __construct(public string $mode = 'client')
     {
@@ -36,7 +36,7 @@ class DataTableAssets extends Component
     /**
      * Get the build assets for the datatable.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function assets()
     {
@@ -49,7 +49,7 @@ class DataTableAssets extends Component
     /**
      * Parse the manifest file.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function parseManifest(): array
     {
@@ -92,7 +92,7 @@ class DataTableAssets extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function render(): View
     {

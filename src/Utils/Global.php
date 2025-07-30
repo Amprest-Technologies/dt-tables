@@ -6,7 +6,7 @@ if (! function_exists('package_path')) {
     /**
      * Generate a package resouce view name depending on the package.
      *
-     * @author Alvin Gichira Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin Gichira Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     function package_path($path): mixed
     {
@@ -18,7 +18,7 @@ if (! function_exists('prettify')) {
     /**
      * Prettify text
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     function prettify(string $text): string
     {
@@ -32,7 +32,7 @@ if (! function_exists('to_object')) {
     /**
      * Convert a string to an object
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     function to_object(mixed $value, ?bool $associative = null): array|object
     {
@@ -44,7 +44,7 @@ if (! function_exists('bag')) {
     /**
      * Return an error bag instance
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     function bag(string $value): HtmlString
     {

@@ -9,7 +9,7 @@ class AssetController
     /**
      * Load the datatable assets.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function __invoke(AssetService $service, string $name): mixed
     {

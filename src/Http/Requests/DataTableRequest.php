@@ -14,7 +14,7 @@ class DataTableRequest extends FormRequest
     /**
      * Prepare the data for validation.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function prepareForValidation(): void
     {
@@ -28,7 +28,7 @@ class DataTableRequest extends FormRequest
     /**
      * Return the rules for the request.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function rules(#[RouteParameter('data_table')] $dataTable): array
     {
@@ -52,7 +52,7 @@ class DataTableRequest extends FormRequest
     /**
      * Get the data used for updating the data table.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function updateData(DataTable $dataTable): array
     {
@@ -66,7 +66,7 @@ class DataTableRequest extends FormRequest
     /**
      * Format the buttons
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function buttons(): array
     {
@@ -79,7 +79,7 @@ class DataTableRequest extends FormRequest
     /**
      * Format the theme
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function theme(): string
     {
@@ -89,7 +89,7 @@ class DataTableRequest extends FormRequest
     /**
      * Format the loader settings.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function loader(): array
     {

@@ -13,7 +13,7 @@ class DataTableColumnController
     /**
      * Store a new table column
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function store(DataTableColumnRequest $request, DataTable $dataTable): RedirectResponse
     {
@@ -35,7 +35,7 @@ class DataTableColumnController
     /**
      * Update the data table column.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function update(DataTableColumnRequest $request, DataTable $dataTable, DataTableColumn $dataTableColumn): RedirectResponse
     {
@@ -56,7 +56,7 @@ class DataTableColumnController
     /**
      * Destroy a table column.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function destroy(DataTable $dataTable, DataTableColumn $dataTableColumn): RedirectResponse
     {

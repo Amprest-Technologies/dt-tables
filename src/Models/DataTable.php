@@ -27,7 +27,7 @@ class DataTable extends Model
     /**
      * Method to set the JSON data to the json file.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function create(array $data): self
     {
@@ -49,7 +49,7 @@ class DataTable extends Model
     /**
      * Define a method to get the JSON data from the json file.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function find(string $key): ?self
     {
@@ -76,7 +76,7 @@ class DataTable extends Model
     /**
      * Update the JSON data in the json file.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function update(array $data = []): bool
     {
@@ -101,7 +101,7 @@ class DataTable extends Model
     /**
      * Method to remove the JSON data from the json file.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function destroy(DataTable $dataTable)
     {

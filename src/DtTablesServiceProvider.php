@@ -17,7 +17,7 @@ class DtTablesServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function register(): void
     {
@@ -36,7 +36,7 @@ class DtTablesServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function boot(): void
     {
@@ -49,12 +49,8 @@ class DtTablesServiceProvider extends ServiceProvider
         //  Publish the configuration file
         $this->loadTranslationsFrom(package_path('lang'), 'dt-tables');
 
-        //  Load the routes file
-        $this->app[Router::class]
-            ->name('dt-tables.')
-            ->prefix('dt-tables')
-            ->middleware('web')
-            ->group(fn () => $this->loadRoutesFrom(package_path('routes/web.php')));
+        //  Load the routes files
+        $this->loadRoutes();
 
         //  Register global middleware
         $this->app[Kernel::class]->pushMiddleware(AutoInjectDtTableAssets::class);
@@ -70,7 +66,7 @@ class DtTablesServiceProvider extends ServiceProvider
     /**
      * Add any package helpers to the application.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function loadHelpersFrom(string $path): void
     {
@@ -82,12 +78,34 @@ class DtTablesServiceProvider extends ServiceProvider
     /**
      * Create the package folder if it doesn't exist.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function createAssets(): void
     {
         if (! file_exists($path = base_path('dt-tables.json'))) {
             touch($path);
         }
+    }
+
+    /**
+     * Load the package routes.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function loadRoutes(): void
+    {
+        //  Load the web file
+        $this->app[Router::class]
+            ->name('dt-tables.')
+            ->prefix('dt-tables')
+            ->middleware('web')
+            ->group(fn () => $this->loadRoutesFrom(package_path('routes/web.php')));
+
+        //  Load the API file
+        $this->app[Router::class]
+            ->name('dt-tables.api.')
+            ->prefix('api/dt-tables')
+            ->middleware('api')
+            ->group(fn () => $this->loadRoutesFrom(package_path('routes/api.php')));
     }
 }

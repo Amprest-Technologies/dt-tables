@@ -11,7 +11,7 @@ class TableNameIsUnique implements ValidationRule
     /**
      * Define the constructor for the TableNameIsUnique class.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function __construct(
         public ?DataTable $ignore = null,
@@ -20,7 +20,7 @@ class TableNameIsUnique implements ValidationRule
     /**
      * Validate the value of the attribute.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

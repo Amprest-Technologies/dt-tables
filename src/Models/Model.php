@@ -16,7 +16,7 @@ class Model
     /**
      * Define the constructor for the DataTable class.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function __construct(array $items = [])
     {
@@ -30,7 +30,7 @@ class Model
     /**
      * Define a method to handle dynamic method calls.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public static function __callStatic($name, $arguments)
     {
@@ -40,7 +40,7 @@ class Model
     /**
      * Method to get all the JSON data from the json file.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function all(): Collection
     {
@@ -54,7 +54,7 @@ class Model
     /**
      * Method to out the JSON data into the json file.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function storeInFile(array $data): bool
     {
@@ -71,7 +71,7 @@ class Model
     /**
      * Method to set attributes
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function setAttributes(array|object $items)
     {
@@ -94,7 +94,7 @@ class Model
     /**
      * Method to get the JSON data from the json file.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function where($key, $value)
     {
@@ -104,7 +104,7 @@ class Model
     /**
      * Pull a value from the data
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function pull(string $key, array $data)
     {
@@ -121,7 +121,7 @@ class Model
     /**
      * Get an array representation of the object.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function toArray(): array
     {

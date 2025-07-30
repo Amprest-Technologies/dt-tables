@@ -13,7 +13,7 @@ class DataTableController
     /**
      * Show a list of tables.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function index(): View
     {
@@ -29,7 +29,7 @@ class DataTableController
     /**
      * Store a new table
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function store(DataTableRequest $request): RedirectResponse
     {
@@ -52,7 +52,7 @@ class DataTableController
     /**
      * Show the page to edit a table.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function edit(DataTable $dataTable): View
     {
@@ -66,7 +66,7 @@ class DataTableController
     /**
      * Update the data table.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function update(DataTableRequest $request, DataTable $dataTable): RedirectResponse
     {
@@ -86,7 +86,7 @@ class DataTableController
     /**
      * Destroy a table.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function destroy(DataTable $dataTable): RedirectResponse
     {

@@ -12,7 +12,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define the register method for the service provider.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function register(): void
     {
@@ -22,7 +22,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define the boot method for the service provider.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function boot(): void
     {

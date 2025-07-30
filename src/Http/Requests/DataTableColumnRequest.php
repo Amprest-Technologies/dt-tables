@@ -13,7 +13,7 @@ class DataTableColumnRequest extends FormRequest
     /**
      * Prepare the data for validation.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function prepareForValidation(): void
     {
@@ -31,7 +31,7 @@ class DataTableColumnRequest extends FormRequest
     /**
      * Return the rules for the request.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function rules(
         #[RouteParameter('data_table')] $dataTable,

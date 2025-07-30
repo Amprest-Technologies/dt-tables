@@ -10,7 +10,7 @@ class HelpersService
     /**
      * Convert an array of attributes to HTML.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function parseAttributes(array $attributes): string
     {
@@ -20,7 +20,7 @@ class HelpersService
     /**
      * Parse the modal content to remove new lines and spaces.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function renderTemplate(string $view, array $params = []): string
     {
@@ -40,7 +40,7 @@ class HelpersService
     /**
      * Convert an array of classes to a CSS class string.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function columnClasses(array $classes): string
     {

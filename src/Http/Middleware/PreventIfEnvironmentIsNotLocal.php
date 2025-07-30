@@ -11,7 +11,7 @@ class PreventIfEnvironmentIsNotLocal
     /**
      * Handle an incoming request.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function handle(Request $request, Closure $next)
     {

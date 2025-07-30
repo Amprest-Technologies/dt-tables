@@ -194,6 +194,7 @@ window.buttons = function(buttons, theme, title) {
     let options = [
         {
             extend: 'copy',
+            name: 'copy',
             text: 'Copy',
             title: title,
             footer: false,
@@ -201,6 +202,7 @@ window.buttons = function(buttons, theme, title) {
         },
         {
             extend: 'excel',
+            name: 'excel',
             text: 'Excel',
             filename: title,
             title: title,
@@ -212,6 +214,7 @@ window.buttons = function(buttons, theme, title) {
         },
         {
             extend: 'colvis',
+            name: 'colvis',
             text: 'Hide Columns',
             className: theme.buttons,
             postfixButtons: ['colvisRestore'],

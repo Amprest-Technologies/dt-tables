@@ -7,7 +7,7 @@ class AssetService
     /**
      * Generate datatables payload.
      *
-     * @author Alvin Gichira Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin Gichira Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function load(string $path): mixed
     {
@@ -43,7 +43,7 @@ class AssetService
     /**
      * Get the mime type of the file
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function getMimeType($path): string
     {
@@ -62,7 +62,7 @@ class AssetService
      * Check if the server modifed data is similar to when the file
      * was last modified
      *
-     * @author Alvin Gichira Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin Gichira Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function matchesCache($lastModified): bool
     {
@@ -72,7 +72,7 @@ class AssetService
     /**
      * Determine the http date
      *
-     * @author Alvin Gichira Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin Gichira Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function httpDate($timestamp): string
     {

@@ -12,7 +12,7 @@ class DataTable extends Facade
     /**
      * Get the registered name of the service.
      *
-     * @author Alvin G. Kaburu <geekaburu@amprest.co.ke>
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected static function getFacadeAccessor(): string
     {
