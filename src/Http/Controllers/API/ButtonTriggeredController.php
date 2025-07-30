@@ -2,7 +2,7 @@
 
 namespace Amprest\DtTables\Http\Controllers\API;
 
-use Amprest\DtTables\Events\ButtonTriggered;
+use Amprest\DtTables\Events\DtButtonTriggered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Throwable;
@@ -24,7 +24,7 @@ class ButtonTriggeredController
             $message = 'Button triggered successfully';
 
             //  Dispatch the event
-            ButtonTriggered::dispatch($request->all());
+            DtButtonTriggered::dispatch($request->all());
 
         //  Define the catch block
         } catch (Throwable $e) {
