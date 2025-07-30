@@ -53,8 +53,8 @@ class DataTable extends Component
         $table = DataTableModel::where('key', $this->tableId)->first();
 
         //  Get the settings
-        $settings = $table->settings;
-
+        $settings = fluent($table->settings ?? []);
+        
         //  Get the columns
         $this->columns = $table->columns ?? [];
 
