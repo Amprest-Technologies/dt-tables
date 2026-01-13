@@ -7,6 +7,10 @@ import { ulid } from 'ulid'
  */
 const eta = new Eta({
     cache: true,
+    views: '',
+    autoEscape: true,
+    useWith: false,
+    async: false,
 });
 
 /* -----------------------------------------------------------------
@@ -126,10 +130,13 @@ let createSelectFilter = function (column, className) {
         column.search(this.value, { exact: true }).draw();
     });
 
-    // Add list of options
-    column.data().unique().sort().each(function (item, index) {
-        select.add(new Option(item, item));
-    });
+    //  Add list of options
+    column.data()
+        .unique()
+        .map((item, index) => item?.value ?? item)
+        .unique()
+        .sort()
+        .each(value => select.add(new Option(value, value)));
 
     //  Get the second tr element in the thead
     column.header(1).appendChild(select);
@@ -259,12 +266,21 @@ window.columns = function (tableID, config) {
         return {
             name: name.replace(/[ ]/g, '_'),
             className: configObj ? configObj.classes : '',
-            data: function (row, type, val, meta) {
-                //  Get the value of the column
-                let data = row[name];
+            data: name,
+            render: function (item, type, row, meta) {
+                //  Get the value
+                let value = item?.value ?? item?.display ?? item;
+
+                //  Handle displaying the value based on the type
+                if (type === 'display' && item?.display) {
+                    return eta.renderString(item?.display, {
+                        id: ulid().toLowerCase(),
+                        row: row,
+                    });
+                }
 
                 //  Return the required value
-                return data?.value ?? data;
+                return value;
             },
             createdCell: function (td, data, rowData, row, col) {
                 //  Get the cell data

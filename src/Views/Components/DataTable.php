@@ -4,7 +4,6 @@ namespace Amprest\DtTables\Views\Components;
 
 use Amprest\DtTables\Models\DataTable as DataTableModel;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Fluent;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
@@ -54,7 +53,7 @@ class DataTable extends Component
 
         //  Get the settings
         $settings = fluent($table->settings ?? []);
-        
+
         //  Get the columns
         $this->columns = $table->columns ?? [];
 
@@ -72,7 +71,7 @@ class DataTable extends Component
 
         //  Set the loader
         $this->loader = isset($settings->loader)
-            ? (array) $settings->loader 
+            ? (array) $settings->loader
             : config('dt-tables.settings.loader', []);
     }
 

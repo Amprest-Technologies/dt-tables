@@ -58,8 +58,10 @@ class DtTablesServiceProvider extends ServiceProvider
         //  Create the package assets
         $this->createAssets();
 
-        //  Load the blade components
+        //  Load the main blade component
         Blade::component('data-table', DataTable::class);
+
+        //  Load the assets blade component
         Blade::component('data-table-assets', DataTableAssets::class);
     }
 

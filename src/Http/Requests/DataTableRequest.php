@@ -24,7 +24,7 @@ class DataTableRequest extends FormRequest
         //  Merge the key with the request
         $this->merge(['key' => Str::slug($key)]);
     }
-    
+
     /**
      * Return the rules for the request.
      *

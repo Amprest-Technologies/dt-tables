@@ -3,6 +3,7 @@
         {{ $slot }}
     </table>
 </div>
+
 @if($loader->enabled ?? false)
     <div class="dt-tables-loader">
         <div>
@@ -89,7 +90,7 @@
     if (tableData.length > 0) {
         options.data = tableData;
     }
-    
+
     //  Define the table
     let table = new DataTable(`#${tableId}`, options);
 

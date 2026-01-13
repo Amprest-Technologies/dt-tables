@@ -26,7 +26,7 @@ class ButtonTriggeredController
             //  Dispatch the event
             DtButtonTriggered::dispatch($request->all());
 
-        //  Define the catch block
+            //  Define the catch block
         } catch (Throwable $e) {
             //  Set the status
             $status = $e->getCode() ?: 500;
