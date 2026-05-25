@@ -1,45 +1,45 @@
 {
-  "_jquery-CLOZz89m.js": {
-    "file": "assets/jquery-CLOZz89m.js",
+  "_jquery-Dtr3Xp7Q.js": {
+    "file": "assets/jquery-Dtr3Xp7Q.js",
     "name": "jquery"
   },
   "resources/css/admin.css": {
-    "file": "assets/admin-y8Jt-W8h.css",
-    "src": "resources/css/admin.css",
-    "isEntry": true,
+    "file": "assets/admin-BvTdeUD-.css",
     "name": "admin",
     "names": [
       "admin.css"
-    ]
+    ],
+    "src": "resources/css/admin.css",
+    "isEntry": true
   },
   "resources/css/client.css": {
-    "file": "assets/client-cQnl_-oD.css",
-    "src": "resources/css/client.css",
-    "isEntry": true,
+    "file": "assets/client-AnwzKjeI.css",
     "name": "client",
     "names": [
       "client.css"
-    ]
+    ],
+    "src": "resources/css/client.css",
+    "isEntry": true
   },
   "resources/js/admin.js": {
-    "file": "assets/admin-DS198iE6.js",
+    "file": "assets/admin-NzaLiZvs.js",
     "name": "admin",
     "src": "resources/js/admin.js",
     "isEntry": true,
     "imports": [
-      "_jquery-CLOZz89m.js"
+      "_jquery-Dtr3Xp7Q.js"
     ]
   },
   "resources/js/client.js": {
-    "file": "assets/client-CF8XuoNI.js",
+    "file": "assets/client-CyOXloRw.js",
     "name": "client",
     "src": "resources/js/client.js",
     "isEntry": true,
     "imports": [
-      "_jquery-CLOZz89m.js"
+      "_jquery-Dtr3Xp7Q.js"
     ],
     "css": [
-      "assets/client-CR_jzPGj.css"
+      "assets/client-ChrJFcm-.css"
     ]
   }
 }

@@ -18,13 +18,11 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
+            'eta': path.resolve(__dirname, 'node_modules/eta/dist/core.js'),
             '@resources': path.resolve(__dirname, 'resources'),
             '@node': path.resolve(__dirname, 'node_modules'),
             '@assets': path.resolve(__dirname, 'public'),
             '@vendor': path.resolve(__dirname, 'vendor'),
         }
-    },
-    optimizeDeps: {
-        exclude: ['eta']
     }
 });
