@@ -45,6 +45,7 @@ These special attributes on `<th>` elements control DataTable behavior:
 | `dtt-row-index` | *(none)* | Auto-generates row numbers (1, 2, 3...) |
 | `dtt-title="key"` | Column key string | Enables column-specific filtering/sorting. The key must match a column key in `dt-tables.json` |
 | `dtt-actions` | *(none)* | Marks the actions column (excluded from search, receives action buttons) |
+| `dtt-hidden` | *(none)* | Hides the column from the UI while keeping it in the DataTable dataset. Row data is still accessible (e.g. for action links). Compatible with all column types. |
 | `exclude-from-export` | *(none, on class)* | Hides the column from Excel/copy exports |
 
 ### When to Use `dtt-title`

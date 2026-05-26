@@ -4,7 +4,7 @@
     "name": "jquery.module"
   },
   "resources/css/admin.css": {
-    "file": "assets/admin-BVGm_THT.css",
+    "file": "assets/admin-BLUf-KyN.css",
     "name": "admin",
     "names": [
       "admin.css"
@@ -31,7 +31,7 @@
     ]
   },
   "resources/js/client.js": {
-    "file": "assets/client-DcVj4BSz.js",
+    "file": "assets/client-2o51l8uZ.js",
     "name": "client",
     "src": "resources/js/client.js",
     "isEntry": true,

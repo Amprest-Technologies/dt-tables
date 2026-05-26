@@ -240,62 +240,71 @@ window.columns = function (tableID, config) {
     return Array.from(document.querySelectorAll(`#${tableID} thead tr:first-of-type th`)).map(function (th) {
         //  Get the data title of the column.
         let dtTitle = th.getAttribute('dtt-title');
-        
+
         //  Get the title of the column
         let title = dtTitle
             ? dtTitle.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
             : th.innerHTML;
 
+        let column;
+
         //  Handle the case where the column is a row index
         if (th.hasAttribute('dtt-row-index')) {
-            return rowIndex(title);
-        }
+            column = rowIndex(title);
 
         //  Handle the case where the column is an action button
-        if (th.hasAttribute('dtt-actions')) {
-            return actionButtons(title);
+        } else if (th.hasAttribute('dtt-actions')) {
+            column = actionButtons(title);
+
+        } else {
+            //  Get the name of the column
+            let name = title ? title.replace(/\s+/g, '_').toLowerCase() : null;
+
+            //  Get the first config object that matches the name
+            let configObj = config.find(obj => obj.key === name);
+
+            column = {
+                name: name.replace(/[ ]/g, '_'),
+                className: configObj ? configObj.classes : '',
+                data: name,
+                render: function (item, type, row, meta) {
+                    //  Get the value
+                    let value = item?.value ?? item?.display ?? item;
+
+                    //  Handle displaying the value based on the type
+                    if (type === 'display' && item?.display) {
+                        return eta.renderString(item?.display, {
+                            id: ulid().toLowerCase(),
+                            row: row,
+                        });
+                    }
+
+                    //  Return the required value
+                    return value;
+                },
+                createdCell: function (td, data, rowData, row, col) {
+                    //  Get the cell data
+                    let cellData = rowData[name];
+
+                    //  Check if the cell data is an object and add the classes if they exist
+                    if (typeof cellData === 'object' && cellData?.classes) {
+                        //  Remove empty strings from the classes array
+                        const validClasses = cellData.classes.split(/\s+/).filter(c => c?.trim());
+
+                        //  Add the classes to the cell
+                        td.classList.add(...validClasses);
+                    }
+                }
+            };
+        }
+        
+        //  dtt-hidden: keep the column in the dataset but hide it from the UI
+        if (th.hasAttribute('dtt-hidden')) {
+            column.visible = false;
         }
 
-        //  Get the name of the column
-        let name = title ? title.replace(/\s+/g, '_').toLowerCase() : null;
-
-        //  Get the first config object that matches the name
-        let configObj = config.find(obj => obj.key === name);
-
-        //  Handle the rest of the columns
-        return {
-            name: name.replace(/[ ]/g, '_'),
-            className: configObj ? configObj.classes : '',
-            data: name,
-            render: function (item, type, row, meta) {
-                //  Get the value
-                let value = item?.value ?? item?.display ?? item;
-
-                //  Handle displaying the value based on the type
-                if (type === 'display' && item?.display) {
-                    return eta.renderString(item?.display, {
-                        id: ulid().toLowerCase(),
-                        row: row,
-                    });
-                }
-
-                //  Return the required value
-                return value;
-            },
-            createdCell: function (td, data, rowData, row, col) {
-                //  Get the cell data
-                let cellData = rowData[name];
-
-                //  Check if the cell data is an object and add the classes if they exist
-                if (typeof cellData === 'object' && cellData?.classes) {
-                    //  Remove empty strings from the classes array
-                    const validClasses = cellData.classes.split(/\s+/).filter(c => c?.trim());
-
-                    //  Add the classes to the cell
-                    td.classList.add(...validClasses);
-                }
-            }
-        };
+        //  Return the column configuration
+        return column;
     });
 };
 
