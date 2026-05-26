@@ -2,6 +2,7 @@
 
 namespace Amprest\DtTables;
 
+use Amprest\DtTables\Console\Commands\MakeDataTableCommand;
 use Amprest\DtTables\Http\Middleware\AutoInjectDtTableAssets;
 use Amprest\DtTables\Providers\RouteServiceProvider;
 use Amprest\DtTables\Services\HelpersService;
@@ -57,6 +58,11 @@ class DtTablesServiceProvider extends ServiceProvider
 
         //  Create the package assets
         $this->createAssets();
+
+        //  Register Artisan commands
+        if ($this->app->runningInConsole()) {
+            $this->commands([MakeDataTableCommand::class]);
+        }
 
         //  Load the main blade component
         Blade::component('data-table', DataTable::class);

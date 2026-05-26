@@ -1,39 +1,43 @@
 @extends('dt-tables::pages.layouts.app')
-@section('title', 'List of Data Tables')
+@section('title', 'Data Tables')
 @section('content')
-    <div class="mb-3">
-        <div class="mb-1 font-semibold">List a new table</div>
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-xl font-semibold text-gray-800">Data Tables</h1>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs p-5 mb-1">
+        <div class="text-sm font-semibold text-gray-700 mb-3">Register a Table</div>
         <form action="{{ route('dt-tables.data-tables.store') }}" method="POST">
             @csrf
             <div class="element-group">
-                <input name="key" type="text" class="@error('key') border border-red-800 @enderror" placeholder="The table key eg. shoes-table" value="{{ old('key') }}">
-                <button class="btn">Submit</button>
+                <input name="key" type="text" class="@error('key') border-red-500! @enderror" placeholder="e.g. invoices-table" value="{{ old('key') }}">
+                <button class="btn">Add Table</button>
             </div>
             @error('key')
-                <small class="text-red-900">{{ $message }}</small>
+                <small class="mt-1 block text-red-700">{{ $message }}</small>
             @enderror
         </form>
     </div>
-    <div class="mb-2">
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden">
         @if($dataTables->isNotEmpty())
-            <div class="mb-1 font-semibold">List of all tables</div>
             <table class="table">
-                <thead>
+                <thead class="bg-gray-50">
                     <tr>
-                        <th class="w-[5%] text-center">ID</th>
-                        <th class="w-[80%]">Table Identifier</th>
-                        <th class="text-center">Actions</th>
+                        <th class="w-[5%] text-center">#</th>
+                        <th>Table Key</th>
+                        <th class="w-[15%] text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($dataTables as $dataTable)
                         <tr>
-                            <th class="text-center">{{ $loop->iteration }}</th>
-                            <td>{{ $dataTable->key }}</td>
+                            <td class="text-center text-gray-400">{{ $loop->iteration }}</td>
+                            <td class="font-mono text-sm">{{ $dataTable->key }}</td>
                             <td>
                                 <div class="element-group justify-center">
                                     <a href="{{ route('dt-tables.data-tables.edit', ['data_table' => $dataTable->id]) }}" class="btn">Edit</a>
-                                    <button type="submit" form="{{ $form = 'delete-'.$dataTable->id.'-form' }}" class="btn">Delete</button>
+                                    <button type="submit" form="{{ $form = 'delete-'.$dataTable->id.'-form' }}" class="btn bg-red-600! hover:bg-red-700!">Delete</button>
                                 </div>
                             </td>
                         </tr>
@@ -45,8 +49,8 @@
                 </tbody>
             </table>
         @else
-            <div class="mb-1 border border-gray-200 rounded-lg p-4">
-                No tables listed yet
+            <div class="py-12 text-center text-sm text-gray-400">
+                No tables registered yet. Add one above.
             </div>
         @endif
     </div>

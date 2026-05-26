@@ -1,0 +1,63 @@
+<?php
+
+namespace {{ namespace }};
+
+use Amprest\DtTables\Tables\BaseTable;
+
+class {{ class }} extends BaseTable
+{
+    /**
+     * Initialize the table.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    public function __construct(
+        //
+    ) {}
+
+    /**
+     * Return the query to be executed for the table.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    public function query(): mixed
+    {
+        //
+    }
+
+    /**
+     * Return data computed once and shared across all rows.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function shared(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Map each model to a display row array.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    public function handle(mixed $model, int $key): mixed
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Return parameters for export activity logging.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function parameters(): array
+    {
+        return [
+            //
+        ];
+    }
+}
