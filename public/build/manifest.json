@@ -1,7 +1,7 @@
 {
-  "_jquery-Dtr3Xp7Q.js": {
-    "file": "assets/jquery-Dtr3Xp7Q.js",
-    "name": "jquery"
+  "_jquery.module-BVm3VuY2.js": {
+    "file": "assets/jquery.module-BVm3VuY2.js",
+    "name": "jquery.module"
   },
   "resources/css/admin.css": {
     "file": "assets/admin-BvTdeUD-.css",
@@ -22,21 +22,21 @@
     "isEntry": true
   },
   "resources/js/admin.js": {
-    "file": "assets/admin-NzaLiZvs.js",
+    "file": "assets/admin-Dp_PkhLe.js",
     "name": "admin",
     "src": "resources/js/admin.js",
     "isEntry": true,
     "imports": [
-      "_jquery-Dtr3Xp7Q.js"
+      "_jquery.module-BVm3VuY2.js"
     ]
   },
   "resources/js/client.js": {
-    "file": "assets/client-Wyn3if9Y.js",
+    "file": "assets/client-DcVj4BSz.js",
     "name": "client",
     "src": "resources/js/client.js",
     "isEntry": true,
     "imports": [
-      "_jquery-Dtr3Xp7Q.js"
+      "_jquery.module-BVm3VuY2.js"
     ],
     "css": [
       "assets/client-CY0z32CV.css"

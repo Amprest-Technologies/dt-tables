@@ -1,4 +1,4 @@
-n@import "tailwindcss";
+@import "tailwindcss";
 @source "@resources/views/pages";
 
 @layer base {
