@@ -1,5 +1,5 @@
 @import 'toastr/build/toastr';
-@import "./utils/tailwind";
+@import './utils/tailwind.css';
 
 .toast {
     opacity: 1 !important;

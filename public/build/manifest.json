@@ -13,7 +13,7 @@
     "isEntry": true
   },
   "resources/css/client.css": {
-    "file": "assets/client-AnwzKjeI.css",
+    "file": "assets/client-B2q07sWf.css",
     "name": "client",
     "names": [
       "client.css"
@@ -31,7 +31,7 @@
     ]
   },
   "resources/js/client.js": {
-    "file": "assets/client-CyOXloRw.js",
+    "file": "assets/client-Wyn3if9Y.js",
     "name": "client",
     "src": "resources/js/client.js",
     "isEntry": true,
@@ -39,7 +39,7 @@
       "_jquery-Dtr3Xp7Q.js"
     ],
     "css": [
-      "assets/client-ChrJFcm-.css"
+      "assets/client-CY0z32CV.css"
     ]
   }
 }
