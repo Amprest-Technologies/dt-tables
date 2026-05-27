@@ -112,7 +112,7 @@ let actionButtons = function (title) {
  * Create a function to add a select filter to the column
  * ------------------------------------------------------------------
  */
-let createSelectFilter = function (column, className) {
+let createSelectFilter = function (cell, column, className) {
     // Create select element and add event listener
     let select = document.createElement('select');
 
@@ -124,7 +124,7 @@ let createSelectFilter = function (column, className) {
 
     //  Add a default option
     select.add(new Option('Show All', ''));
-        
+
     //  Add an event listener to the select element
     select.addEventListener('change', function () {
         column.search(this.value, { exact: true }).draw();
@@ -138,15 +138,15 @@ let createSelectFilter = function (column, className) {
         .sort()
         .each(value => select.add(new Option(value, value)));
 
-    //  Get the second tr element in the thead
-    column.header(1).appendChild(select);
+    //  Append to the filter row cell
+    cell.appendChild(select);
 };
 
 /* -----------------------------------------------------------------
  * Create a function to add an input filter to the column
  * ------------------------------------------------------------------
  */
-let createInputFilter = function (column, className) {
+let createInputFilter = function (cell, column, className) {
     //  Create an input element
     let input = document.createElement('input');
 
@@ -164,26 +164,18 @@ let createInputFilter = function (column, className) {
         column.search(this.value).draw();
     });
 
-    //  Get the second tr element in the thead
-    column.header(1).appendChild(input);
+    //  Append to the filter row cell
+    cell.appendChild(input);
 };
-
-/* -----------------------------------------------------------------
- * Create a function to initialize the datatable
- * ------------------------------------------------------------------
- */
-window.setupDataTable = function (tableId, columns) {
-    if (columns.filter(column => column.search_type !== 'none').length > 0) {
-        cloneHeader(tableId);
-    }
-};
-
 /* -----------------------------------------------------------------
  * Create a function to hide the loader and show the datatable
  * ------------------------------------------------------------------
  */
 window.hideLoader = function() {
+    //  Hide the loader
     document.querySelector('.dt-tables-loader').style.display = 'none';
+
+    //  Show the datatable container
     document.querySelector('.dt-tables-container').style.display = 'block';
 };
 
@@ -246,6 +238,7 @@ window.columns = function (tableID, config) {
             ? dtTitle.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
             : th.innerHTML;
 
+        //  Define a column
         let column;
 
         //  Handle the case where the column is a row index
@@ -265,7 +258,6 @@ window.columns = function (tableID, config) {
 
             column = {
                 name: name.replace(/[ ]/g, '_'),
-                className: configObj ? configObj.classes : '',
                 data: name,
                 render: function (item, type, row, meta) {
                     //  Get the value
@@ -336,12 +328,38 @@ window.setupStyling = function (theme) {
 window.setupFilters = function (api, config, theme) {
     //  Loop through the columns and add a filter to each column
     if (config.filter(column => column.search_type !== 'none').length > 0) {
+        //  Clone the header after DataTables has initialised so the filter row
+        //  is not captured in export snapshots (DataTables reads headers at init time)
+        let tableId = api.table().node().id;
+
+        //  Clone the header to create a new row for filters and append it to the thead
+        cloneHeader(tableId);
+
+        //  Query the live DOM for the original header row cells to determine column positions
+        let originalCells = Array.from(document.querySelectorAll(`#${tableId} thead tr:first-child th`));
+
+        //  Query the live DOM for the filter row cells
+        let filterCells = Array.from(document.querySelectorAll(`#${tableId} thead tr.selection-row th`));
+
+        //  Loop through the columns in the datatable
         api.columns().every(function () {
             //  Get the column
             let column = this;
 
-            //  Get the header element
-            column.header(1).innerHTML = '';
+            //  Find the DOM position of this column's header in the original row
+            let cellIndex = originalCells.indexOf(column.header(0));
+
+            //  If the column header is not found, skip to the next iteration
+            if (cellIndex === -1) { return; }
+
+            //  Get the corresponding filter cell
+            let cell = filterCells[cellIndex];
+
+            //  If the cell is not found, skip to the next iteration
+            if (!cell) { return; }
+
+            //  Clear the cell
+            cell.innerHTML = '';
 
             //  Get the name of the column
             let name = column.name();
@@ -355,10 +373,10 @@ window.setupFilters = function (api, config, theme) {
             //  Check if the column is in the select items
             switch (searchType) {
                 case 'select':
-                    createSelectFilter(column, theme.select);
+                    createSelectFilter(cell, column, theme.select);
                     break;
                 case 'input':
-                    createInputFilter(column, theme.input);
+                    createInputFilter(cell, column, theme.input);
                     break;
             }
         });

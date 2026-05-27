@@ -2,10 +2,11 @@
 
 namespace Amprest\DtTables\Facades;
 
+use Amprest\DtTables\Services\HelpersService;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Amprest\DtTables\Services\HelpersService
+ * @see HelpersService
  */
 class DataTable extends Facade
 {

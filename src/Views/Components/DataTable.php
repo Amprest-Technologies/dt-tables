@@ -24,6 +24,12 @@ class DataTable extends Component
         public array $buttons = [],
         public array $theme = [],
         public array $loader = [],
+        public int $pageLength = 10,
+        public bool $ordering = true,
+        public bool $searching = true,
+        public bool $paging = true,
+        public bool $info = true,
+        public bool $scrollX = false,
     ) {
         //  Set the tableId to the id if not provided
         $this->tableId ??= $this->id;
@@ -73,6 +79,21 @@ class DataTable extends Component
         $this->loader = isset($settings->loader)
             ? (array) $settings->loader
             : config('dt-tables.settings.loader', []);
+
+        //  Wrap behaviour safely — older tables that pre-date this feature will
+        //  not have the key in JSON, so fluent([]) ensures no null-access errors
+        $behaviour = fluent((array) ($settings->behaviour ?? []));
+
+        //  Set the page length
+        $this->pageLength = (int) ($behaviour->page_length
+            ?? config('dt-tables.settings.behaviour.page_length', 10));
+
+        //  Set the behaviour toggles
+        $this->ordering = (bool) ($behaviour->ordering ?? config('dt-tables.settings.behaviour.ordering', true));
+        $this->searching = (bool) ($behaviour->searching ?? config('dt-tables.settings.behaviour.searching', true));
+        $this->paging = (bool) ($behaviour->paging ?? config('dt-tables.settings.behaviour.paging', true));
+        $this->info = (bool) ($behaviour->info ?? config('dt-tables.settings.behaviour.info', true));
+        $this->scrollX = (bool) ($behaviour->scroll_x ?? config('dt-tables.settings.behaviour.scroll_x', false));
     }
 
     /**

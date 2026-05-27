@@ -24,7 +24,6 @@ class DataTableColumnRequest extends FormRequest
         $this->merge([
             'key' => Str::slug($this->key, '_'),
             'search_type' => $this->search_type ?? 'none',
-            'classes' => $this->classes ?? null,
         ]);
     }
 
@@ -44,7 +43,6 @@ class DataTableColumnRequest extends FormRequest
         return [
             'key' => ['required', 'string', 'max:255', $uniqueRule],
             'search_type' => ['required', Rule::in(config('dt-tables.columns.search_types'))],
-            'classes' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

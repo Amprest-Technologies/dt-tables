@@ -20,11 +20,6 @@ class DataTableColumn extends Model
     public string $search_type;
 
     /**
-     * The classes for the data table column.
-     */
-    public ?string $classes;
-
-    /**
      * Method to set the JSON data to the json file.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>

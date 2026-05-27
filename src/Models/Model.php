@@ -23,8 +23,10 @@ class Model
         //  Define the json file path
         $this->jsonPath = config('dt-tables.data_source');
 
-        //  Set attributes
-        $this->setAttributes($items);
+        //  Check if the items are not empty
+        if (! empty($items)) {
+            $this->setAttributes($items);
+        }
     }
 
     /**

@@ -7,22 +7,38 @@ class DataTable extends Model
     /**
      * The id for the data table.
      */
-    public $id;
+    public string $id;
 
     /**
      * The key for the data table.
      */
-    public $key;
+    public string $key;
 
     /**
      * The settings for the data table.
      */
-    public $settings;
+    public mixed $settings = [
+        'buttons' => ['copy', 'colvis', 'excel'],
+        'theme' => 'bootstrap',
+        'loader' => [
+            'enabled' => true,
+            'message' => 'Loading data, please wait...',
+            'image' => 'img/loader.svg',
+        ],
+        'behaviour' => [
+            'page_length' => 10,
+            'ordering' => true,
+            'searching' => true,
+            'paging' => true,
+            'info' => true,
+            'scroll_x' => false,
+        ],
+    ];
 
     /**
      * The columns for the data table.
      */
-    public $columns;
+    public mixed $columns = [];
 
     /**
      * Method to set the JSON data to the json file.
@@ -35,6 +51,13 @@ class DataTable extends Model
         if (! file_exists($this->jsonPath)) {
             touch($this->jsonPath);
         }
+
+        //  Prepare the data to be stored in the json file
+        $data = array_merge($data, [
+            'id' => strtolower(str()->ulid()),
+            'settings' => $this->settings,
+            'columns' => $this->columns,
+        ]);
 
         //  Get the contents of the json file
         $tables = $this->all()->push($data)->toArray();

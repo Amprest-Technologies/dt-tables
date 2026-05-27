@@ -38,7 +38,7 @@ class DataTableRequest extends FormRequest
         //  Return the rules
         return [
             'key' => ['required', 'string', 'max:255', $uniqueRule],
-            'type' => ['sometimes', 'required', Rule::in(['buttons', 'theme', 'loader'])],
+            'type' => ['sometimes', 'required', Rule::in(['buttons', 'theme', 'loader', 'behaviour'])],
             'theme' => ['sometimes', 'required', Rule::in(array_keys(config('dt-tables.themes')))],
             'buttons' => ['sometimes', 'required', 'array'],
             'buttons.*' => ['sometimes', 'boolean'],
@@ -46,6 +46,12 @@ class DataTableRequest extends FormRequest
             'loader.enabled' => ['sometimes', 'boolean'],
             'loader.message' => ['sometimes', 'nullable', 'string', 'max:255'],
             'loader.image' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'page_length' => ['sometimes', 'required', 'integer', Rule::in([10, 25, 50, 100, -1])],
+            'ordering' => ['sometimes', 'required', 'boolean'],
+            'searching' => ['sometimes', 'required', 'boolean'],
+            'paging' => ['sometimes', 'required', 'boolean'],
+            'info' => ['sometimes', 'required', 'boolean'],
+            'scroll_x' => ['sometimes', 'required', 'boolean'],
         ];
     }
 
@@ -97,6 +103,23 @@ class DataTableRequest extends FormRequest
             'enabled' => $this->boolean('loader.enabled', config('dt-tables.settings.loader.enabled')),
             'message' => $this->string('loader.message', config('dt-tables.settings.loader.message')),
             'image' => $this->string('loader.image', config('dt-tables.settings.loader.image')),
+        ];
+    }
+
+    /**
+     * Format the behaviour settings.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    public function behaviour(): array
+    {
+        return [
+            'page_length' => (int) $this->integer('page_length', config('dt-tables.settings.behaviour.page_length', 10)),
+            'ordering' => $this->boolean('ordering', config('dt-tables.settings.behaviour.ordering', true)),
+            'searching' => $this->boolean('searching', config('dt-tables.settings.behaviour.searching', true)),
+            'paging' => $this->boolean('paging', config('dt-tables.settings.behaviour.paging', true)),
+            'info' => $this->boolean('info', config('dt-tables.settings.behaviour.info', true)),
+            'scroll_x' => $this->boolean('scroll_x', config('dt-tables.settings.behaviour.scroll_x', false)),
         ];
     }
 }

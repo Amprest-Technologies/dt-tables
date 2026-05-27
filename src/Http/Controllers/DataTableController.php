@@ -5,7 +5,6 @@ namespace Amprest\DtTables\Http\Controllers;
 use Amprest\DtTables\Http\Requests\DataTableRequest;
 use Amprest\DtTables\Models\DataTable;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class DataTableController
@@ -34,19 +33,17 @@ class DataTableController
     public function store(DataTableRequest $request): RedirectResponse
     {
         //  Create the table
-        $dataTable = DataTable::create(array_merge($request->validated(), [
-            'id' => strtolower(Str::ulid()),
-            'settings' => config('dt-tables.settings'),
-            'columns' => [],
-        ]));
+        $dataTable = DataTable::create(['key' => $request->safe()->key]);
 
         //  Return the view with the list of tables
-        return redirect()->route('dt-tables.data-tables.edit', ['data_table' => $dataTable->id])->with([
-            'alert' => [
-                'type' => 'success',
-                'message' => trans('dt-tables::alerts.data-table.created'),
-            ],
-        ]);
+        return redirect()
+            ->route('dt-tables.data-tables.edit', ['data_table' => $dataTable->id])
+            ->with([
+                'alert' => [
+                    'type' => 'success',
+                    'message' => trans('dt-tables::alerts.data-table.created'),
+                ],
+            ]);
     }
 
     /**

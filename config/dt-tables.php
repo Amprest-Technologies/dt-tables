@@ -27,6 +27,14 @@ return [
             'message' => 'Loading data, please wait...',
             'image' => null,
         ],
+        'behaviour' => [
+            'page_length' => 10,
+            'ordering' => true,
+            'searching' => true,
+            'paging' => true,
+            'info' => true,
+            'scroll_x' => false,
+        ],
     ],
 
     /*

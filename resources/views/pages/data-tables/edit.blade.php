@@ -1,51 +1,64 @@
 @extends('dt-tables::pages.layouts.app')
 @section('title', prettify($dataTable->key))
 @section('content')
+    {{-- Header --}}
     <div class="flex items-center justify-between mb-6">
         <div>
-            <div class="text-xs text-gray-400 mb-1">
+            <nav class="text-xs text-gray-400 mb-1">
                 <a href="{{ route('dt-tables.data-tables.index') }}" class="hover:text-indigo-600">Tables</a>
                 <span class="mx-1">/</span>
                 <span>{{ prettify($dataTable->key) }}</span>
-            </div>
-            <h1 class="text-xl font-semibold text-gray-800">{{ prettify($dataTable->key) }}</h1>
+            </nav>
+            <h1 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                {{ prettify($dataTable->key) }}
+                <span class="font-mono text-xs bg-indigo-50 text-indigo-500 border border-indigo-100 px-2 py-0.5 rounded-full">{{ $dataTable->key }}</span>
+            </h1>
         </div>
         <a href="{{ route('dt-tables.data-tables.index') }}" class="text-sm text-indigo-600 hover:underline">← Back</a>
     </div>
 
     {{-- Column Configurations --}}
-    <div class="bg-white border border-gray-200 rounded-xl shadow-xs p-5 mb-1">
-        <div class="text-sm font-semibold text-gray-700 mb-4">Column Configurations</div>
-
-        <form action="{{ route('dt-tables.data-tables.columns.store', ['data_table' => $dataTable->id]) }}" method="POST" class="mb-4">
-            @csrf
-            @php $id = 'new-column' @endphp
-            {!! bag($id) !!}
-            <div class="element-group">
-                <input name="key" type="text" class="@error('key', $id) border-red-500! @enderror" placeholder="Add a new column key e.g. tenant_name" value="{{ old('key') }}">
-                <button class="btn">Add Column</button>
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden mb-1 px-5 py-4">
+        <div class="py-4 border-b border-gray-100 flex items-center justify-between">
+            <div>
+                <div class="text-sm font-semibold text-gray-800">Columns</div>
+                <div class="text-xs text-gray-400 mt-0.5">Keys and per-column search filters</div>
             </div>
-            @error('key', $id)
-                <small class="mt-1 block text-red-700">{{ $message }}</small>
-            @enderror
-        </form>
+            @if($columns->isNotEmpty())
+                <span class="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full">{{ $columns->count() }} {{ Str::plural('column', $columns->count()) }}</span>
+            @endif
+        </div>
+
+        <div class="py-3 border-b border-gray-100">
+            <form action="{{ route('dt-tables.data-tables.columns.store', ['data_table' => $dataTable->id]) }}" method="POST">
+                @csrf
+                @php $id = 'new-column' @endphp
+                {!! bag($id) !!}
+                <div class="element-group">
+                    <input name="key" type="text" class="@error('key', $id) border-red-500! @enderror" placeholder="New column key e.g. tenant_name" value="{{ old('key') }}">
+                    <button class="btn shrink-0">Add Column</button>
+                </div>
+                @error('key', $id)
+                    <small class="mt-1 block text-red-700">{{ $message }}</small>
+                @enderror
+            </form>
+        </div>
 
         @if($columns->isNotEmpty())
             <table class="table">
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="w-[5%] text-center">#</th>
-                        <th class="w-[35%]">Column Key</th>
-                        <th class="w-[20%]">Search Type</th>
-                        <th class="w-[25%]">HTML Classes</th>
-                        <th class="w-[15%] text-center">Actions</th>
+                        <th class="w-[50%]">Key</th>
+                        <th class="w-[25%]">Search</th>
+                        <th class="w-[20%] text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($columns as $column)
                         @php $id = $column->id @endphp
                         <tr>
-                            <td class="text-center text-gray-400">{{ $loop->iteration }}</td>
+                            <td class="text-center text-xs text-gray-400">{{ $loop->iteration }}</td>
                             <td>
                                 <input name="key" type="text" value="{{ old('key', prettify($column->key)) }}" placeholder="Column key" class="@error('key', $id) border-red-500! @enderror" form="{{ $form = 'update-'.$id.'-form' }}">
                                 @error('key', $id)
@@ -59,12 +72,6 @@
                                     @endforeach
                                 </select>
                                 @error('search_type', $id)
-                                    <small class="mt-0.5 block text-red-700">{{ $message }}</small>
-                                @enderror
-                            </td>
-                            <td>
-                                <input name="classes" type="text" value="{{ old('classes', $column->classes) }}" placeholder="e.g. text-center fw-bold" class="@error('classes', $id) border-red-500! @enderror" form="{{ $form }}">
-                                @error('classes', $id)
                                     <small class="mt-0.5 block text-red-700">{{ $message }}</small>
                                 @enderror
                             </td>
@@ -88,77 +95,154 @@
                 </tbody>
             </table>
         @else
-            <div class="py-8 text-center text-sm text-gray-400 border border-gray-200 rounded-lg">
-                No columns added yet.
+            <div class="py-12 text-center text-sm text-gray-400">
+                No columns configured yet. Add one above.
             </div>
         @endif
     </div>
 
-    {{-- Theme + Buttons --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-1 mb-1">
-        <div class="bg-white border border-gray-200 rounded-xl shadow-xs p-5">
-            <div class="text-sm font-semibold text-gray-700 mb-4">Theme</div>
-            <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'theme']) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="mb-4">
-                    <label>Table Theme</label>
-                    <select name="theme">
-                        <option value="bootstrap" @selected($settings->theme === 'bootstrap')>Bootstrap</option>
-                        <option value="tailwind" @selected($settings->theme === 'tailwind')>Tailwind</option>
-                    </select>
-                </div>
-                <button class="btn w-full">Save Theme</button>
-            </form>
+    {{-- Settings (all sections in one card) --}}
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden">
+        <div class="px-5 py-3 border-b border-gray-100">
+            <div class="text-sm font-semibold text-gray-800">Settings</div>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-xl shadow-xs p-5">
-            <div class="text-sm font-semibold text-gray-700 mb-4">Export Buttons</div>
-            <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'buttons']) }}" method="POST">
-                @csrf
-                @method('PUT')
-                @foreach(config('dt-tables.settings.buttons') as $button)
-                    <div class="mb-4">
-                        <label>{{ prettify($button) }}</label>
-                        <select name="buttons[{{ $button }}]">
-                            <option value="1" @selected(in_array($button, $settings->buttons))>Active</option>
-                            <option value="0" @selected(!in_array($button, $settings->buttons))>Inactive</option>
+        {{-- Theme --}}
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'theme']) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="px-5 py-4 border-b border-gray-100">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm text-gray-500">Theme</span>
+                    <button class="btn shrink-0">Save</button>
+                </div>
+                <select name="theme">
+                    <option value="bootstrap" @selected($settings->theme === 'bootstrap')>Bootstrap</option>
+                    <option value="tailwind" @selected($settings->theme === 'tailwind')>Tailwind</option>
+                </select>
+            </div>
+        </form>
+
+        {{-- Export Buttons --}}
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'buttons']) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="px-5 py-4 border-b border-gray-100">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm text-gray-500">Export Buttons</span>
+                    <button class="btn shrink-0">Save</button>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    @foreach(config('dt-tables.settings.buttons') as $button)
+                        <div>
+                            <label class="mb-2">{{ prettify($button) }}</label>
+                            <div class="flex items-center gap-1.5">
+                                <select name="buttons[{{ $button }}]">
+                                    <option value="1" @selected(in_array($button, $settings->buttons))>Active</option>
+                                    <option value="0" @selected(!in_array($button, $settings->buttons))>Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </form>
+
+        {{-- Behaviour --}}
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'behaviour']) }}" method="POST">
+            @csrf
+            @method('PUT')
+            @php $behaviour = fluent((array) ($settings->behaviour ?? [])); @endphp
+            <div class="px-5 py-4 border-b border-gray-100">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm text-gray-500">Behaviour</span>
+                    <button class="btn shrink-0">Save</button>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="mb-2">Page Length</label>
+                        @php $pageLength = old('page_length', $behaviour->page_length ?? 10); @endphp
+                        <select name="page_length">
+                            @foreach ([10, 25, 50, 100, -1] as $length)
+                                <option value="{{ $length }}" @selected($pageLength == $length)>{{ $length === -1 ? 'All' : $length }}</option>
+                            @endforeach
                         </select>
                     </div>
-                @endforeach
-                <button class="btn w-full">Save Buttons</button>
-            </form>
-        </div>
-    </div>
+                    <div>
+                        <label class="mb-2">Ordering</label>
+                        @php $ordering = old('ordering', (bool) ($behaviour->ordering ?? true)); @endphp
+                        <select name="ordering">
+                            <option value="1" @selected($ordering)>Enabled</option>
+                            <option value="0" @selected(!$ordering)>Disabled</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-2">Global Search</label>
+                        @php $searching = old('searching', (bool) ($behaviour->searching ?? true)); @endphp
+                        <select name="searching">
+                            <option value="1" @selected($searching)>Enabled</option>
+                            <option value="0" @selected(!$searching)>Disabled</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-2">Pagination</label>
+                        @php $paging = old('paging', (bool) ($behaviour->paging ?? true)); @endphp
+                        <select name="paging">
+                            <option value="1" @selected($paging)>Enabled</option>
+                            <option value="0" @selected(!$paging)>Disabled</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-2">Row Count Info</label>
+                        @php $info = old('info', (bool) ($behaviour->info ?? true)); @endphp
+                        <select name="info">
+                            <option value="1" @selected($info)>Enabled</option>
+                            <option value="0" @selected(!$info)>Disabled</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-2">Horiz. Scroll</label>
+                        @php $scrollX = old('scroll_x', (bool) ($behaviour->scroll_x ?? false)); @endphp
+                        <select name="scroll_x">
+                            <option value="1" @selected($scrollX)>Enabled</option>
+                            <option value="0" @selected(!$scrollX)>Disabled</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
 
-    {{-- Loader --}}
-    <div class="bg-white border border-gray-200 rounded-xl shadow-xs p-5">
-        <div class="text-sm font-semibold text-gray-700 mb-4">Loader</div>
+        {{-- Loader --}}
         <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'loader']) }}" method="POST">
             @csrf
             @method('PUT')
             @php $loader = $settings->loader ?? null; @endphp
-            <div class="space-y-4">
-                <div>
-                    <label>Enabled</label>
-                    <select name="loader[enabled]">
+            <div class="px-5 py-4">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm text-gray-500">Loader</span>
+                    <button class="btn shrink-0">Save</button>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="mb-2">Enabled</label>
                         @php $enabled = old('loader.enabled', (bool) ($loader->enabled ?? 0)); @endphp
-                        <option value="1" @selected($enabled)>Yes</option>
-                        <option value="0" @selected(!$enabled)>No</option>
-                    </select>
-                </div>
-                <div>
-                    @php $message = old('loader.message', $loader->message ?? null); @endphp
-                    <label>Message</label>
-                    <input type="text" name="loader[message]" value="{{ $message }}" placeholder="Loading message...">
-                </div>
-                <div>
-                    @php $image = old('loader.image', $loader->image ?? null); @endphp
-                    <label>Image Path</label>
-                    <input type="text" name="loader[image]" value="{{ $image }}" placeholder="img/loaders/app.svg">
+                        <select name="loader[enabled]">
+                            <option value="1" @selected($enabled)>Yes</option>
+                            <option value="0" @selected(!$enabled)>No</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-2">Message</label>
+                        @php $message = old('loader.message', $loader->message ?? null); @endphp
+                        <input type="text" name="loader[message]" value="{{ $message }}" placeholder="Loading message...">
+                    </div>
+                    <div>
+                        <label class="mb-2">Image Path</label>
+                        @php $image = old('loader.image', $loader->image ?? null); @endphp
+                        <input type="text" name="loader[image]" value="{{ $image }}" placeholder="img/loaders/app.svg">
+                    </div>
                 </div>
             </div>
-            <button class="btn w-full">Save Loader</button>
         </form>
     </div>
 @endsection

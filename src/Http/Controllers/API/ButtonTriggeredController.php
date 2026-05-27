@@ -16,6 +16,7 @@ class ButtonTriggeredController
      */
     public function __invoke(Request $request): JsonResponse
     {
+        //  Define the try block
         try {
             //  Set the status
             $status = 200;

@@ -41,12 +41,15 @@
     //  Get the title of the table
     let title = @js($attributes->get('title', '*'));
 
-    //  Initialize the datatable
-    setupDataTable(tableId, configColumns);
-
     //  Setup the datatable options
     let options = {
         responsive: true,
+        pageLength: @js($pageLength),
+        ordering: @js($ordering),
+        searching: @js($searching),
+        paging: @js($paging),
+        info: @js($info),
+        scrollX: @js($scrollX),
         layout: {
             top: {
                 className: 'top-row',
