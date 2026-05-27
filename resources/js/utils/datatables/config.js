@@ -48,7 +48,7 @@ let rowIndex = function (title) {
         title: title,
         className: 'row-index',
         render: function (data, type, row, meta) {
-            return meta.row + meta.settings._iDisplayStart + 1;
+            return meta.row + (type === 'display' ? meta.settings._iDisplayStart : 0) + 1;
         }
     };
 }
@@ -198,6 +198,9 @@ window.buttons = function(buttons, theme, title) {
             title: title,
             footer: false,
             className: theme.buttons,
+            exportOptions: {
+                orthogonal: 'sort',
+            },
         },
         {
             extend: 'excel',
@@ -208,7 +211,8 @@ window.buttons = function(buttons, theme, title) {
             footer: false,
             className: theme.buttons,
             exportOptions: {
-                columns: ':visible:not(th.exclude-from-export)'
+                orthogonal: 'sort',
+                columns: ':visible:not(th.exclude-from-export)',
             }
         },
         {
