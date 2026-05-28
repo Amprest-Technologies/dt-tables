@@ -72,8 +72,8 @@ abstract class BaseTable
      */
     public static function build(mixed ...$args): array
     {
-        //  Instantiate the table class with provided arguments
-        $instance = new static(...$args);
+        //  Attempt to get or initiate an instance
+        $instance = ($args['instance'] ?? null) ?: new static(...$args);
 
         //  Normalise query result to a Collection
         $query = $instance->query();
@@ -119,6 +119,10 @@ abstract class BaseTable
      */
     public function raw(): array
     {
-        return self::build()['table'] ?? [];
+        //  Get the build
+        $build = self::build(instance: $this);
+
+        //  Return the raw table
+        return $build['table'] ?? [];
     }
 }
