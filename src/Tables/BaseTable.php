@@ -23,7 +23,7 @@ abstract class BaseTable
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    abstract public function handle(mixed $model, int $key): mixed;
+    abstract public function handle(mixed $model, mixed $key): mixed;
 
     /**
      * Return data computed once and shared across all rows.
@@ -110,5 +110,15 @@ abstract class BaseTable
     public static function make(mixed ...$args): static
     {
         return new static(...$args);
+    }
+
+    /**
+     * Get the raw table data.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    public function raw(): array
+    {
+        return self::build()['table'] ?? [];
     }
 }
