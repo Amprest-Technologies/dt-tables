@@ -107,6 +107,22 @@
             <div class="text-sm font-semibold text-gray-800">Settings</div>
         </div>
 
+        {{-- Name --}}
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'name']) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="px-5 py-4 border-b border-gray-100">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm text-gray-500">Name</span>
+                    <button class="btn shrink-0">Save</button>
+                </div>
+                <input type="text" name="key" value="{{ old('key', $dataTable->key) }}" placeholder="e.g. invoices-table">
+                @error('key')
+                    <small class="mt-1 block text-red-700">{{ $message }}</small>
+                @enderror
+            </div>
+        </form>
+
         {{-- Theme --}}
         <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'theme']) }}" method="POST">
             @csrf

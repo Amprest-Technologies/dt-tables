@@ -30,7 +30,7 @@ class DataTableRequest extends FormRequest
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    public function rules(#[RouteParameter('data_table')] $dataTable): array
+    public function rules(#[RouteParameter('data_table')] DataTable $dataTable): array
     {
         //  Define the unique rule for the key
         $uniqueRule = new TableNameIsUnique(ignore: $dataTable);
@@ -38,7 +38,7 @@ class DataTableRequest extends FormRequest
         //  Return the rules
         return [
             'key' => ['required', 'string', 'max:255', $uniqueRule],
-            'type' => ['sometimes', 'required', Rule::in(['buttons', 'theme', 'loader', 'behaviour'])],
+            'type' => ['sometimes', 'required', Rule::in(['buttons', 'theme', 'loader', 'behaviour', 'name'])],
             'theme' => ['sometimes', 'required', Rule::in(array_keys(config('dt-tables.themes')))],
             'buttons' => ['sometimes', 'required', 'array'],
             'buttons.*' => ['sometimes', 'boolean'],
@@ -62,6 +62,15 @@ class DataTableRequest extends FormRequest
      */
     public function updateData(DataTable $dataTable): array
     {
+        //  Check if the update type is name
+        if ($this->type === 'name') {
+            //  Define the key
+            $dataTable->key = $this->key;
+
+            //  Retuen as an array
+            return $dataTable->toArray();
+        }
+
         //  Get the type of data to update
         $dataTable->settings->{$this->type} = $this->{$this->type}();
 

@@ -101,17 +101,7 @@ abstract class BaseTable
             'parameters' => $instance->parameters(),
         ];
     }
-
-    /**
-     * Return a new instance without running the pipeline.
-     *
-     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
-     */
-    public static function make(mixed ...$args): static
-    {
-        return new static(...$args);
-    }
-
+    
     /**
      * Get the raw table data.
      *

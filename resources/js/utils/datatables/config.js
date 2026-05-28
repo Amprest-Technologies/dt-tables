@@ -207,13 +207,43 @@ window.buttons = function(buttons, theme, title) {
             name: 'excel',
             text: 'Excel',
             filename: title,
-            title: title,
+            title: function () {
+                //  Get the current time
+                const now = new Date();
+
+                //  Extract the date
+                const date = now.toLocaleDateString('en-GB');
+
+                //  Extract the time
+                const time = now.toLocaleTimeString('en-GB');
+
+                //  Return the string
+                return `${title} - Generated at ${date} ${time}`;
+            },
             footer: false,
             className: theme.buttons,
             exportOptions: {
                 orthogonal: 'sort',
                 columns: ':visible:not(th.exclude-from-export)',
-            }
+            },
+            customize: function (xlsx) {
+                //  sheet1.xml is the grid of rows and cells written to the Excel file.
+                const sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                //  Set a counter to 0
+                let rowNum = 0;
+
+                //  Loop through the items and apply borders of different widths
+                sheet.querySelectorAll('sheetData row').forEach(function (row) {
+                    //  Loop through each cell
+                    row.querySelectorAll('c').forEach(function (cell) {
+                        cell.setAttribute('s', rowNum <= 1 ? '27' : '25');
+                    });
+
+                    //  Increment the counter
+                    rowNum++;
+                });
+            },
         },
         {
             extend: 'colvis',
