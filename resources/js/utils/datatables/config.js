@@ -253,6 +253,7 @@ window.columns = function (tableID, config) {
         } else if (th.hasAttribute('dtt-actions')) {
             column = actionButtons(title);
 
+        //  Handle the default case
         } else {
             //  Get the name of the column
             let name = title ? title.replace(/\s+/g, '_').toLowerCase() : null;
@@ -260,6 +261,7 @@ window.columns = function (tableID, config) {
             //  Get the first config object that matches the name
             let configObj = config.find(obj => obj.key === name);
 
+            //  Define the column configuration
             column = {
                 name: name.replace(/[ ]/g, '_'),
                 data: name,
@@ -402,6 +404,8 @@ window.setupSearchParams = function (api) {
     new URLSearchParams(window.location.search).forEach((value, key) => {
         //  Get the column index
         let index = columns.findIndex(col => col.name === key.replace(/-/g, '_'));
+
+        console.log({ key, value, index });
 
         //  Get the column
         let column = api.column(index);
