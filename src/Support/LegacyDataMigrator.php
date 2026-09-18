@@ -71,8 +71,8 @@ class LegacyDataMigrator
             $this->migrateTable($table);
         }
 
-        //  Never delete the legacy file, only move it aside
-        rename($this->legacyPath, "{$this->legacyPath}.bak");
+        //  Remove the legacy file now that every table has its own file
+        unlink($this->legacyPath);
     }
 
     /**
