@@ -14,27 +14,35 @@ const eta = new Eta({
 });
 
 /* -----------------------------------------------------------------
- * Create a function to clone the header so as to allow filtering
+ * Create a function to build the filter row, one cell per column
  * ------------------------------------------------------------------
  */
-let cloneHeader = function (tableId) {
+let buildFilterRow = function (tableId, api) {
     //  Get the table element
     let table = document.getElementById(tableId);
 
     //  Get the thead element
     let thead = table.querySelector('thead');
 
-    //  Duplicate the tr element in the thead element
-    let tr = thead.querySelector('tr').cloneNode(true);
+    //  Create the filter row
+    let tr = document.createElement('tr');
 
-    //  Add data-dt-order="disable" attribute to the cloned <tr>
+    //  Add data-dt-order="disable" attribute to the filter row
     tr.setAttribute('data-dt-order', 'disable');
 
-    //  Add a class to the cloned <tr>
+    //  Add a class to the filter row
     tr.classList.add('selection-row');
 
-    // Append the cloned <tr> to the thead (or insert wherever needed)
+    //  Add one cell per column, cloned from that column's own header cell
+    api.columns().every(function () {
+        tr.appendChild(this.header(0).cloneNode(true));
+    });
+
+    //  Append the filter row to the thead
     thead.appendChild(tr);
+
+    //  Return the filter row so its cells can be addressed by column index
+    return tr;
 };
 
 /* -----------------------------------------------------------------
@@ -364,38 +372,37 @@ window.setupStyling = function (theme) {
 window.setupFilters = function (api, config, theme) {
     //  Loop through the columns and add a filter to each column
     if (config.filter(column => column.search_type !== 'none').length > 0) {
-        //  Clone the header after DataTables has initialised so the filter row
-        //  is not captured in export snapshots (DataTables reads headers at init time)
+        //  Build the filter row after DataTables has initialised so it is not
+        //  captured in export snapshots (DataTables reads headers at init time)
         let tableId = api.table().node().id;
 
-        //  Clone the header to create a new row for filters and append it to the thead
-        cloneHeader(tableId);
+        //  Build the filter row, one cell per column in true column-index order
+        let filterRow = buildFilterRow(tableId, api);
 
-        //  Query the live DOM for the original header row cells to determine column positions
-        let originalCells = Array.from(document.querySelectorAll(`#${tableId} thead tr:first-child th`));
+        //  Address filter cells by column index, matching the build order above
+        let filterCells = Array.from(filterRow.children);
 
-        //  Query the live DOM for the filter row cells
-        let filterCells = Array.from(document.querySelectorAll(`#${tableId} thead tr.selection-row th`));
+        //  Keep a filter cell's visibility in step with its column's
+        let syncCellVisibility = function (column, cell) {
+            cell.style.display = column.visible() ? '' : 'none';
+        };
 
         //  Loop through the columns in the datatable
         api.columns().every(function () {
             //  Get the column
             let column = this;
 
-            //  Find the DOM position of this column's header in the original row
-            let cellIndex = originalCells.indexOf(column.header(0));
-
-            //  If the column header is not found, skip to the next iteration
-            if (cellIndex === -1) { return; }
-
-            //  Get the corresponding filter cell
-            let cell = filterCells[cellIndex];
+            //  Get the corresponding filter cell by column index
+            let cell = filterCells[column.index()];
 
             //  If the cell is not found, skip to the next iteration
             if (!cell) { return; }
 
             //  Clear the cell
             cell.innerHTML = '';
+
+            //  Hide the filter cell for columns that start out hidden (dtt-hidden)
+            syncCellVisibility(column, cell);
 
             //  Get the name of the column
             let name = column.name();
@@ -416,6 +423,15 @@ window.setupFilters = function (api, config, theme) {
                     break;
             }
         });
+
+        //  Keep the filter row aligned when a column is toggled later (e.g. via the colvis button)
+        api.on('column-visibility.dt', function (e, settings, columnIndex) {
+            //  Get the corresponding filter cell by column index
+            let cell = filterCells[columnIndex];
+
+            //  Sync its visibility if found
+            if (cell) { syncCellVisibility(api.column(columnIndex), cell); }
+        });
     }
 };
 
@@ -434,8 +450,6 @@ window.setupSearchParams = function (api) {
     new URLSearchParams(window.location.search).forEach((value, key) => {
         //  Get the column index
         let index = columns.findIndex(col => col.name === key.replace(/-/g, '_'));
-
-        console.log({ key, value, index });
 
         //  Get the column
         let column = api.column(index);
