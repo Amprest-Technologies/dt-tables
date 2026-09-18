@@ -18,11 +18,11 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            'eta': path.resolve(__dirname, 'node_modules/eta/dist/core.js'),
-            '@resources': path.resolve(__dirname, 'resources'),
-            '@node': path.resolve(__dirname, 'node_modules'),
-            '@assets': path.resolve(__dirname, 'public'),
-            '@vendor': path.resolve(__dirname, 'vendor'),
+            'eta': path.resolve(import.meta.dirname, 'node_modules/eta/dist/core.js'),
+            '@resources': path.resolve(import.meta.dirname, 'resources'),
+            '@node': path.resolve(import.meta.dirname, 'node_modules'),
+            '@assets': path.resolve(import.meta.dirname, 'public'),
+            '@vendor': path.resolve(import.meta.dirname, 'vendor'),
         }
     }
 });
