@@ -1,6 +1,6 @@
 ---
 name: dt-tables-admin
-description: "Use when working with the amprest/dt-tables package's built-in admin UI at /dt-tables/data-tables: registering a new DataTable, adding/editing/deleting columns and their search types, editing a table's name/theme/export buttons/behaviour/loader settings, or debugging why a table isn't picking up its dt-tables/{key}.json configuration. Covers the package's own routes, controllers, and Blade views under package/src/Http/Controllers and package/resources/views/pages/data-tables. Do not use for writing Table classes in app/DataTables/, the <x-data-table> component itself, or the package's JS/CSS bundles — see the dt-tables-development skill for those."
+description: "Use when working with the amprest/dt-tables package's built-in admin UI at /dt-tables/data-tables: registering a new DataTable, adding/editing/deleting columns and their search types, editing a table's name/theme/export buttons/behaviour/loader settings, or debugging why a table isn't picking up its resources/data-tables/{key}.json configuration. Covers the package's own routes, controllers, and Blade views under package/src/Http/Controllers and package/resources/views/pages/data-tables. Do not use for writing Table classes in app/DataTables/, the <x-data-table> component itself, or the package's JS/CSS bundles — see the dt-tables-development skill for those."
 license: MIT
 metadata:
   author: Amprest Technologies
@@ -10,7 +10,7 @@ metadata:
 
 ## Package Overview
 
-`amprest/dt-tables` ships a small local-only admin UI for managing the `dt-tables/` data store without hand-editing files: registering tables, adding/editing/deleting columns, and editing per-table settings (name, theme, export buttons, behaviour, loader). Each table lives in its own `dt-tables/{key}.json` file.
+`amprest/dt-tables` ships a small local-only admin UI for managing the `resources/data-tables/` data store without hand-editing files: registering tables, adding/editing/deleting columns, and editing per-table settings (name, theme, export buttons, behaviour, loader). Each table lives in its own `resources/data-tables/{key}.json` file.
 
 ## Routes (local-only)
 
@@ -87,4 +87,4 @@ Every controller action redirects back with a flash `alert`; the layout renders 
 
 - Settings updates always send the whole table object (`$dataTable->toArray()`), not just the changed field — if you add a new settings section, make sure its formatter method has sensible fallbacks for tables that predate it (see the `behaviour` fallback pattern using `fluent((array) ($settings->behaviour ?? []))`).
 - Column rows share `<button form="...">` across a `<tr>` and two out-of-band `<form>` elements — each needs a unique `id` derived from the column's id, or submitting one row's form will submit the wrong one.
-- The whole UI, including the index page, is inaccessible outside `APP_ENV=local` — don't rely on it being reachable in staging or production; tables must be registered another way there (e.g. committing `dt-tables/{key}.json` files directly) if needed.
+- The whole UI, including the index page, is inaccessible outside `APP_ENV=local` — don't rely on it being reachable in staging or production; tables must be registered another way there (e.g. committing `resources/data-tables/{key}.json` files directly) if needed.

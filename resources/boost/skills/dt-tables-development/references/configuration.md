@@ -1,12 +1,12 @@
 # Configuration
 
-## dt-tables/
+## resources/data-tables/
 
-The `dt-tables/` directory stores metadata for all registered DataTables — one JSON file per table, named `{key}.json`. Its location is fixed (`dt_tables_storage_path()`, resolving to `base_path('dt-tables')`) and is never read from config, so it can't drift out of sync with a published config file. The directory is git-tracked so table configuration ships with the repo. Each file defines that table's columns, search types, buttons, and theme.
+The `resources/data-tables/` directory stores metadata for all registered DataTables — one JSON file per table, named `{key}.json`. Its location is fixed (`dt_tables_storage_path()`, resolving to `resource_path('data-tables')`) and is never read from config, so it can't drift out of sync with a published config file. The directory is git-tracked so table configuration ships with the repo. Each file defines that table's columns, search types, buttons, and theme.
 
 ### Structure
 
-`dt-tables/tenants-table.json`:
+`resources/data-tables/tenants-table.json`:
 
 ```json
 {
@@ -77,14 +77,14 @@ Some tables support a loading overlay while data processes:
 
 ### Registering a New Table
 
-When creating a new DataTable, add a file to `dt-tables/` via the admin UI at `/dt-tables/data-tables`, or manually:
+When creating a new DataTable, add a file to `resources/data-tables/` via the admin UI at `/dt-tables/data-tables`, or manually:
 
-1. Create `dt-tables/{key}.json`, where `{key}` matches the `id` attribute you will use on `<x-data-table>`
+1. Create `resources/data-tables/{key}.json`, where `{key}` matches the `id` attribute you will use on `<x-data-table>`
 2. Set the `key` field inside the file to the same value as the filename
 3. Define `settings` with desired buttons and theme
 4. Add `columns` entries for each column that needs filtering — the `key` must match the `dtt-title` attribute in the Blade `<th>` element, and each column needs its own generated ULID `id`
 
-**Important:** Not every column in `<thead>` needs a `dt-tables/{key}.json` entry. Only columns with `dtt-title` attributes that need search/filter capability need entries. Columns like row index (`dtt-row-index`), actions (`dtt-actions`), and plain display columns do not need entries.
+**Important:** Not every column in `<thead>` needs a `resources/data-tables/{key}.json` entry. Only columns with `dtt-title` attributes that need search/filter capability need entries. Columns like row index (`dtt-row-index`), actions (`dtt-actions`), and plain display columns do not need entries.
 
 ## config/dt-tables.php
 
@@ -123,7 +123,7 @@ return [
 
 ### Theme Selection
 
-Each table can override the default theme in its `dt-tables/{key}.json` settings. The theme controls the CSS classes applied to buttons, inputs, and selects within the DataTable UI.
+Each table can override the default theme in its `resources/data-tables/{key}.json` settings. The theme controls the CSS classes applied to buttons, inputs, and selects within the DataTable UI.
 
 - Use `bootstrap` for portal admin views (Bootstrap-styled pages)
 - Use `tailwind` for Tailwind CSS-styled views (e.g., access manager, customer pages)
