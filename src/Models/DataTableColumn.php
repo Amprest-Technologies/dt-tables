@@ -26,11 +26,6 @@ class DataTableColumn extends Model
      */
     protected function create(array $data): bool
     {
-        //  Check if the json file exists
-        if (! file_exists($this->jsonPath)) {
-            touch($this->jsonPath);
-        }
-
         //  Pull the table id
         [$dataTable, $data] = $this->pull('data_table', $data);
 
@@ -51,20 +46,12 @@ class DataTableColumn extends Model
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    protected function find(string $id): ?self
+    protected function find(string $id, DataTable $dataTable): ?self
     {
-        //  Check if the json file exists
-        if (! file_exists($this->jsonPath)) {
-            return null;
-        }
+        //  Get the column from the parent table's own columns, scoped to that one file
+        $column = $dataTable->columns->firstWhere('id', $id);
 
-        //  Get the item from the json file
-        $columns = $this->all();
-
-        //  Get the column
-        $column = $columns->pluck('columns')->flatten(1)->firstWhere('id', $id);
-
-        //  If no columns exist, return null
+        //  If no column exists, return null
         if (! $column) {
             return null;
         }
@@ -83,11 +70,6 @@ class DataTableColumn extends Model
      */
     public function update(array $data): bool
     {
-        //  Check if the json file exists
-        if (! file_exists($this->jsonPath)) {
-            return false;
-        }
-
         //  Pull the table id
         [$dataTable, $data] = $this->pull('data_table', array_merge($data, ['id' => $this->id]));
 
@@ -111,11 +93,6 @@ class DataTableColumn extends Model
      */
     public function delete(DataTable $dataTable): bool
     {
-        //  Check if the json file exists
-        if (! file_exists($this->jsonPath)) {
-            return false;
-        }
-
         //  Remove the column
         $dataTable->columns = $dataTable->columns
             ->reject(fn ($column) => $column->id === $this->id)

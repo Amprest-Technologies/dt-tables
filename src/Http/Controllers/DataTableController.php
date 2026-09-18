@@ -37,7 +37,7 @@ class DataTableController
 
         //  Return the view with the list of tables
         return redirect()
-            ->route('dt-tables.data-tables.edit', ['data_table' => $dataTable->id])
+            ->route('dt-tables.data-tables.edit', ['data_table' => $dataTable->key])
             ->with([
                 'alert' => [
                     'type' => 'success',
@@ -73,11 +73,14 @@ class DataTableController
         //  Update the table
         $dataTable->update($validated);
 
-        //  Return the view with the list of tables
-        return redirect()->back()->with(['alert' => [
-            'type' => 'success',
-            'message' => trans('dt-tables::alerts.data-table.updated'),
-        ]]);
+        //  Redirect by key (not back()) since a name update renames the file,
+        //  which would leave back() pointing at the now-stale old-key edit URL
+        return redirect()
+            ->route('dt-tables.data-tables.edit', ['data_table' => $dataTable->key])
+            ->with(['alert' => [
+                'type' => 'success',
+                'message' => trans('dt-tables::alerts.data-table.updated'),
+            ]]);
     }
 
     /**

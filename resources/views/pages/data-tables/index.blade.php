@@ -36,12 +36,12 @@
                             <td class="font-mono text-sm">{{ $dataTable->key }}</td>
                             <td>
                                 <div class="element-group justify-center">
-                                    <a href="{{ route('dt-tables.data-tables.edit', ['data_table' => $dataTable->id]) }}" class="btn">Edit</a>
-                                    <button type="submit" form="{{ $form = 'delete-'.$dataTable->id.'-form' }}" class="btn bg-red-600! hover:bg-red-700!">Delete</button>
+                                    <a href="{{ route('dt-tables.data-tables.edit', ['data_table' => $dataTable->key]) }}" class="btn">Edit</a>
+                                    <button type="submit" form="{{ $form = 'delete-'.$dataTable->key.'-form' }}" class="btn bg-red-600! hover:bg-red-700!" onclick="return confirm('Delete table ' + @js($dataTable->key) + '? This cannot be undone.')">Delete</button>
                                 </div>
                             </td>
                         </tr>
-                        <form id="{{ $form }}" action="{{ route('dt-tables.data-tables.destroy', ['data_table' => $dataTable->id]) }}" method="POST">
+                        <form id="{{ $form }}" action="{{ route('dt-tables.data-tables.destroy', ['data_table' => $dataTable->key]) }}" method="POST">
                             @csrf
                             @method('DELETE')
                         </form>

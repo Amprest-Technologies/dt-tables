@@ -38,10 +38,11 @@ class RouteServiceProvider extends ServiceProvider
             return $dataTable;
         });
 
-        //  Define the route bindings for the data table
-        Route::bind('data_table_column', function (string $value) {
+        //  Define the route bindings for the data table column, scoped to the
+        //  already-resolved parent data table so no other table's file is touched
+        Route::bind('data_table_column', function (string $value, $route) {
             //  Return the result of the find
-            $column = DataTableColumn::find($value);
+            $column = DataTableColumn::find($value, $route->parameter('data_table'));
 
             //  Abort if no result is found
             abort_if(is_null($column), 404, 'Data table column not found');

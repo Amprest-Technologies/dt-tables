@@ -26,7 +26,7 @@ class TableNameIsUnique implements ValidationRule
     {
         //  Define the exists rule
         $exists = DataTable::where($attribute, $value)
-            ->when($this->ignore, fn ($query) => $query->where('id', '!=', $this->ignore->id))
+            ->when($this->ignore, fn ($query) => $query->where('key', '!=', $this->ignore->key))
             ->isNotEmpty();
 
         //  Check if the table name exists

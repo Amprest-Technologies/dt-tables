@@ -30,7 +30,7 @@ class DataTableRequest extends FormRequest
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    public function rules(#[RouteParameter('data_table')] DataTable $dataTable): array
+    public function rules(#[RouteParameter('data_table')] ?DataTable $dataTable = null): array
     {
         //  Define the unique rule for the key
         $uniqueRule = new TableNameIsUnique(ignore: $dataTable);

@@ -1,57 +1,55 @@
 # Configuration
 
-## dt-tables.json
+## dt-tables/
 
-The `dt-tables.json` file at the project root stores metadata for all registered DataTables. Each entry defines the table's columns, search types, buttons, and theme.
+The `dt-tables/` directory stores metadata for all registered DataTables — one JSON file per table, named `{key}.json`. Its location is fixed (`dt_tables_storage_path()`, resolving to `base_path('dt-tables')`) and is never read from config, so it can't drift out of sync with a published config file. The directory is git-tracked so table configuration ships with the repo. Each file defines that table's columns, search types, buttons, and theme.
 
 ### Structure
 
+`dt-tables/tenants-table.json`:
+
 ```json
-[
-    {
-        "id": "01jvsbg1pwpppz7gjstvw892dp",
-        "key": "tenants-table",
-        "settings": {
-            "buttons": ["copy", "colvis", "excel"],
-            "theme": "bootstrap"
+{
+    "key": "tenants-table",
+    "settings": {
+        "buttons": ["copy", "colvis", "excel"],
+        "theme": "bootstrap"
+    },
+    "columns": [
+        {
+            "key": "zone",
+            "search_type": "select",
+            "classes": null,
+            "id": "01jvsbkqpt0ps8s3w9m815genz"
         },
-        "columns": [
-            {
-                "key": "zone",
-                "search_type": "select",
-                "classes": null,
-                "id": "01jvsbkqpt0ps8s3w9m815genz"
-            },
-            {
-                "key": "name",
-                "search_type": "input",
-                "classes": null,
-                "id": "01jvsbm8msvw7ghsw62v6jq6sj"
-            },
-            {
-                "key": "balance",
-                "search_type": "none",
-                "classes": null,
-                "id": "01jvsbrhmsaxy09v6dq7xg79za"
-            }
-        ]
-    }
-]
+        {
+            "key": "name",
+            "search_type": "input",
+            "classes": null,
+            "id": "01jvsbm8msvw7ghsw62v6jq6sj"
+        },
+        {
+            "key": "balance",
+            "search_type": "none",
+            "classes": null,
+            "id": "01jvsbrhmsaxy09v6dq7xg79za"
+        }
+    ]
+}
 ```
 
 ### Fields
 
 | Field | Description |
 |-------|-------------|
-| `id` | ULID identifier for the table entry |
-| `key` | **Must match** the `id` attribute on `<x-data-table>` |
+| `key` | **Must match** both the `id` attribute on `<x-data-table>` and the file's own name (`{key}.json`) |
 | `settings.buttons` | Export buttons to show: `copy`, `colvis`, `excel` |
 | `settings.theme` | CSS framework: `bootstrap` or `tailwind` |
 | `settings.loader` | Optional loader configuration (see below) |
 | `columns[].key` | **Must match** the `dtt-title` value in Blade and the array key from `handle()` |
 | `columns[].search_type` | Filter type: `input`, `select`, or `none` |
 | `columns[].classes` | Optional CSS classes for the column |
-| `columns[].id` | ULID identifier for the column entry |
+| `columns[].id` | ULID identifier for the column entry (columns still have an id; tables don't) |
 
 ### Search Types
 
@@ -79,23 +77,21 @@ Some tables support a loading overlay while data processes:
 
 ### Registering a New Table
 
-When creating a new DataTable, add an entry to `dt-tables.json` via the admin UI at `/dt-tables/data-tables`, or manually:
+When creating a new DataTable, add a file to `dt-tables/` via the admin UI at `/dt-tables/data-tables`, or manually:
 
-1. Generate a ULID for the `id` field
-2. Set `key` to match the `id` attribute you will use on `<x-data-table>`
+1. Create `dt-tables/{key}.json`, where `{key}` matches the `id` attribute you will use on `<x-data-table>`
+2. Set the `key` field inside the file to the same value as the filename
 3. Define `settings` with desired buttons and theme
-4. Add `columns` entries for each column that needs filtering — the `key` must match the `dtt-title` attribute in the Blade `<th>` element
+4. Add `columns` entries for each column that needs filtering — the `key` must match the `dtt-title` attribute in the Blade `<th>` element, and each column needs its own generated ULID `id`
 
-**Important:** Not every column in `<thead>` needs a `dt-tables.json` entry. Only columns with `dtt-title` attributes that need search/filter capability need entries. Columns like row index (`dtt-row-index`), actions (`dtt-actions`), and plain display columns do not need entries.
+**Important:** Not every column in `<thead>` needs a `dt-tables/{key}.json` entry. Only columns with `dtt-title` attributes that need search/filter capability need entries. Columns like row index (`dtt-row-index`), actions (`dtt-actions`), and plain display columns do not need entries.
 
 ## config/dt-tables.php
 
-The package configuration file defines default settings:
+The package configuration file defines default settings. There is no `data_source` key — the storage location is fixed by the package (`dt_tables_storage_path()`), not configurable, so it can never go stale:
 
 ```php
 return [
-    'data_source' => base_path('dt-tables.json'),
-
     'settings' => [
         'buttons' => ['copy', 'colvis', 'excel'],
         'theme' => 'bootstrap',
@@ -127,7 +123,7 @@ return [
 
 ### Theme Selection
 
-Each table can override the default theme in its `dt-tables.json` settings. The theme controls the CSS classes applied to buttons, inputs, and selects within the DataTable UI.
+Each table can override the default theme in its `dt-tables/{key}.json` settings. The theme controls the CSS classes applied to buttons, inputs, and selects within the DataTable UI.
 
 - Use `bootstrap` for portal admin views (Bootstrap-styled pages)
 - Use `tailwind` for Tailwind CSS-styled views (e.g., access manager, customer pages)

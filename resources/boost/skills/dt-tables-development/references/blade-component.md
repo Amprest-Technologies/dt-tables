@@ -8,7 +8,7 @@ The `<x-data-table>` component renders a fully interactive DataTable with search
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `id` | `string` | Unique identifier — **must match** the `key` in `dt-tables.json` |
+| `id` | `string` | Unique identifier — **must match** the `key` field in its `dt-tables/{key}.json` file |
 | `:payload` | `array` | The data array returned by `Table::build()` |
 
 ### Optional Attributes
@@ -43,7 +43,7 @@ These special attributes on `<th>` elements control DataTable behavior:
 | Attribute | Value | Purpose |
 |-----------|-------|---------|
 | `dtt-row-index` | *(none)* | Auto-generates row numbers (1, 2, 3...) |
-| `dtt-title="key"` | Column key string | Enables column-specific filtering/sorting. The key must match a column key in `dt-tables.json` |
+| `dtt-title="key"` | Column key string | Enables column-specific filtering/sorting. The key must match a column key in that table's `dt-tables/{key}.json` |
 | `dtt-actions` | *(none)* | Marks the actions column (excluded from search, receives action buttons) |
 | `dtt-hidden` | *(none)* | Hides the column from the UI while keeping it in the DataTable dataset. Row data is still accessible (e.g. for action links). Compatible with all column types. |
 | `exclude-from-export` | *(none, on class)* | Hides the column from Excel/copy exports |
@@ -52,7 +52,7 @@ These special attributes on `<th>` elements control DataTable behavior:
 
 The package identifies column names from the `<th>` inner text. Use `dtt-title="key"` in two cases:
 
-1. **Searchable/filterable columns** — the key links the column to its `dt-tables.json` search configuration
+1. **Searchable/filterable columns** — the key links the column to its `dt-tables/{key}.json` search configuration
 2. **Dynamic `<th>` content** — when the header text contains variables or Blade expressions (e.g., `Amount ({{ currency() }})`), the package cannot reliably extract the column name from the rendered text. Add `dtt-title="key"` so the package knows what column to render.
 
 ```blade
@@ -68,7 +68,7 @@ The package identifies column names from the `<th>` inner text. Use `dtt-title="
 
 The `dtt-title` value must match both:
 1. A key in the row array returned by `handle()` in the Table class
-2. A column `key` in the `dt-tables.json` configuration
+2. A column `key` in that table's `dt-tables/{key}.json` configuration
 
 ```php
 // In Table class handle():
@@ -154,11 +154,11 @@ Columns can be conditionally shown based on context:
 The `<x-data-table>` component (`Amprest\DtTables\Views\Components\DataTable`):
 
 1. Accepts `:payload` and extracts `$payload['table']` as `$tableData` and `$payload['parameters']` as `$tableParams`
-2. Looks up `dt-tables.json` for a matching `key` to load column configuration (search types, themes, buttons)
+2. Looks up `dt-tables/{key}.json` for a matching `key` to load column configuration (search types, themes, buttons)
 3. Renders a `<table>` with the slotted `<thead>`, hidden initially if a loader is configured
 4. Injects an inline `<script type="module">` that initializes the DataTable with:
    - Row data from `$tableData`
-   - Column config from `dt-tables.json`
+   - Column config from `dt-tables/{key}.json`
    - Search/filter setup per column based on `search_type`
    - Export buttons (copy, colvis, excel)
    - Button trigger event listeners for activity logging

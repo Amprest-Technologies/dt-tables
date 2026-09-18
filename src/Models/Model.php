@@ -9,9 +9,9 @@ use ReflectionProperty;
 class Model
 {
     /**
-     * Define the json file path.
+     * Define the directory holding one JSON file per record.
      */
-    protected string $jsonPath;
+    protected string $directory;
 
     /**
      * Define the constructor for the DataTable class.
@@ -20,13 +20,23 @@ class Model
      */
     public function __construct(array $items = [])
     {
-        //  Define the json file path
-        $this->jsonPath = config('dt-tables.data_source');
+        //  Define the directory holding the JSON files
+        $this->directory = rtrim(dt_tables_storage_path(), '/');
 
         //  Check if the items are not empty
         if (! empty($items)) {
             $this->setAttributes($items);
         }
+    }
+
+    /**
+     * Get the file path for a given key.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function filePath(string $key): string
+    {
+        return "{$this->directory}/{$key}.json";
     }
 
     /**
@@ -40,34 +50,68 @@ class Model
     }
 
     /**
-     * Method to get all the JSON data from the json file.
+     * Method to get all the JSON data across every file in the directory.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function all(): Collection
     {
-        //  Get the json data
-        $data = json_decode(file_get_contents($this->jsonPath));
+        //  Get every json file in the directory
+        $files = is_dir($this->directory) ? glob($this->filePath('*')) : [];
 
-        //  Return the collection of json data
-        return collect($data)->values();
+        //  Decode each file and drop any that failed to parse
+        return collect($files)
+            ->map(fn ($file) => json_decode(file_get_contents($file)))
+            ->filter()
+            ->values();
     }
 
     /**
-     * Method to out the JSON data into the json file.
+     * Method to write the JSON data for a given key to its file.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    protected function storeInFile(array $data): bool
+    protected function storeInFile(string $key, array $data): bool
     {
         //  Encode the json data
-        $data = json_encode($data);
+        $data = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
         //  Put the json data to the file
-        file_put_contents($this->jsonPath, $data);
+        file_put_contents($this->filePath($key), $data);
 
         //  Check if the json data was written to the file
-        return file_get_contents($this->jsonPath) === $data;
+        return file_get_contents($this->filePath($key)) === $data;
+    }
+
+    /**
+     * Method to delete the file for a given key.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function deleteFile(string $key): bool
+    {
+        return file_exists($this->filePath($key)) && unlink($this->filePath($key));
+    }
+
+    /**
+     * Method to rename a key's file, refusing to clobber an existing destination.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function renameFile(string $oldKey, string $newKey): bool
+    {
+        //  Never overwrite another record's file
+        if (file_exists($this->filePath($newKey))) {
+            return false;
+        }
+
+        //  If there's nothing to rename, there's nothing to fail
+        if (! file_exists($this->filePath($oldKey))) {
+            return true;
+        }
+
+        //  Rename the file
+        return rename($this->filePath($oldKey), $this->filePath($newKey));
     }
 
     /**

@@ -6,6 +6,7 @@ use Amprest\DtTables\Console\Commands\MakeDataTableCommand;
 use Amprest\DtTables\Http\Middleware\AutoInjectDtTableAssets;
 use Amprest\DtTables\Providers\RouteServiceProvider;
 use Amprest\DtTables\Services\HelpersService;
+use Amprest\DtTables\Support\LegacyDataMigrator;
 use Amprest\DtTables\Views\Components\DataTable;
 use Amprest\DtTables\Views\Components\DataTableAssets;
 use Illuminate\Contracts\Http\Kernel;
@@ -90,9 +91,16 @@ class DtTablesServiceProvider extends ServiceProvider
      */
     protected function createAssets(): void
     {
-        if (! file_exists($path = base_path('dt-tables.json'))) {
-            touch($path);
+        //  Get the directory
+        $directory = dt_tables_storage_path();
+
+        //  Migrate any legacy single-file dt-tables.json into the new folder structure
+        if (file_exists($legacyPath = base_path('dt-tables.json'))) {
+            (new LegacyDataMigrator($legacyPath, $directory))->handle();
         }
+
+        //  Create the directory
+        ensure_directory_exists($directory);
     }
 
     /**

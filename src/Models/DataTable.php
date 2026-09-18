@@ -5,14 +5,14 @@ namespace Amprest\DtTables\Models;
 class DataTable extends Model
 {
     /**
-     * The id for the data table.
-     */
-    public string $id;
-
-    /**
      * The key for the data table.
      */
     public string $key;
+
+    /**
+     * The key this instance was loaded under, used to detect renames on update.
+     */
+    protected ?string $originalKey = null;
 
     /**
      * The settings for the data table.
@@ -47,23 +47,17 @@ class DataTable extends Model
      */
     protected function create(array $data): self
     {
-        //  Check if the json file exists
-        if (! file_exists($this->jsonPath)) {
-            touch($this->jsonPath);
-        }
+        //  Check if the directory exists
+        ensure_directory_exists($this->directory);
 
         //  Prepare the data to be stored in the json file
         $data = array_merge($data, [
-            'id' => strtolower(str()->ulid()),
             'settings' => $this->settings,
             'columns' => $this->columns,
         ]);
 
-        //  Get the contents of the json file
-        $tables = $this->all()->push($data)->toArray();
-
-        //  Store the items into the json file
-        $this->storeInFile($tables);
+        //  Store the table into its own json file
+        $this->storeInFile($data['key'], $data);
 
         //  Check if the json data was written to the file
         return new self($data);
@@ -76,21 +70,24 @@ class DataTable extends Model
      */
     protected function find(string $key): ?self
     {
-        //  Check if the json file exists
-        if (! file_exists($this->jsonPath)) {
+        //  Check if the table's json file exists
+        if (! file_exists($this->filePath($key))) {
             return null;
         }
 
-        //  Get the table from the json file
-        $table = $this->all()->firstWhere('id', $key);
+        //  Get the table from its json file
+        $table = json_decode(file_get_contents($this->filePath($key)));
 
-        //  If no items exist, return null
+        //  If the file failed to parse, return null
         if (! $table) {
             return null;
         }
 
         //  Else set the attributes
         $this->setAttributes($table);
+
+        //  Remember the key this instance was loaded under, to detect renames on update
+        $this->originalKey = $this->key;
 
         //  Return the object
         return $this;
@@ -103,22 +100,30 @@ class DataTable extends Model
      */
     public function update(array $data = []): bool
     {
-        //  Check if the json file exists
-        if (! file_exists($this->jsonPath)) {
+        //  Fall back to the current attributes if no data was given
+        $data = $data ?: $this->toArray();
+
+        //  Determine the new key
+        $newKey = $data['key'] ?? $this->key;
+
+        //  Determine the old key
+        $oldKey = $this->originalKey ?? $newKey;
+
+        //  If the key changed, rename the file first; bail out if that fails
+        if ($oldKey !== $newKey && ! $this->renameFile($oldKey, $newKey)) {
             return false;
         }
 
-        //  Get the contents of the json file
-        $tables = $this->all();
+        //  Store the table into its json file
+        $written = $this->storeInFile($newKey, $data);
 
-        //  Get the index
-        $index = $tables->search(fn ($item) => $item->id === $this->id);
+        //  Track the new key once the write succeeds
+        if ($written) {
+            $this->originalKey = $newKey;
+        }
 
-        //  Check the remaining items
-        $tables = $tables->replace([$index => $data ?: $this->toArray()]);
-
-        //  Store the tables into the json file
-        return $this->storeInFile($tables->toArray());
+        //  Return the result
+        return $written;
     }
 
     /**
@@ -126,20 +131,8 @@ class DataTable extends Model
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    protected function destroy(DataTable $dataTable)
+    protected function destroy(DataTable $dataTable): bool
     {
-        //  Check if the json file exists
-        if (! file_exists($this->jsonPath)) {
-            return false;
-        }
-
-        //  Get the contents of the json file
-        $tables = $this->all();
-
-        //  Check the remaining items
-        $tables = $tables->reject(fn ($table) => $table->id === $dataTable->id)->values();
-
-        //  Store the items into the json file
-        return $this->storeInFile($tables->toArray());
+        return $this->deleteFile($dataTable->key);
     }
 }

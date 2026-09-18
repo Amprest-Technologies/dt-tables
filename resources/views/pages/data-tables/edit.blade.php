@@ -30,7 +30,7 @@
         </div>
 
         <div class="py-3 border-b border-gray-100">
-            <form action="{{ route('dt-tables.data-tables.columns.store', ['data_table' => $dataTable->id]) }}" method="POST">
+            <form action="{{ route('dt-tables.data-tables.columns.store', ['data_table' => $dataTable->key]) }}" method="POST">
                 @csrf
                 @php $id = 'new-column' @endphp
                 {!! bag($id) !!}
@@ -78,16 +78,16 @@
                             <td>
                                 <div class="element-group justify-center">
                                     <button form="{{ $form }}" type="submit" class="btn">Save</button>
-                                    <button form="{{ $deleteForm = 'delete-'.$id.'-form' }}" type="submit" class="btn bg-red-600! hover:bg-red-700!">Delete</button>
+                                    <button form="{{ $deleteForm = 'delete-'.$id.'-form' }}" type="submit" class="btn bg-red-600! hover:bg-red-700!" onclick="return confirm('Delete column ' + @js($column->key) + '? This cannot be undone.')">Delete</button>
                                 </div>
                             </td>
                         </tr>
-                        <form id="{{ $form }}" action="{{ route('dt-tables.data-tables.columns.update', ['data_table' => $dataTable->id, 'data_table_column' => $id]) }}" method="POST">
+                        <form id="{{ $form }}" action="{{ route('dt-tables.data-tables.columns.update', ['data_table' => $dataTable->key, 'data_table_column' => $id]) }}" method="POST">
                             @csrf
                             {!! bag($id) !!}
                             @method('PUT')
                         </form>
-                        <form id="{{ $deleteForm }}" action="{{ route('dt-tables.data-tables.columns.destroy', ['data_table' => $dataTable->id, 'data_table_column' => $id]) }}" method="POST">
+                        <form id="{{ $deleteForm }}" action="{{ route('dt-tables.data-tables.columns.destroy', ['data_table' => $dataTable->key, 'data_table_column' => $id]) }}" method="POST">
                             @csrf
                             @method('DELETE')
                         </form>
@@ -108,7 +108,7 @@
         </div>
 
         {{-- Name --}}
-        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'name']) }}" method="POST">
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->key, 'type' => 'name']) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="px-5 py-4 border-b border-gray-100">
@@ -124,7 +124,7 @@
         </form>
 
         {{-- Theme --}}
-        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'theme']) }}" method="POST">
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->key, 'type' => 'theme']) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="px-5 py-4 border-b border-gray-100">
@@ -140,7 +140,7 @@
         </form>
 
         {{-- Export Buttons --}}
-        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'buttons']) }}" method="POST">
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->key, 'type' => 'buttons']) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="px-5 py-4 border-b border-gray-100">
@@ -165,7 +165,7 @@
         </form>
 
         {{-- Behaviour --}}
-        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'behaviour']) }}" method="POST">
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->key, 'type' => 'behaviour']) }}" method="POST">
             @csrf
             @method('PUT')
             @php $behaviour = fluent((array) ($settings->behaviour ?? [])); @endphp
@@ -229,7 +229,7 @@
         </form>
 
         {{-- Loader --}}
-        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->id, 'type' => 'loader']) }}" method="POST">
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->key, 'type' => 'loader']) }}" method="POST">
             @csrf
             @method('PUT')
             @php $loader = $settings->loader ?? null; @endphp

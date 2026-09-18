@@ -55,13 +55,13 @@ class DataTable extends Component
     protected function setUp(): void
     {
         //  Sync the table properties
-        $table = DataTableModel::where('key', $this->tableId)->first();
+        $table = DataTableModel::find($this->tableId);
 
         //  Get the settings
         $settings = fluent($table->settings ?? []);
 
         //  Get the columns
-        $this->columns = $table->columns ?? [];
+        $this->columns = collect($table->columns ?? [])->toArray();
 
         //  Get the buttons
         $this->buttons = $settings->buttons ?? config('dt-tables.settings.buttons', []);
