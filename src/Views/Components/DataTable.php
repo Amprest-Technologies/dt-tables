@@ -31,8 +31,9 @@ class DataTable extends Component
         public bool $info = true,
         public bool $scrollX = false,
     ) {
-        //  Set the tableId to the id if not provided
+        //  The id is the DOM id and tableId is the config key; each falls back to the other
         $this->tableId ??= $this->id;
+        $this->id ??= $this->tableId;
 
         //  Get the payload
         $payload = is_null($this->payload) ? [] : $this->payload;

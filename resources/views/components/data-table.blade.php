@@ -1,11 +1,11 @@
-<div class="dt-tables-container" @style(['display: none' => ($loader = fluent($loader))->enabled ?? false])>
-    <table id="{{ $tableId }}" {{ $attributes }}>
+<div class="dt-tables-container" data-dt-table="{{ $id }}" @style(['display: none' => ($loader = fluent($loader))->enabled ?? false])>
+    <table id="{{ $id }}" {{ $attributes }}>
         {{ $slot }}
     </table>
 </div>
 
 @if($loader->enabled ?? false)
-    <div class="dt-tables-loader">
+    <div class="dt-tables-loader" data-dt-table="{{ $id }}">
         <div>
             @if($loader->image ?? false)
                 <div class="loader-image">
@@ -20,8 +20,11 @@
 @endif
 
 <script type="module" defer>
-    //  Get the table ID
-    let tableId = @js($tableId);
+    //  Get the DOM id of this table element
+    let tableId = @js($id);
+
+    //  Get the key of the table configuration it uses
+    let configKey = @js($tableId);
 
     //  Get the table data
     let tableData = @js($tableData);
@@ -43,7 +46,6 @@
 
     //  Setup the datatable options
     let options = {
-        responsive: true,
         pageLength: @js($pageLength),
         ordering: @js($ordering),
         searching: @js($searching),
@@ -76,7 +78,7 @@
             let api = this.api();
 
             //  Set up styling
-            setupStyling(configTheme);
+            setupStyling(api, configTheme);
 
             //  Set up filters
             setupFilters(api, configColumns, configTheme);
@@ -85,7 +87,7 @@
             setupSearchParams(api);
 
             //  Hide loader once the table is initialized
-            hideLoader();
+            hideLoader(tableId);
         },
     };
 
@@ -112,7 +114,7 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({
-                tableId: tableId,
+                tableId: configKey,
                 action: config.name,
                 params: tableParams.buttonTrigger || {},
             }),

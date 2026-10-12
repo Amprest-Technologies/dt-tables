@@ -56,7 +56,7 @@ let rowIndex = function (title) {
         title: title,
         className: 'row-index',
         render: function (data, type, row, meta) {
-            return meta.row + (type === 'display' ? meta.settings._iDisplayStart : 0) + 1;
+            return meta.row + (type === 'display' ? new DataTable.Api(meta.settings).page.info().start : 0) + 1;
         }
     };
 }
@@ -90,7 +90,7 @@ let actionButtons = function (title) {
 
                 //  Append the buttons to the html string if it exists
                 if (![undefined, null].includes(button)) {
-                    htmlString += `<a ${button.attributes}">${button.label}</a>`;
+                    htmlString += `<a ${button.attributes}>${button.label}</a>`;
                 }
 
                 //  If the template is not defined, skip it
@@ -179,12 +179,12 @@ let createInputFilter = function (cell, column, className) {
  * Create a function to hide the loader and show the datatable
  * ------------------------------------------------------------------
  */
-window.hideLoader = function() {
-    //  Hide the loader
-    document.querySelector('.dt-tables-loader').style.display = 'none';
+window.hideLoader = function(tableId) {
+    //  Hide only this table's loader
+    document.querySelector(`.dt-tables-loader[data-dt-table="${tableId}"]`).style.display = 'none';
 
-    //  Show the datatable container
-    document.querySelector('.dt-tables-container').style.display = 'block';
+    //  Show only this table's container
+    document.querySelector(`.dt-tables-container[data-dt-table="${tableId}"]`).style.display = 'block';
 };
 
 /* -----------------------------------------------------------------
@@ -232,7 +232,7 @@ window.buttons = function(buttons, theme, title) {
             className: theme.buttons,
             exportOptions: {
                 orthogonal: 'sort',
-                columns: ':visible:not(th.exclude-from-export)',
+                columns: 'th:not(.exclude-from-export):visible',
             },
             customize: function (xlsx) {
                 //  sheet1.xml is the grid of rows and cells written to the Excel file.
@@ -348,18 +348,21 @@ window.columns = function (tableID, config) {
  * Set up the styling for the datatable
  * ------------------------------------------------------------------
  */
-window.setupStyling = function (theme) {
+window.setupStyling = function (api, theme) {
+    //  Scope all lookups to this table's own DataTables wrapper
+    let container = api.table().container();
+
     //  Remove the classes from the buttons
-    document.querySelectorAll('.dt-button').forEach(el => el.classList.remove('dt-button'));
+    container.querySelectorAll('.dt-button').forEach(el => el.classList.remove('dt-button'));
 
     //  Remove dt-search and dt-input classes from the search input
-    document.querySelectorAll('.dt-search').forEach(el => {
+    container.querySelectorAll('.dt-search').forEach(el => {
         el.classList.remove('dt-search');
         el.classList.add('dt-tables-search');
     });
 
     //  Add the classes from the datatable search input
-    document.querySelectorAll('.dt-input').forEach(el => {
+    container.querySelectorAll('.dt-input').forEach(el => {
         el.classList.remove('dt-input')
         el.classList.add(...theme.input.split(/\s+/).filter(c => c?.trim()));
     });
@@ -444,12 +447,12 @@ window.setupSearchParams = function (api) {
     let tableId = api.table().node().id;
 
     //  Get the columns in the table
-    let columns = api.settings()[0].aoColumns;
+    let columns = api.columns().names().toArray();
 
     //  Loop through the search params
     new URLSearchParams(window.location.search).forEach((value, key) => {
         //  Get the column index
-        let index = columns.findIndex(col => col.name === key.replace(/-/g, '_'));
+        let index = columns.findIndex(name => name === key.replace(/-/g, '_'));
 
         //  Get the column
         let column = api.column(index);
