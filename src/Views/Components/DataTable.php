@@ -3,6 +3,7 @@
 namespace Amprest\DtTables\Views\Components;
 
 use Amprest\DtTables\Models\DataTable as DataTableModel;
+use Amprest\DtTables\Support\ServerSideQuery;
 use Amprest\DtTables\Support\TableSource;
 use Illuminate\Support\Facades\App;
 use Illuminate\View\Component;
@@ -80,10 +81,20 @@ class DataTable extends Component
         }
 
         //  Seal the class and its parameters so the browser cannot change them
+        $token = TableSource::seal($this->source, $this->params);
+
+        //  Get the table source
+        $source = (new TableSource($this->source, $this->params))->instance();
+
+        //  Ask the table which columns the server can search and sort by
+        $columns = (new ServerSideQuery($source))->columns();
+
+        //  Define the server-side settings
         $this->serverSide = [
             'rowsUrl' => route('dt-tables.api.server-side.rows'),
             'optionsUrl' => route('dt-tables.api.server-side.options'),
-            'token' => TableSource::seal($this->source, $this->params),
+            'token' => $token,
+            ...$columns,
         ];
     }
 

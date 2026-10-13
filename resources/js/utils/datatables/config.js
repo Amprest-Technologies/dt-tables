@@ -241,6 +241,12 @@ window.remoteTable = function (settings, csrfToken) {
 
     //  Return the helper
     return {
+        //  get the searchable property
+        searchable: settings.searchable ?? null,
+
+        //  get the orderable property
+        orderable: settings.orderable ?? null,
+
         //  Get the options of a select filter
         options: function (column) {
             return post(settings.optionsUrl, { column })
@@ -274,6 +280,19 @@ window.serverSideOptions = function (tableId, remote, config, columns, onParamet
 
     //  Keep the set on the table node
     document.getElementById(tableId).dttExact = exact;
+
+    //  Switch off the sorting and searching the server cannot do, so the browser does not offer them
+    columns.forEach(function (column) {
+        //  If the column is not orderable or searchable, switch it off
+        if (remote.orderable && ! remote.orderable.includes(column.name)) {
+            column.orderable = false;
+        }
+
+        //  If the column is not orderable or searchable, switch it off
+        if (remote.searchable && ! remote.searchable.includes(column.name)) {
+            column.searchable = false;
+        }
+    });
 
     //  Apply the URL searches to the very first request, so it is not followed by a second
     let searchCols = columns.map(function (column, index) {
@@ -551,6 +570,9 @@ window.setupFilters = function (api, config, theme, remote) {
 
             //  Get the name of the column
             let name = column.name();
+
+            //  Offer no filter on a column the server cannot search
+            if (remote && remote.searchable && ! remote.searchable.includes(name)) { return; }
 
             //  Get the first config object that matches the name
             let configObj = config.find(obj => obj.key === name);

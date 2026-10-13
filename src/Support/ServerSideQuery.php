@@ -91,6 +91,39 @@ class ServerSideQuery
     }
 
     /**
+     * Get the row keys the server can search and sort by, so the browser only offers those.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    public function columns(): array
+    {
+        //  Get the searchable keys
+        $searchable = [];
+
+        //  Get the orderable keys
+        $orderable = [];
+
+        //  Loop through the keys
+        foreach (array_keys($this->map) as $key) {
+            //  A key with a search target can be searched
+            if ($this->searchOf((string) $key) !== null) {
+                $searchable[] = (string) $key;
+            }
+
+            //  A key with a sort expression can be sorted
+            if ($this->sortOf((string) $key) !== null) {
+                $orderable[] = (string) $key;
+            }
+        }
+
+        //  Return both lists
+        return [
+            'searchable' => $searchable,
+            'orderable' => $orderable
+        ];
+    }
+
+    /**
      * Determine whether any search is narrowing the rows.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
