@@ -1,4 +1,6 @@
-<div class="dt-tables-container" data-dt-table="{{ $id }}" @style(['display: none' => ($loader = fluent($loader))->enabled ?? false])>
+<div class="dt-tables-container" data-dt-table="{{ $id }}" @style([
+    'display: none' => ($loader = fluent($loader))->enabled ?? false
+])>
     <table id="{{ $id }}" {{ $attributes }}>
         {{ $slot }}
     </table>
@@ -6,16 +8,7 @@
 
 @if($loader->enabled ?? false)
     <div class="dt-tables-loader" data-dt-table="{{ $id }}">
-        <div>
-            @if($loader->image ?? false)
-                <div class="loader-image">
-                    <img style="text-center" src="{{ asset($loader->image) }}" alt="Loading...">
-                </div>
-            @endif
-            <div class="loader-text">
-                {{ $loader->message ?? 'Loading...' }}
-            </div>
-        </div>
+        {!! $loaderMarkup !!}
     </div>
 @endif
 
@@ -28,6 +21,9 @@
 
     //  Get the table data
     let tableData = @js($tableData);
+
+    //  Get the server-side settings; empty for tables fed inline
+    let serverSide = @js($serverSide);
 
     //  Get the table parameters
     let tableParams = @js($tableParams);
@@ -43,6 +39,11 @@
 
     //  Get the title of the table
     let title = @js($attributes->get('title', '*'));
+
+    //  Get the helper that talks to the server, for tables that page on the server
+    let remote = serverSide.rowsUrl 
+        ? remoteTable(serverSide, @js(csrf_token())) 
+        : null;
 
     //  Setup the datatable options
     let options = {
@@ -81,18 +82,36 @@
             setupStyling(api, configTheme);
 
             //  Set up filters
-            setupFilters(api, configColumns, configTheme);
+            setupFilters(api, configColumns, configTheme, remote);
 
             //  Setup the search params
-            setupSearchParams(api);
+            setupSearchParams(api, remote);
 
             //  Hide loader once the table is initialized
             hideLoader(tableId);
         },
     };
 
-    //  If the table data is not empty, set the data
-    if (tableData.length > 0) {
+    //  Server-side tables ask the server for one page at a time; local ones get their rows up front
+    if (remote) {
+        //  Setup the server-side options
+        let serverOptions = serverSideOptions(
+            tableId,
+            remote,
+            configColumns,
+            options.columns, params => tableParams = params
+        );
+
+        //  Assign the options
+        Object.assign(options, serverOptions);
+
+        //  Show the table's own loader, rather than the default text
+        if (@js($loaderMarkup) !== '') {
+            options.language.processing = `<div class="loader-content">${@js($loaderMarkup)}</div>`;
+        }
+
+    //  Local tables get their rows up front
+    } else if (tableData.length > 0) {
         options.data = tableData;
     }
 

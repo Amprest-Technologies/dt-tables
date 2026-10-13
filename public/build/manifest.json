@@ -13,7 +13,7 @@
     "isEntry": true
   },
   "resources/css/client.css": {
-    "file": "assets/client-B2q07sWf.css",
+    "file": "assets/client-BT7-155j.css",
     "name": "client",
     "names": [
       "client.css"
@@ -31,7 +31,7 @@
     ]
   },
   "resources/js/client.js": {
-    "file": "assets/client-CCgfQMo7.js",
+    "file": "assets/client-C1d8ejTJ.js",
     "name": "client",
     "src": "resources/js/client.js",
     "isEntry": true,

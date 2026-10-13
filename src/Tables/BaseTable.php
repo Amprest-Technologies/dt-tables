@@ -101,7 +101,7 @@ abstract class BaseTable
             'parameters' => $instance->parameters(),
         ];
     }
-    
+
     /**
      * Get the raw table data.
      *

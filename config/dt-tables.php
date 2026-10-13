@@ -29,6 +29,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | DT Table Server Side
+    |--------------------------------------------------------------------------
+    |
+    | Tables given a `source` page, search and sort in the database, one page per
+    | request. `middleware` guards the endpoints, so add `auth` to restrict them,
+    | and `max_length` caps how many rows one request may return.
+    |
+    */
+    'server_side' => [
+        'middleware' => ['web'],
+        'max_length' => 1000,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | DT Table Theme
     |--------------------------------------------------------------------------
     |

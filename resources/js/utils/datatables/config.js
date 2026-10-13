@@ -120,7 +120,7 @@ let actionButtons = function (title) {
  * Create a function to add a select filter to the column
  * ------------------------------------------------------------------
  */
-let createSelectFilter = function (cell, column, className) {
+let createSelectFilter = function (cell, column, className, remote) {
     // Create select element and add event listener
     let select = document.createElement('select');
 
@@ -135,16 +135,41 @@ let createSelectFilter = function (cell, column, className) {
 
     //  Add an event listener to the select element
     select.addEventListener('change', function () {
+        //  Get the table node
+        let node = column.table().node();
+
+        //  Keep track of the columns filtered by an exact value
+        node.dttExact = node.dttExact || new Set();
+
+        //  if the value is set, add the column index to the set
+        this.value
+            ? node.dttExact.add(column.index()) 
+            : node.dttExact.delete(column.index());
+
+        //  Filter the column
         column.search(this.value, { exact: true }).draw();
     });
 
-    //  Add list of options
-    column.data()
-        .unique()
-        .map((item, index) => item?.value ?? item)
-        .unique()
-        .sort()
-        .each(value => select.add(new Option(value, value)));
+    //  Server-side tables hold one page, so the options come from the server
+    if (remote) {
+        //  Get the options
+        remote.options(column.name()).then(options => {
+            //  Add the options
+            options.forEach(option => select.add(new Option(option.label, option.value)));
+
+            //  Restore a search that was applied before the options arrived (e.g. from the URL)
+            select.value = column.search() || '';
+        });
+
+    //  Otherwise add the list of options from the loaded rows
+    } else {
+        column.data()
+            .unique()
+            .map((item, index) => item?.value ?? item)
+            .unique()
+            .sort()
+            .each(value => select.add(new Option(value, value)));
+    }
 
     //  Append to the filter row cell
     cell.appendChild(select);
@@ -154,7 +179,7 @@ let createSelectFilter = function (cell, column, className) {
  * Create a function to add an input filter to the column
  * ------------------------------------------------------------------
  */
-let createInputFilter = function (cell, column, className) {
+let createInputFilter = function (cell, column, className, remote) {
     //  Create an input element
     let input = document.createElement('input');
 
@@ -167,14 +192,131 @@ let createInputFilter = function (cell, column, className) {
     //  Add a placeholder to the input element
     input.placeholder = 'Search...';
 
+    //  Server-side tables send a request per search, so wait for typing to pause
+    let timer;
+
     //  Add an event listener to the input element
     input.addEventListener('keyup', function () {
-        column.search(this.value).draw();
+        //  Local tables filter instantly
+        if (! remote) {
+            return column.search(this.value).draw();
+        }
+
+        //  Clear the timer
+        clearTimeout(timer);
+
+        //  Set the timer
+        timer = setTimeout(() => column.search(this.value).draw(), 400);
     });
 
     //  Append to the filter row cell
     cell.appendChild(input);
 };
+/* -----------------------------------------------------------------
+ * Create the helper that talks to the server for a server-side table
+ * ------------------------------------------------------------------
+ */
+window.remoteTable = function (settings, csrfToken) {
+    //  Post a JSON request to one of the server-side endpoints
+    let post = function (url, body) {
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: JSON.stringify({ token: settings.token, ...body }),
+        }).then(response => {
+            //  Fail on error responses
+            if (! response.ok) {
+                throw new Error(`Failed to load table data (${response.status})`);
+            }
+
+            //  Return the decoded body
+            return response.json();
+        });
+    };
+
+    //  Return the helper
+    return {
+        //  Get the options of a select filter
+        options: function (column) {
+            return post(settings.optionsUrl, { column })
+                .then(json => json.options)
+                .catch(error => {
+                    //  Log the failure and show the filter without options
+                    console.error(error);
+
+                    //  Return an empty array
+                    return [];
+                });
+        },
+
+        //  Get a page of rows
+        rows: function (data) {
+            return post(settings.rowsUrl, data);
+        },
+    };
+};
+
+/* -----------------------------------------------------------------
+ * Create the datatable options that make the server page, search and order
+ * ------------------------------------------------------------------
+ */
+window.serverSideOptions = function (tableId, remote, config, columns, onParameters) {
+    //  Get the search terms given in the URL
+    let urlSearch = new URLSearchParams(window.location.search);
+
+    //  Track the columns filtered by an exact value; select filters share this set
+    let exact = new Set();
+
+    //  Keep the set on the table node
+    document.getElementById(tableId).dttExact = exact;
+
+    //  Apply the URL searches to the very first request, so it is not followed by a second
+    let searchCols = columns.map(function (column, index) {
+        //  Find the term for this column
+        let term = column.name 
+            ? urlSearch.get(column.name) ?? urlSearch.get(column.name.replace(/_/g, '-')) 
+            : null;
+
+        //  Select filters match the whole value
+        if (term !== null && config.find(obj => obj.key === column.name)?.search_type === 'select') {
+            exact.add(index);
+        }
+
+        //  Return the initial search of the column
+        return term === null ? null : { search: term };
+    });
+
+    //  Return the options
+    return {
+        serverSide: true,
+        processing: true,
+        searchCols: searchCols,
+        ajax: function (data, callback) {
+            //  Ask the server for the page, naming the exact-match columns
+            remote.rows({ ...data, exact: [...document.getElementById(tableId).dttExact] })
+                .then(json => {
+                    //  Keep the parameters used by the button events
+                    onParameters(json.parameters || {});
+
+                    //  Draw the page
+                    callback(json);
+                })
+                .catch(error => {
+                    //  Log the failure
+                    console.error(error);
+
+                    //  Draw an empty table so the loader is dismissed
+                    callback({ draw: data.draw, recordsTotal: 0, recordsFiltered: 0, data: [] });
+                });
+        },
+    };
+};
+
 /* -----------------------------------------------------------------
  * Create a function to hide the loader and show the datatable
  * ------------------------------------------------------------------
@@ -372,7 +514,7 @@ window.setupStyling = function (api, theme) {
  * Set up the filters for the datatable
  * ------------------------------------------------------------------
  */
-window.setupFilters = function (api, config, theme) {
+window.setupFilters = function (api, config, theme, remote) {
     //  Loop through the columns and add a filter to each column
     if (config.filter(column => column.search_type !== 'none').length > 0) {
         //  Build the filter row after DataTables has initialised so it is not
@@ -419,10 +561,10 @@ window.setupFilters = function (api, config, theme) {
             //  Check if the column is in the select items
             switch (searchType) {
                 case 'select':
-                    createSelectFilter(cell, column, theme.select);
+                    createSelectFilter(cell, column, theme.select, remote);
                     break;
                 case 'input':
-                    createInputFilter(cell, column, theme.input);
+                    createInputFilter(cell, column, theme.input, remote);
                     break;
             }
         });
@@ -442,7 +584,7 @@ window.setupFilters = function (api, config, theme) {
  * Set up the search params for the datatable
  * ------------------------------------------------------------------
  */
-window.setupSearchParams = function (api) {
+window.setupSearchParams = function (api, remote) {
     //  Get the table id
     let tableId = api.table().node().id;
 
@@ -465,8 +607,10 @@ window.setupSearchParams = function (api) {
             //  Set the value of the element
             element.value = value;
 
-            //  Dispatch the event
-            column.search(value).draw();
+            //  Server-side tables were created with these searches already applied
+            if (! remote) {
+                column.search(value).draw();
+            }
         }
     });
 };

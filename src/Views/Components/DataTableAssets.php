@@ -3,6 +3,7 @@
 namespace Amprest\DtTables\Views\Components;
 
 use Illuminate\Foundation\Vite;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 use Illuminate\View\Component;
 use Illuminate\View\View;
@@ -38,7 +39,7 @@ class DataTableAssets extends Component
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    public function assets()
+    public function assets(): Collection
     {
         return collect($this->parseManifest())->map(fn ($file) => new Fluent([
             'path' => route('dt-tables.asset.show', ['name' => basename($file)]),

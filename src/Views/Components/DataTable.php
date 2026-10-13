@@ -3,12 +3,19 @@
 namespace Amprest\DtTables\Views\Components;
 
 use Amprest\DtTables\Models\DataTable as DataTableModel;
+use Amprest\DtTables\Support\TableSource;
 use Illuminate\Support\Facades\App;
 use Illuminate\View\Component;
 use Illuminate\View\View;
+use InvalidArgumentException;
 
 class DataTable extends Component
 {
+    /**
+     * The markup of the loader, shown before the first draw and while a page loads.
+     */
+    public string $loaderMarkup = '';
+
     /**
      * Initialize a new component instance.
      *
@@ -17,6 +24,9 @@ class DataTable extends Component
     public function __construct(
         public ?string $id = null,
         public ?string $tableId = null,
+        public ?string $source = null,
+        public array $params = [],
+        public array $serverSide = [],
         public array $payload = [],
         public array $tableData = [],
         public array $tableParams = [],
@@ -33,6 +43,8 @@ class DataTable extends Component
     ) {
         //  The id is the DOM id and tableId is the config key; each falls back to the other
         $this->tableId ??= $this->id;
+
+        //  The id is the DOM id
         $this->id ??= $this->tableId;
 
         //  Get the payload
@@ -46,6 +58,33 @@ class DataTable extends Component
 
         //  Set up the component
         $this->setUp();
+    }
+
+    /**
+     * Build the server-side settings for a table fed by a source class.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function setUpServerSide(): void
+    {
+        //  Nothing to do for inline tables
+        if (is_null($this->source)) {
+            return;
+        }
+
+        //  A table is fed either inline or from a source, never both
+        if (! empty($this->payload)) {
+            throw new InvalidArgumentException(
+                'The [source] and [payload] attributes cannot be used together'
+            );
+        }
+
+        //  Seal the class and its parameters so the browser cannot change them
+        $this->serverSide = [
+            'rowsUrl' => route('dt-tables.api.server-side.rows'),
+            'optionsUrl' => route('dt-tables.api.server-side.options'),
+            'token' => TableSource::seal($this->source, $this->params),
+        ];
     }
 
     /**
@@ -67,6 +106,14 @@ class DataTable extends Component
         //  Get the buttons
         $this->buttons = $settings->buttons ?? config('dt-tables.settings.buttons', []);
 
+        //  Set up server-side loading when a source table class is given
+        $this->setUpServerSide();
+
+        //  Copy and Excel only see the loaded page, so server-side tables hide them
+        if ($this->serverSide) {
+            $this->buttons = array_values(array_diff((array) $this->buttons, ['copy', 'excel']));
+        }
+
         //  Get the theme framework
         $framework = $settings->theme ?? config('dt-tables.settings.theme', 'bootstrap');
 
@@ -81,20 +128,54 @@ class DataTable extends Component
             ? (array) $settings->loader
             : config('dt-tables.settings.loader', []);
 
-        //  Wrap behaviour safely — older tables that pre-date this feature will
-        //  not have the key in JSON, so fluent([]) ensures no null-access errors
+        //  Build the loader markup
+        $this->loaderMarkup = $this->buildLoaderMarkup();
+
+        //  Get the behaviour
         $behaviour = fluent((array) ($settings->behaviour ?? []));
 
         //  Set the page length
         $this->pageLength = (int) ($behaviour->page_length
             ?? config('dt-tables.settings.behaviour.page_length', 10));
 
-        //  Set the behaviour toggles
+        //  Set the ordering
         $this->ordering = (bool) ($behaviour->ordering ?? config('dt-tables.settings.behaviour.ordering', true));
+
+        //  Set the searching
         $this->searching = (bool) ($behaviour->searching ?? config('dt-tables.settings.behaviour.searching', true));
+
+        //  Set the paging
         $this->paging = (bool) ($behaviour->paging ?? config('dt-tables.settings.behaviour.paging', true));
+
+        //  Set the info
         $this->info = (bool) ($behaviour->info ?? config('dt-tables.settings.behaviour.info', true));
+
+        //  Set the scrollX
         $this->scrollX = (bool) ($behaviour->scroll_x ?? config('dt-tables.settings.behaviour.scroll_x', false));
+    }
+
+    /**
+     * Build the markup of the loader from its settings.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function buildLoaderMarkup(): string
+    {
+        //  Get the loader settings
+        $loader = fluent($this->loader);
+
+        //  No markup is needed when the loader is disabled
+        if (! ($loader->enabled ?? false)) {
+            return '';
+        }
+
+        //  Add the image when one is set
+        $markup = ($loader->image ?? false)
+            ? '<div class="loader-image"><img src="'.e(asset($loader->image)).'" alt="Loading..."></div>'
+            : '';
+
+        //  Add the message and return the markup
+        return $markup.'<div class="loader-text">'.e($loader->message ?? 'Loading...').'</div>';
     }
 
     /**

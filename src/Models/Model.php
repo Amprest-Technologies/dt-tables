@@ -44,7 +44,7 @@ class Model
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    public static function __callStatic($name, $arguments)
+    public static function __callStatic($name, $arguments): mixed
     {
         return (new static)->$name(...$arguments);
     }
@@ -119,7 +119,7 @@ class Model
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    protected function setAttributes(array|object $items)
+    protected function setAttributes(array|object $items): void
     {
         foreach ($items as $key => $item) {
             //  Handle array items
@@ -142,7 +142,7 @@ class Model
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    protected function where($key, $value)
+    protected function where($key, $value): Collection
     {
         return $this->all()->where($key, $value);
     }
@@ -152,7 +152,7 @@ class Model
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    protected function pull(string $key, array $data)
+    protected function pull(string $key, array $data): array
     {
         //  Get the value from the data
         $value = $data[$key] ?? null;
