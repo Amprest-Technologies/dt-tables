@@ -1,5 +1,7 @@
 # Button Trigger Events
 
+Server-side tables (`:source`) hide the `copy` and `excel` buttons because an export would only see the loaded page, so the event never fires for them. Everything below applies to inline tables.
+
 ## What Fires It
 
 The `<x-data-table>` component's inline script listens for the DataTables `buttons-action` event. When the clicked button's `name` is `copy` or `excel` (not `colvis`), it does a client-side `fetch()`:

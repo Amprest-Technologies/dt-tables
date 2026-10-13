@@ -8,8 +8,6 @@ class {{ class }} extends BaseTable
 {
     /**
      * Initialize the table.
-     *
-     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function __construct(
         //
@@ -17,8 +15,6 @@ class {{ class }} extends BaseTable
 
     /**
      * Return the query to be executed for the table.
-     *
-     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function query(): mixed
     {
@@ -27,8 +23,6 @@ class {{ class }} extends BaseTable
 
     /**
      * Return data computed once and shared across all rows.
-     *
-     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function shared(): array
     {
@@ -39,10 +33,8 @@ class {{ class }} extends BaseTable
 
     /**
      * Map each model to a display row array.
-     *
-     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    public function handle(mixed $model, int $key): mixed
+    public function handle(mixed $model, mixed $key): mixed
     {
         return [
             //
@@ -51,8 +43,6 @@ class {{ class }} extends BaseTable
 
     /**
      * Return parameters for export activity logging.
-     *
-     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     protected function parameters(): array
     {

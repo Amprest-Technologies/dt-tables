@@ -3,6 +3,7 @@
 namespace Amprest\DtTables\Console\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 class MakeDataTableCommand extends GeneratorCommand
 {
@@ -34,7 +35,7 @@ class MakeDataTableCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return package_path('stubs/data-table.stub');
+        return package_path($this->option('server-side') ? 'stubs/data-table.server-side.stub' : 'stubs/data-table.stub');
     }
 
     /**
@@ -45,5 +46,18 @@ class MakeDataTableCommand extends GeneratorCommand
     protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace.'\\DataTables';
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function getOptions(): array
+    {
+        return [
+            ...parent::getOptions(),
+            ['server-side', 's', InputOption::VALUE_NONE, 'Create a table that pages, searches and sorts in the database'],
+        ];
     }
 }

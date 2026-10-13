@@ -1,0 +1,93 @@
+<?php
+
+namespace {{ namespace }};
+
+use Amprest\DtTables\Tables\ServerSideTable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+
+class {{ class }} extends ServerSideTable
+{
+    /**
+     * Initialize the table.
+     */
+    public function __construct(
+        //
+    ) {}
+
+    /**
+     * Return the query that selects the table's rows.
+     *
+     * Do not add limit(), offset() or a final order; the package pages, searches and sorts it.
+     */
+    public function query(): Builder
+    {
+        //
+    }
+
+    /**
+     * Map each row key to the SQL it can be searched and sorted by.
+     */
+    public function columnMap(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Return the column that makes every row's position unique, so paging is stable.
+     */
+    public function keyColumn(): string
+    {
+        return 'id';
+    }
+
+    /**
+     * Return the options of select filters, keyed by row key.
+     */
+    public function filterOptions(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Return data computed once and shared across the rows of a page.
+     */
+    protected function shared(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Map each model on the requested page to a display row array.
+     */
+    public function handle(mixed $model, mixed $key): mixed
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Return parameters for export activity logging.
+     */
+    public function parameters(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Determine whether the request may read this table's data.
+     */
+    public function authorize(Request $request): bool
+    {
+        return true;
+    }
+}

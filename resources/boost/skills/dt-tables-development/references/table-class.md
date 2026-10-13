@@ -1,5 +1,7 @@
 # Table Class Structure
 
+> This file covers inline tables (`BaseTable`). For tables that page, search and sort in the database, see the `dt-tables-server-side` skill (`ServerSideTable`, scaffolded with `make:data-table --server-side`).
+
 ## BaseTable Pipeline
 
 All Table classes extend `Amprest\DtTables\Tables\BaseTable`. The pipeline runs via the static `build()` method:
@@ -134,7 +136,7 @@ Override `handle()` to transform each model into a display array:
  *
  * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
  */
-public function handle(mixed $house, int $key): mixed
+public function handle(mixed $house, mixed $key): mixed
 {
     return [
         'id' => $house->id,
@@ -177,7 +179,7 @@ public function handle(mixed $house, int $key): mixed
 **Returning Fluent objects** — use `fluent([...])` for object-style access in views:
 
 ```php
-public function handle(mixed $visit, int $key): mixed
+public function handle(mixed $visit, mixed $key): mixed
 {
     return fluent([
         'visitor_name' => $visit->visitor->name,
@@ -374,7 +376,7 @@ class ZoneTable extends BaseTable
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    public function handle(mixed $zone, int $key): mixed
+    public function handle(mixed $zone, mixed $key): mixed
     {
         //  Get the permission
         $permission = $this->shared['permission'];

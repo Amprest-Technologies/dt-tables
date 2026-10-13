@@ -9,7 +9,8 @@ The `<x-data-table>` component renders a fully interactive DataTable with search
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `id` | `string` | Unique identifier — **must match** the `key` field in its `resources/data-tables/{key}.json` file |
-| `:payload` | `array` | The data array returned by `Table::build()` |
+| `:payload` | `array` | The data array returned by `Table::build()` (inline tables) |
+| `:source` | `class-string` | A `ServerSideTable` class to page from the database, instead of `:payload` (see the `dt-tables-server-side` skill) |
 
 ### Optional Attributes
 
@@ -17,6 +18,7 @@ The `<x-data-table>` component renders a fully interactive DataTable with search
 |-----------|------|-------------|
 | `title` | `string` | Table title used in export filenames |
 | `class` | `string` | HTML classes for the `<table>` element |
+| `:params` | `array` | With `:source`: constructor arguments for the table class, sealed into the token (JSON-safe values only) |
 
 ### Basic Usage
 
@@ -149,6 +151,8 @@ Columns can be conditionally shown based on context:
 @endsection
 ```
 
+`:payload` and `:source` are alternatives: using both throws `InvalidArgumentException`.
+
 ## How the Component Works Internally
 
 The `<x-data-table>` component (`Amprest\DtTables\Views\Components\DataTable`):
@@ -163,3 +167,5 @@ The `<x-data-table>` component (`Amprest\DtTables\Views\Components\DataTable`):
    - Export buttons (copy, colvis, excel)
    - Button trigger event listeners for activity logging
 5. The `<tbody>` is generated client-side by the DataTable JS library from the `tableData` array
+
+With `:source`, the component instead seals the class and params into an encrypted token, reads the table's `columnMap()` to learn which columns can be searched and sorted, and passes the endpoint URLs and token to the script. The browser then fetches one page per request.

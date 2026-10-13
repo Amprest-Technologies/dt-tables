@@ -1,5 +1,7 @@
 # Controller Integration
 
+This page covers inline tables, where the controller calls `::build()`. A server-side table needs no controller work: the view passes `:source` and the browser fetches pages (see the `dt-tables-server-side` skill).
+
 ## Calling Table Classes
 
 Controllers call Table classes via `::build()` with named parameters matching the constructor:

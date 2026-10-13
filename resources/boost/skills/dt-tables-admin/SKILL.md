@@ -83,6 +83,13 @@ Every controller action redirects back with a flash `alert`; the layout renders 
 
 `TableNameIsUnique` and `ColumnNameIsUnique` (both `ValidationRule` objects in `src/Rules`) enforce that a table's `key` is unique across all tables, and a column's `key` is unique within its parent table — both accept an `ignore` model so editing a record doesn't flag its own current value as a duplicate.
 
+## Server-side Tables
+
+Tables rendered with `<x-data-table :source>` (see the `dt-tables-server-side` skill) use the same `resources/data-tables/{key}.json` entries, with two differences:
+
+- A `select` column's options come from the table class's `filterOptions()`, not from the loaded rows.
+- A column's `search_type` only takes effect if the table's `columnMap()` can search that key. The filter is hidden for any other column, whatever its `search_type`.
+
 ## Common Pitfalls
 
 - Settings updates always send the whole table object (`$dataTable->toArray()`), not just the changed field — if you add a new settings section, make sure its formatter method has sensible fallbacks for tables that predate it (see the `behaviour` fallback pattern using `fluent((array) ($settings->behaviour ?? []))`).

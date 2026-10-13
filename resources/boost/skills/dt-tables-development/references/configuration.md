@@ -118,8 +118,15 @@ return [
     'columns' => [
         'search_types' => ['none', 'input', 'select'],
     ],
+
+    'server_side' => [
+        'middleware' => ['web'],   // middleware of the server-side endpoints; add 'auth' to restrict them
+        'max_length' => 1000,      // the most rows one server-side request may return
+    ],
 ];
 ```
+
+The `server_side` keys only affect tables rendered with `:source` (see the `dt-tables-server-side` skill).
 
 ### Theme Selection
 
