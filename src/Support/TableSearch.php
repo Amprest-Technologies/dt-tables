@@ -34,7 +34,6 @@ class TableSearch
      */
     public static function escapeLike(string $value): string
     {
-        //  Prefix each special character with the escape character
         return str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $value);
     }
 }

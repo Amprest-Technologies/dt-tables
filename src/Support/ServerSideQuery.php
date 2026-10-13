@@ -119,7 +119,7 @@ class ServerSideQuery
         //  Return both lists
         return [
             'searchable' => $searchable,
-            'orderable' => $orderable
+            'orderable' => $orderable,
         ];
     }
 
@@ -299,7 +299,6 @@ class ServerSideQuery
      */
     protected function count(Builder|EloquentBuilder $query): int
     {
-        //  Count the rows the way pagination does
         return (int) $this->baseQuery($query)->getCountForPagination();
     }
 
@@ -361,7 +360,6 @@ class ServerSideQuery
      */
     protected function wrap(Builder|EloquentBuilder $query, string $expression): string
     {
-        //  Plain table.column names are quoted; anything else is the developer's raw SQL
         return preg_match('/^[\w.]+$/', $expression)
             ? $this->baseQuery($query)->getGrammar()->wrap($expression)
             : $expression;
@@ -374,7 +372,6 @@ class ServerSideQuery
      */
     protected function raw(Builder|EloquentBuilder $query, string $expression): Expression|string
     {
-        //  Plain column names are passed as they are; anything else becomes a raw expression
         return preg_match('/^[\w.]+$/', $expression)
             ? $expression
             : $this->baseQuery($query)->raw($expression);

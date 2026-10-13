@@ -212,11 +212,119 @@ let createInputFilter = function (cell, column, className, remote) {
     //  Append to the filter row cell
     cell.appendChild(input);
 };
+
+/* -----------------------------------------------------------------
+ * Create a function to show the message above a table whose data could not be loaded
+ * ------------------------------------------------------------------
+ */
+window.showTableError = function (tableId, error) {
+    //  Get the container of this table
+    let container = document.querySelector(`.dt-tables-container[data-dt-table="${tableId}"]`);
+
+    //  Nothing to show it in
+    if (! container) { return; }
+
+    //  Define the action that reloads the page, for problems a fresh page fixes
+    let reload = { label: 'Reload page', run: () => window.location.reload() };
+
+    //  Define the action that asks for the same page again, for problems that may pass
+    let retry = { label: 'Try again', run: () => new DataTable.Api(`#${tableId}`).draw(false) };
+
+    //  Explain the failure in terms the user can act on, and offer the step that can fix it
+    let problem = {
+        419: { title: 'Session expired', text: 'Your session has expired. Reload the page to continue.', action: reload },
+        401: { title: 'Sign in required', text: 'You need to sign in to see this data.', action: reload },
+        403: { title: 'Access denied', text: 'You are not allowed to see this data.', action: null },
+    }[error?.status] ?? { title: 'Could not load data', text: 'Something went wrong while loading the table.', action: retry };
+
+    //  Replace any earlier message
+    clearTableError(tableId);
+
+    //  Create the message element
+    let element = document.createElement('div');
+
+    //  Add the class that styles the message
+    element.className = 'dt-tables-error';
+
+    //  Let screen readers announce the message
+    element.setAttribute('role', 'alert');
+
+    //  Add the warning icon, which is fixed markup and holds no user data
+    element.innerHTML = '<svg class="dt-tables-error-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+
+    //  Create the container of the title and the explanation
+    let body = document.createElement('div');
+
+    //  Add the class that styles the container
+    body.className = 'dt-tables-error-body';
+
+    //  Create the title
+    let title = document.createElement('strong');
+
+    //  Set the title, as text so nothing is read as markup
+    title.textContent = problem.title;
+
+    //  Create the explanation
+    let text = document.createElement('span');
+
+    //  Set the explanation, as text so nothing is read as markup
+    text.textContent = problem.text;
+
+    //  Put the title and the explanation in the container
+    body.append(title, text);
+
+    //  Put the container in the message
+    element.append(body);
+
+    //  Add the button that can fix the problem
+    if (problem.action) {
+        //  Create the button
+        let button = document.createElement('button');
+
+        //  Keep the button from submitting any form around the table
+        button.type = 'button';
+
+        //  Add the class that styles the button
+        button.className = 'dt-tables-error-action';
+
+        //  Label the button
+        button.textContent = problem.action.label;
+
+        //  Run the action when the button is clicked
+        button.addEventListener('click', problem.action.run);
+
+        //  Put the button in the message
+        element.append(button);
+    }
+
+    //  Show it above the table
+    container.prepend(element);
+};
+
+/* -----------------------------------------------------------------
+ * Create a function to clear the message once the table's data loads again
+ * ------------------------------------------------------------------
+ */
+window.clearTableError = function (tableId) {
+    document.querySelector(`.dt-tables-container[data-dt-table="${tableId}"] .dt-tables-error`)?.remove();
+};
+
 /* -----------------------------------------------------------------
  * Create the helper that talks to the server for a server-side table
  * ------------------------------------------------------------------
  */
 window.remoteTable = function (settings, csrfToken) {
+    //  Get the CSRF header, preferring the cookie because the session keeps it fresh while the page stays open
+    let csrfHeader = function () {
+        //  Find the cookie Laravel sets with each response
+        let cookie = document.cookie.split('; ').find(item => item.startsWith('XSRF-TOKEN='));
+
+        //  Fall back to the token the page was rendered with
+        return cookie
+            ? { 'X-XSRF-TOKEN': decodeURIComponent(cookie.substring('XSRF-TOKEN='.length)) }
+            : { 'X-CSRF-TOKEN': csrfToken };
+    };
+
     //  Post a JSON request to one of the server-side endpoints
     let post = function (url, body) {
         return fetch(url, {
@@ -225,13 +333,20 @@ window.remoteTable = function (settings, csrfToken) {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken,
+                ...csrfHeader(),
             },
             body: JSON.stringify({ token: settings.token, ...body }),
         }).then(response => {
-            //  Fail on error responses
+            //  Fail on error responses, keeping the status so the user can be told why
             if (! response.ok) {
-                throw new Error(`Failed to load table data (${response.status})`);
+                //  Create the error
+                let error = new Error(`Failed to load table data (${response.status})`);
+
+                //  Keep the status on the error
+                error.status = response.status;
+
+                //  Throw the error
+                throw error;
             }
 
             //  Return the decoded body
@@ -319,6 +434,9 @@ window.serverSideOptions = function (tableId, remote, config, columns, onParamet
             //  Ask the server for the page, naming the exact-match columns
             remote.rows({ ...data, exact: [...document.getElementById(tableId).dttExact] })
                 .then(json => {
+                    //  Clear any earlier failure
+                    clearTableError(tableId);
+
                     //  Keep the parameters used by the button events
                     onParameters(json.parameters || {});
 
@@ -328,6 +446,9 @@ window.serverSideOptions = function (tableId, remote, config, columns, onParamet
                 .catch(error => {
                     //  Log the failure
                     console.error(error);
+
+                    //  Tell the user, so an empty table is not mistaken for no data
+                    showTableError(tableId, error);
 
                     //  Draw an empty table so the loader is dismissed
                     callback({ draw: data.draw, recordsTotal: 0, recordsFiltered: 0, data: [] });
@@ -464,6 +585,7 @@ window.columns = function (tableID, config) {
             column = {
                 name: name.replace(/[ ]/g, '_'),
                 data: name,
+                defaultContent: '',
                 render: function (item, type, row, meta) {
                     //  Get the value
                     let value = item?.value ?? item?.display ?? item;

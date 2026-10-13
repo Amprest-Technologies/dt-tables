@@ -13,7 +13,6 @@ class ServerSideRowsRequest extends ServerSideRequest
      */
     public function rules(): array
     {
-        //  Return the rules
         return [
             ...parent::rules(),
             'draw' => ['nullable', 'integer'],
