@@ -3,7 +3,6 @@
 namespace Amprest\DtTables\Views\Components;
 
 use Amprest\DtTables\Models\DataTable as DataTableModel;
-use Amprest\DtTables\Support\ServerSideQuery;
 use Amprest\DtTables\Support\TableSource;
 use Illuminate\Support\Facades\App;
 use Illuminate\View\Component;
@@ -87,7 +86,7 @@ class DataTable extends Component
         $source = (new TableSource($this->source, $this->params))->instance();
 
         //  Ask the table which columns the server can search and sort by
-        $columns = (new ServerSideQuery($source))->columns();
+        $columns = $source->runner()->columns();
 
         //  Define the server-side settings
         $this->serverSide = [

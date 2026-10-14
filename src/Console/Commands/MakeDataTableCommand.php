@@ -35,7 +35,11 @@ class MakeDataTableCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return package_path($this->option('server-side') ? 'stubs/data-table.server-side.stub' : 'stubs/data-table.stub');
+        return package_path(match (true) {
+            $this->option('api') => 'stubs/data-table.api.stub',
+            $this->option('server-side') => 'stubs/data-table.server-side.stub',
+            default => 'stubs/data-table.stub',
+        });
     }
 
     /**
@@ -58,6 +62,7 @@ class MakeDataTableCommand extends GeneratorCommand
         return [
             ...parent::getOptions(),
             ['server-side', 's', InputOption::VALUE_NONE, 'Create a table that pages, searches and sorts in the database'],
+            ['api', 'a', InputOption::VALUE_NONE, 'Create a table that pages, searches and sorts through an API'],
         ];
     }
 }

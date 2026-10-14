@@ -1,0 +1,103 @@
+<?php
+
+namespace {{ namespace }};
+
+use Amprest\DtTables\Support\PageRequest;
+use Amprest\DtTables\Tables\ApiTable;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+
+class {{ class }} extends ApiTable
+{
+    /**
+     * Initialize the table.
+     *
+     * Parameters are sealed into a token, so they must be scalars or arrays.
+     */
+    public function __construct(
+        //
+    ) {}
+
+    /**
+     * Return the configured HTTP client, with its base url, credentials and timeouts.
+     */
+    public function client(): PendingRequest
+    {
+        return Http::baseUrl(config('services.api.base_url'));
+    }
+
+    /**
+     * Return the endpoint, relative to the client's base url, that serves the rows.
+     */
+    public function endpoint(): string
+    {
+        return '';
+    }
+
+    /**
+     * Map each row key to the remote field it can be searched and sorted by.
+     */
+    public function columnMap(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Translate the requested page into the API's request parameters.
+     */
+    public function params(PageRequest $page): array
+    {
+        return parent::params($page);
+    }
+
+    /**
+     * Return the options of select filters, keyed by row key.
+     */
+    public function filterOptions(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Return data computed once and shared across the rows of a page.
+     */
+    protected function shared(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Map each item on the requested page to a display row array.
+     */
+    public function handle(mixed $model, mixed $key): mixed
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Return parameters for export activity logging.
+     */
+    public function parameters(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Determine whether the request may read this table's data.
+     */
+    public function authorize(Request $request): bool
+    {
+        return true;
+    }
+}

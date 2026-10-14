@@ -1,6 +1,6 @@
 ---
 name: dt-tables-server-side
-description: "Use when a DataTable has too many rows to load at once and should page, search and sort in the database instead: creating ServerSideTable classes in app/DataTables/ (php artisan make:data-table --server-side), defining query(), columnMap() (SQL expressions, search closures, the global opt-out), keyColumn(), filterOptions() and authorize(), rendering with <x-data-table :source :params>, the server-side endpoints and config('dt-tables.server_side') settings, and debugging searches, sorting, counts, loader/error messages or 403/419 responses. Do not use for inline tables built with BaseTable::build() and :payload, or for the admin UI — see the dt-tables-development and dt-tables-admin skills."
+description: "Use when a DataTable has too many rows to load at once and should page, search and sort in the database instead: creating ServerSideTable classes in app/DataTables/ (php artisan make:data-table --server-side), ApiTable classes for tables fed by an HTTP API (make:data-table --api), defining query(), columnMap() (SQL expressions, search closures, the global opt-out), keyColumn(), filterOptions() and authorize(), rendering with <x-data-table :source :params>, the server-side endpoints and config('dt-tables.server_side') settings, and debugging searches, sorting, counts, loader/error messages or 403/419 responses. Do not use for inline tables built with BaseTable::build() and :payload, or for the admin UI — see the dt-tables-development and dt-tables-admin skills."
 license: MIT
 metadata:
   author: Amprest Technologies
@@ -66,7 +66,13 @@ Choose server-side when the table can hold thousands of rows. Keep inline for sm
 - Entry forms: string, closure, or `['search' => ..., 'sort' => ..., 'global' => bool]`
 - Decides which columns the browser offers sorting and filtering on
 
-### 3. Endpoints, Security and Errors → `references/endpoints.md`
+### 3. API-Backed Tables → `references/api-table.md`
+
+- Extend `Amprest\DtTables\Tables\ApiTable` when the API pages, searches and sorts
+- Required: `client()`, `endpoint()`, `columnMap()` (remote field names), `handle()`
+- Optional: `params()`, `parse()`, `method()`; failures surface as 502/504
+
+### 4. Endpoints, Security and Errors → `references/endpoints.md`
 
 - Routes, middleware, the sealed token, `max_length`, status codes
 - The loading overlay and the error card shown when a request fails

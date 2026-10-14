@@ -2,7 +2,7 @@
 
 namespace Amprest\DtTables\Support;
 
-use Amprest\DtTables\Tables\ServerSideTable;
+use Amprest\DtTables\Tables\ServerSideSource;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
 use InvalidArgumentException;
@@ -18,10 +18,9 @@ class TableSource
         public string $class,
         public array $params = [],
     ) {
-        //  Only server-side table classes may be served
-        if (! is_subclass_of($this->class, ServerSideTable::class)) {
+        if (! is_subclass_of($this->class, ServerSideSource::class)) {
             throw new InvalidArgumentException(
-                "[{$this->class}] must extend ".ServerSideTable::class
+                "[{$this->class}] must extend ".ServerSideSource::class
             );
         }
     }
@@ -59,11 +58,11 @@ class TableSource
             abort(403, 'Invalid data table token');
         }
 
-        //  Reject a payload that is not a server-side table class
+        //  Reject a payload that is not a server-side source class
         abort_unless(is_array($payload) && is_string($payload['class'] ?? null), 403, 'Invalid data table source');
 
-        //  Reject a class that is not a server-side table
-        abort_unless(is_subclass_of($payload['class'], ServerSideTable::class), 403, 'Invalid data table source');
+        //  Reject a class that is not a server-side source
+        abort_unless(is_subclass_of($payload['class'], ServerSideSource::class), 403, 'Invalid data table source');
 
         //  Return the source
         return new static($payload['class'], $payload['params'] ?? []);
@@ -74,7 +73,7 @@ class TableSource
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    public function instance(): ServerSideTable
+    public function instance(): ServerSideSource
     {
         return new $this->class(...$this->params);
     }

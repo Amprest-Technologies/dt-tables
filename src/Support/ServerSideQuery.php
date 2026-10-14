@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Expression;
 
-class ServerSideQuery
+class ServerSideQuery implements ServerSideRunner
 {
     /**
      * The table's columnMap().

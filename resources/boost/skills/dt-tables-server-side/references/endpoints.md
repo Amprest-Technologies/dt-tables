@@ -85,4 +85,4 @@ it('pages orders', function () {
 ## Not Supported
 
 - No server-side export. Copy and Excel are hidden because they only see one page.
-- No external-API source; the table must be backed by a database query builder.
+- A table backed by an HTTP API extends `ApiTable` instead of `ServerSideTable`; see `api-table.md`.

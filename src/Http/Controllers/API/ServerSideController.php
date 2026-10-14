@@ -5,7 +5,7 @@ namespace Amprest\DtTables\Http\Controllers\API;
 use Amprest\DtTables\Http\Requests\ServerSideOptionsRequest;
 use Amprest\DtTables\Http\Requests\ServerSideRequest;
 use Amprest\DtTables\Http\Requests\ServerSideRowsRequest;
-use Amprest\DtTables\Support\ServerSideQuery;
+use Amprest\DtTables\Support\ServerSideRunner;
 use Amprest\DtTables\Support\TableSource;
 use Illuminate\Http\JsonResponse;
 
@@ -46,7 +46,7 @@ class ServerSideController
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    protected function query(ServerSideRequest $request): ServerSideQuery
+    protected function query(ServerSideRequest $request): ServerSideRunner
     {
         //  Open the token and create the table
         $table = TableSource::open($request->token())->instance();
@@ -54,7 +54,7 @@ class ServerSideController
         //  Let the table decide whether this request may read its data
         abort_unless($table->authorize($request), 403, 'This action is unauthorized');
 
-        //  Return the query runner
-        return new ServerSideQuery($table);
+        //  Return the runner of the source
+        return $table->runner();
     }
 }
