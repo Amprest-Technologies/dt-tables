@@ -1,6 +1,6 @@
 # Table Class Structure
 
-> This file covers inline tables (`BaseTable`). For tables that page, search and sort in the database, see the `dt-tables-server-side` skill (`ServerSideTable`, scaffolded with `make:data-table --server-side`).
+> This file covers inline tables (`BaseTable`). For tables that page, search and sort in the database, see the `dt-tables-server-side` skill (`ServerSideTable`, scaffolded with `make:data-table --server-side`) or through a remote API (`ApiTable`, `make:data-table --api`).
 
 ## BaseTable Pipeline
 

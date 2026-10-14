@@ -10,7 +10,7 @@ The `<x-data-table>` component renders a fully interactive DataTable with search
 |-----------|------|-------------|
 | `id` | `string` | Unique identifier — **must match** the `key` field in its `resources/data-tables/{key}.json` file |
 | `:payload` | `array` | The data array returned by `Table::build()` (inline tables) |
-| `:source` | `class-string` | A `ServerSideTable` class to page from the database, instead of `:payload` (see the `dt-tables-server-side` skill) |
+| `:source` | `class-string` | A `ServerSideTable` (database) or `ApiTable` (remote API) class to page on the server, instead of `:payload` (see the `dt-tables-server-side` skill) |
 
 ### Optional Attributes
 

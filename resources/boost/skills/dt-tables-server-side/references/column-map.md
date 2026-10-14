@@ -2,6 +2,8 @@
 
 `columnMap()` tells the package which SQL each row key is searched and sorted by. It is the only link between what the browser asks for and what the database can do.
 
+> For an `ApiTable` the values are remote field names, not SQL, and closures are not supported. The `search`, `sort` and `global` keys work the same way. See `api-table.md`.
+
 ## Entry Forms
 
 ```php

@@ -1,6 +1,6 @@
 ---
 name: dt-tables-server-side
-description: "Use when a DataTable has too many rows to load at once and should page, search and sort in the database instead: creating ServerSideTable classes in app/DataTables/ (php artisan make:data-table --server-side), ApiTable classes for tables fed by an HTTP API (make:data-table --api), defining query(), columnMap() (SQL expressions, search closures, the global opt-out), keyColumn(), filterOptions() and authorize(), rendering with <x-data-table :source :params>, the server-side endpoints and config('dt-tables.server_side') settings, and debugging searches, sorting, counts, loader/error messages or 403/419 responses. Do not use for inline tables built with BaseTable::build() and :payload, or for the admin UI — see the dt-tables-development and dt-tables-admin skills."
+description: "Use when a DataTable has too many rows to load at once and should page, search and sort on the server instead, either in the database (ServerSideTable) or through an HTTP API (ApiTable): creating ServerSideTable classes in app/DataTables/ (php artisan make:data-table --server-side), ApiTable classes for tables whose rows come from a remote API (php artisan make:data-table --api; client(), endpoint(), params(), parse(), PageRequest, Page, 502/504 errors, page-only enrichment), defining query(), columnMap() (SQL expressions, search closures, the global opt-out, or remote field names for APIs), keyColumn(), filterOptions() and authorize(), rendering with <x-data-table :source :params>, the server-side endpoints and config('dt-tables.server_side') settings, and debugging searches, sorting, counts, loader/error messages or 403/419 responses. Do not use for inline tables built with BaseTable::build() and :payload, or for the admin UI — see the dt-tables-development and dt-tables-admin skills."
 license: MIT
 metadata:
   author: Amprest Technologies
@@ -10,14 +10,16 @@ metadata:
 
 ## When to Use It
 
-| Inline table (`BaseTable`) | Server-side table (`ServerSideTable`) |
-|---|---|
-| Controller runs `Table::build()` and passes `:payload` | No controller work: the view passes `:source` (the class) |
-| Every row is loaded, mapped and sent with the page | Only the requested page is queried and mapped |
-| Search and sort happen in the browser | Search, sort, paging and counts happen in SQL |
-| Copy and Excel export the whole table | Copy and Excel buttons are hidden (they would only see one page) |
+| | Inline table (`BaseTable`) | Server-side SQL (`ServerSideTable`) | Server-side API (`ApiTable`) |
+|---|---|---|---|
+| Rows come from | A query or collection loaded up front | Your database | A remote HTTP API |
+| Controller work | `Table::build()` and `:payload` | None: the view passes `:source` | None: the view passes `:source` |
+| What is loaded | Every row, mapped and sent with the page | Only the requested page | Only the requested page |
+| Search, sort, paging | In the browser | In SQL | In the API (the package sends the page, search and order) |
+| `columnMap()` values | n/a | SQL expressions or closures | Remote field names |
+| Copy / Excel | Whole table | Hidden (only one page loaded) | Hidden |
 
-Choose server-side when the table can hold thousands of rows. Keep inline for small tables and for tables that need `before()`/`after()` collection processing or data that is not in SQL.
+Choose server-side when the table can hold thousands of rows. Pick `ServerSideTable` when the rows are in your own database and `ApiTable` when another service owns them (and can page, search and sort them). Keep inline for small tables and for tables that need `before()`/`after()` collection processing.
 
 ## Architecture Flow
 
@@ -25,15 +27,21 @@ Choose server-side when the table can hold thousands of rows. Keep inline for sm
 <x-data-table :source="Table::class" :params="[...]">
   → component seals {class, params} into an encrypted token
   → DataTables POSTs draw/start/length/search/order/columns + token
-  → ServerSideController: open token → authorize() → ServerSideQuery
-  → search, count, order, page in SQL → handle() on that page's models only
+  → ServerSideController: open token → authorize() → $table->runner()
+  → ServerSideTable: ServerSideQuery searches, counts, orders and pages in SQL
+  → ApiTable: ApiQuery builds a PageRequest → params() → HTTP to the API → parse() → Page
+  → handle() on that page's items only
   → JSON {draw, recordsTotal, recordsFiltered, data, parameters}
 ```
 
+Both table types extend `ServerSideSource`, which holds `handle()`, `columnMap()`, `filterOptions()`, `shared()`, `parameters()` and `authorize()`, and each returns a `ServerSideRunner`. The token, validation, loader and error card are shared.
+
 ## Quick Start
 
-1. Scaffold the class: `php artisan make:data-table OrderTable --server-side` (creates `app/DataTables/OrderTable.php`).
-2. Fill in `query()`, `columnMap()`, `handle()` (and `filterOptions()` for select filters).
+1. Scaffold the class (creates `app/DataTables/OrderTable.php`):
+   - Database: `php artisan make:data-table OrderTable --server-side`
+   - Remote API: `php artisan make:data-table OrderTable --api`
+2. Fill in `query()`, `columnMap()`, `handle()` (and `filterOptions()` for select filters). For an API table fill in `client()`, `endpoint()`, `columnMap()` and `handle()` instead, plus `params()` if the API names things differently.
 3. Render it:
 
 ```blade
@@ -55,7 +63,7 @@ Choose server-side when the table can hold thousands of rows. Keep inline for sm
 
 ### 1. The Table Class → `references/table-class.md`
 
-- Extend `Amprest\DtTables\Tables\ServerSideTable`
+- Extend `Amprest\DtTables\Tables\ServerSideTable` (rows in your database)
 - Required: `query()`, `handle()`, `columnMap()`
 - Optional: `keyColumn()`, `filterOptions()`, `shared()`, `parameters()`, `authorize()`
 - `query()` must not call `limit()`, `offset()` or a final `orderBy` (a default `latest()` is fine)
@@ -68,9 +76,12 @@ Choose server-side when the table can hold thousands of rows. Keep inline for sm
 
 ### 3. API-Backed Tables → `references/api-table.md`
 
-- Extend `Amprest\DtTables\Tables\ApiTable` when the API pages, searches and sorts
+- Extend `Amprest\DtTables\Tables\ApiTable` when another service owns the rows and pages, searches and sorts them
 - Required: `client()`, `endpoint()`, `columnMap()` (remote field names), `handle()`
-- Optional: `params()`, `parse()`, `method()`; failures surface as 502/504
+- Optional: `params()` (translate the `PageRequest`), `parse()` (read rows and counts), `method()` (`'post'` for long lists), `filterOptions()`, `authorize()`
+- The default request sends `page`, `per_page`, `search`, `search_fields`, `filters`, `sort`, `dir`; the default response is `data` plus `meta.total` and `meta.filtered`
+- A failing API gives 502 or 504 and the error card, never an empty table
+- Covers page-only enrichment from your own database, sealed scalar params, and testing with `Http::fake()`
 
 ### 4. Endpoints, Security and Errors → `references/endpoints.md`
 
@@ -90,3 +101,4 @@ Choose server-side when the table can hold thousands of rows. Keep inline for sm
 - Global search runs a `like '%word%'` condition across every searchable column and cannot use an index. Set `'global' => false` on ids, amounts and other columns people do not search by.
 - Themes work as for inline tables: the table's `settings.theme` (or `config('dt-tables.settings.theme')`) picks `bootstrap` or `tailwind` classes for the filters and buttons. The loader overlay and the error card use their own neutral styles in `client.css`, so they need no framework classes.
 - `handle()` signature is `handle(mixed $model, mixed $key): mixed`. `int $key` is a fatal signature error.
+- **API tables:** the API must page, search and sort itself and return `meta.total`; never filter the page after it arrives, because the counts and pages would be wrong. Pass scopes and dates as scalars in `:params`, keep credentials in `client()`, and send long id lists with `method(): 'post'`. See `references/api-table.md`.

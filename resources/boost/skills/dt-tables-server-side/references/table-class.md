@@ -1,5 +1,7 @@
 # Server-side Table Class
 
+> This file covers tables backed by your database (`ServerSideTable`). For tables whose rows come from a remote HTTP API, see `api-table.md` (`ApiTable`). Both extend `ServerSideSource`, so `handle()`, `filterOptions()`, `shared()`, `parameters()` and `authorize()` behave the same.
+
 ## ServerSideTable Methods
 
 All server-side tables extend `Amprest\DtTables\Tables\ServerSideTable`. Scaffold with `php artisan make:data-table {Name} --server-side` (alias `-s`).
