@@ -117,6 +117,25 @@ let actionButtons = function (title) {
 };
 
 /* -----------------------------------------------------------------
+ * Get the kind of filter a column has: 'select', 'input' or null
+ * ------------------------------------------------------------------
+ */
+let filterType = function (config, remote, name) {
+    //  Inline tables use the columns configured in the table's json
+    if (! remote) {
+        return config.find(obj => obj.key === name)?.search_type ?? null;
+    }
+
+    //  Server-side tables ignore the json: nothing to search means no filter
+    if (! remote.searchable?.includes(name)) {
+        return null;
+    }
+
+    //  Keys with options get a select, the rest an input
+    return remote.selects?.includes(name) ? 'select' : 'input';
+};
+
+/* -----------------------------------------------------------------
  * Create a function to add a select filter to the column
  * ------------------------------------------------------------------
  */
@@ -354,6 +373,9 @@ window.remoteTable = function (settings, csrfToken) {
         });
     };
 
+    //  Hold the filters waiting for their options
+    let queue = [];
+
     //  Return the helper
     return {
         //  get the searchable property
@@ -362,17 +384,38 @@ window.remoteTable = function (settings, csrfToken) {
         //  get the orderable property
         orderable: settings.orderable ?? null,
 
-        //  Get the options of a select filter
-        options: function (column) {
-            return post(settings.optionsUrl, { column })
-                .then(json => json.options)
-                .catch(error => {
-                    //  Log the failure and show the filter without options
-                    console.error(error);
+        //  Get the keys filtered with a select
+        selects: settings.selects ?? [],
 
-                    //  Return an empty array
-                    return [];
+        //  Get the options of a select filter; filters asked for together share one request
+        options: function (column) {
+            return new Promise(resolve => {
+                //  Queue the column
+                queue.push({ column, resolve });
+
+                //  The first column of a batch schedules the request for when the others have queued
+                if (queue.length > 1) { return; }
+
+                //  Wait for the current task to finish so every filter can queue
+                Promise.resolve().then(() => {
+                    //  Take the batch
+                    let batch = queue;
+
+                    //  Start a new batch
+                    queue = [];
+
+                    //  Ask for every column at once
+                    post(settings.optionsUrl, { columns: [...new Set(batch.map(item => item.column))] })
+                        .then(json => batch.forEach(item => item.resolve(json.options[item.column] ?? [])))
+                        .catch(error => {
+                            //  Log the failure and show the filters without options
+                            console.error(error);
+
+                            //  Resolve every filter with an empty list
+                            batch.forEach(item => item.resolve([]));
+                        });
                 });
+            });
         },
 
         //  Get a page of rows
@@ -417,7 +460,7 @@ window.serverSideOptions = function (tableId, remote, config, columns, onParamet
             : null;
 
         //  Select filters match the whole value
-        if (term !== null && config.find(obj => obj.key === column.name)?.search_type === 'select') {
+        if (term !== null && filterType(config, remote, column.name) === 'select') {
             exact.add(index);
         }
 
@@ -617,6 +660,14 @@ window.columns = function (tableID, config) {
             };
         }
         
+        //  dtt-align: left, center or right aligns the column's header and cells
+        if (th.hasAttribute('dtt-align')) {
+            column.className = [
+                column.className, 
+                `dtt-align-${th.getAttribute('dtt-align')}`
+            ].filter(Boolean).join(' ');
+        }
+
         //  dtt-hidden: keep the column in the dataset but hide it from the UI
         if (th.hasAttribute('dtt-hidden')) {
             column.visible = false;
@@ -656,8 +707,14 @@ window.setupStyling = function (api, theme) {
  * ------------------------------------------------------------------
  */
 window.setupFilters = function (api, config, theme, remote) {
+    //  Check if any column has a filter
+    let hasFilters = api.columns()
+        .names()
+        .toArray()
+        .some(name => ['input', 'select'].includes(filterType(config, remote, name)));
+
     //  Loop through the columns and add a filter to each column
-    if (config.filter(column => column.search_type !== 'none').length > 0) {
+    if (hasFilters) {
         //  Build the filter row after DataTables has initialised so it is not
         //  captured in export snapshots (DataTables reads headers at init time)
         let tableId = api.table().node().id;
@@ -696,11 +753,8 @@ window.setupFilters = function (api, config, theme, remote) {
             //  Offer no filter on a column the server cannot search
             if (remote && remote.searchable && ! remote.searchable.includes(name)) { return; }
 
-            //  Get the first config object that matches the name
-            let configObj = config.find(obj => obj.key === name);
-
-            //  Get the search type
-            let searchType = configObj ? configObj.search_type : null;
+            //  Get the kind of filter the column has
+            let searchType = filterType(config, remote, name);
 
             //  Check if the column is in the select items
             switch (searchType) {

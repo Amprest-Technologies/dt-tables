@@ -43,10 +43,11 @@ The `resources/data-tables/` directory stores metadata for all registered DataTa
 | Field | Description |
 |-------|-------------|
 | `key` | **Must match** both the `id` attribute on `<x-data-table>` and the file's own name (`{key}.json`) |
+| `mode` | How the table is fed: `inline` (rows in the page), `server_side` (database query) or `api` (HTTP API). Required when registering a table in the admin UI; a file without one reads as `inline`. It only shapes the admin UI, since `:source` on the component decides how a table runs |
 | `settings.buttons` | Export buttons to show: `copy`, `colvis`, `excel` |
 | `settings.theme` | CSS framework: `bootstrap` or `tailwind` |
 | `settings.loader` | Optional loader configuration (see below) |
-| `columns[].key` | **Must match** the `dtt-title` value in Blade and the array key from `handle()` |
+| `columns[].key` | **Must match** the `dtt-title` value in Blade and the array key from `handle()`. Inline tables only: `server_side` and `api` tables ignore `columns` and take their filters from the table class |
 | `columns[].search_type` | Filter type: `input`, `select`, or `none` |
 | `columns[].classes` | Optional CSS classes for the column |
 | `columns[].id` | ULID identifier for the column entry (columns still have an id; tables don't) |
@@ -122,6 +123,7 @@ return [
     'server_side' => [
         'middleware' => ['web'],   // middleware of the server-side endpoints; add 'auth' to restrict them
         'max_length' => 1000,      // the most rows one server-side request may return
+        'count_cache' => 60,       // seconds a row count is reused; 0 counts on every request
     ],
 ];
 ```

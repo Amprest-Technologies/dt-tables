@@ -38,7 +38,8 @@ class DataTableRequest extends FormRequest
         //  Return the rules
         return [
             'key' => ['required', 'string', 'max:255', $uniqueRule],
-            'type' => ['sometimes', 'required', Rule::in(['buttons', 'theme', 'loader', 'behaviour', 'name'])],
+            'mode' => [Rule::requiredIf($this->isChangingMode($dataTable)), Rule::in(DataTable::MODES)],
+            'type' => ['sometimes', 'required', Rule::in(['buttons', 'theme', 'loader', 'behaviour', 'name', 'mode'])],
             'theme' => ['sometimes', 'required', Rule::in(array_keys(config('dt-tables.themes')))],
             'buttons' => ['sometimes', 'required', 'array'],
             'buttons.*' => ['sometimes', 'boolean'],
@@ -56,6 +57,16 @@ class DataTableRequest extends FormRequest
     }
 
     /**
+     * Determine whether the mode must be given: when a table is registered or its mode is changed.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function isChangingMode(?DataTable $dataTable): bool
+    {
+        return is_null($dataTable) || $this->input('type') === 'mode';
+    }
+
+    /**
      * Get the data used for updating the data table.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
@@ -68,6 +79,15 @@ class DataTableRequest extends FormRequest
             $dataTable->key = $this->key;
 
             //  Retuen as an array
+            return $dataTable->toArray();
+        }
+
+        //  Check if the update type is mode
+        if ($this->type === 'mode') {
+            //  Define the mode
+            $dataTable->mode = $this->mode;
+
+            //  Return as an array
             return $dataTable->toArray();
         }
 

@@ -12,7 +12,8 @@ All server-side tables extend `Amprest\DtTables\Tables\ServerSideTable`. Scaffol
 | `handle(mixed $model, mixed $key): mixed` | yes | Maps one model on the requested page to a display row. `$key` is the row's absolute position in the whole table (page 3 of size 10 starts at 20). |
 | `columnMap(): array` | yes | Maps each row key to the SQL it is searched and sorted by. See `column-map.md`. |
 | `keyColumn(): string` | no (`'id'`) | The unique column appended as the last sort so paging is stable. Set it when a join makes `id` ambiguous. |
-| `filterOptions(): array` | no | Options of `select` filters, keyed by row key. |
+| `filterOptions(): array` | no | Options of `select` filters, keyed by row key. A value may be a closure, which only runs when that filter is opened. |
+| `filterKeys(): array` | no | Row keys that get a select filter; defaults to the keys of `filterOptions()`, which does not run closures. |
 | `shared(): array` | no | Computed once per page and read in `handle()` through `$this->shared['key']`. |
 | `parameters(): array` | no | Sent back with every page; `parameters()['buttonTrigger']` feeds `DtButtonTriggered`. |
 | `authorize(Request $request): bool` | no (`true`) | Return `false` to answer 403. Runs on every rows and options request. |
@@ -104,6 +105,9 @@ class OrderTable extends ServerSideTable
     {
         return [
             'status' => ['pending' => 'Pending', 'paid' => 'Paid', 'refunded' => 'Refunded'],
+
+            //  A costly list is a closure, so it is only built when its filter is opened
+            'customer_name' => fn () => Customer::orderBy('name')->pluck('name', 'name')->all(),
         ];
     }
 
@@ -156,5 +160,5 @@ class OrderTable extends ServerSideTable
 
 - No controller: nothing calls `::build()`. The component receives `:source` and the browser fetches pages.
 - Copy and Excel buttons are removed from server-side tables; `DtButtonTriggered` therefore does not fire for them. `colvis` still works.
-- Column filters work against the database. A `select` filter loads its options from `filterOptions()` instead of the loaded rows, and matches the whole value.
+- Column filters work against the database. A `select` filter loads its options from `filterOptions()` instead of the loaded rows, and matches the whole value. Every key in `filterOptions()` gets a select; every other searchable key in `columnMap()` gets an input. The table's JSON `columns` are ignored.
 - A filter or sort arrow only appears for columns that `columnMap()` can search or sort (see `column-map.md`).

@@ -33,7 +33,10 @@ class DataTableController
     public function store(DataTableRequest $request): RedirectResponse
     {
         //  Create the table
-        $dataTable = DataTable::create(['key' => $request->safe()->key]);
+        $dataTable = DataTable::create([
+            'key' => $request->safe()->key,
+            'mode' => $request->safe()->mode,
+        ]);
 
         //  Return the view with the list of tables
         return redirect()

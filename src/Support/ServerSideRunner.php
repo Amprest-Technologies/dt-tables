@@ -21,7 +21,7 @@ interface ServerSideRunner
     public function options(string $column): array;
 
     /**
-     * Get the searchable and orderable row keys, so the browser only offers those.
+     * Get the searchable, orderable and select-filtered row keys, so the browser only offers those.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */

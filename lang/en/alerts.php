@@ -18,6 +18,7 @@ return [
     ],
 
     'data-table-column' => [
+        'server-side' => 'Server-side and API tables take their filters from the table class, not from columns.',
         'created' => 'Data table created successfully.',
         'updated' => 'Data table updated successfully.',
         'destroyed' => 'Data table deleted successfully.',

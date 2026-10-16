@@ -123,7 +123,7 @@ class ApiQuery implements ServerSideRunner
     public function options(string $column): array
     {
         //  Get the options the table declared for the column
-        $options = $this->table->filterOptions()[$column] ?? [];
+        $options = $this->table->optionsFor($column);
 
         //  A plain list uses each value as its own label
         $isList = array_is_list($options);
@@ -162,10 +162,11 @@ class ApiQuery implements ServerSideRunner
             }
         }
 
-        //  Return both lists
+        //  Return both lists, and the keys that are filtered with a select
         return [
             'searchable' => $searchable,
             'orderable' => $orderable,
+            'selects' => array_map('strval', $this->table->filterKeys()),
         ];
     }
 

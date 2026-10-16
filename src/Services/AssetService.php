@@ -21,7 +21,7 @@ class AssetService
         $lastModified = filemtime($path);
 
         //  Create the cache control string
-        $cacheControl = 'public, max-age=31536000';
+        $cacheControl = 'public, max-age=31536000, immutable';
 
         //  if the server modification date matches the file date
         if ($this->matchesCache($lastModified)) {

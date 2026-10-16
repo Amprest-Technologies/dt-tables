@@ -5,9 +5,19 @@ namespace Amprest\DtTables\Models;
 class DataTable extends Model
 {
     /**
+     * The modes a table can be fed in: rows inline, from a database query, or from an API.
+     */
+    public const MODES = ['inline', 'server_side', 'api'];
+
+    /**
      * The key for the data table.
      */
     public string $key;
+
+    /**
+     * How the table is fed. Files saved before modes existed carry none, so they read as inline.
+     */
+    public string $mode = 'inline';
 
     /**
      * The key this instance was loaded under, used to detect renames on update.
@@ -52,6 +62,7 @@ class DataTable extends Model
 
         //  Prepare the data to be stored in the json file
         $data = array_merge($data, [
+            'mode' => $data['mode'] ?? $this->mode,
             'settings' => $this->settings,
             'columns' => $this->columns,
         ]);
@@ -91,6 +102,35 @@ class DataTable extends Model
 
         //  Return the object
         return $this;
+    }
+
+    /**
+     * Set the attributes, treating a missing, empty or unknown mode as inline.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function setAttributes(array|object $items): void
+    {
+        //  Convert the items to an array
+        $items = (array) $items;
+
+        //  Fall back to inline when the mode is not one we know
+        if (array_key_exists('mode', $items) && ! in_array($items['mode'], self::MODES, true)) {
+            unset($items['mode']);
+        }
+
+        //  Set the attributes
+        parent::setAttributes($items);
+    }
+
+    /**
+     * Determine whether the table is fed by the server, from a query or an API, one page at a time.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    public function isServerSide(): bool
+    {
+        return $this->mode !== 'inline';
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Amprest\DtTables\Tables;
 
 use Amprest\DtTables\Support\ServerSideRunner;
+use Closure;
 use Illuminate\Http\Request;
 
 abstract class ServerSideSource
@@ -34,13 +35,37 @@ abstract class ServerSideSource
     abstract public function columnMap(): array;
 
     /**
-     * Return the options of select filters, keyed by row key.
+     * Return the options of select filters, keyed by row key. A value may be a closure, which is only run when that filter is opened.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public function filterOptions(): array
     {
         return [];
+    }
+
+    /**
+     * Return the options of one select filter, running its closure if it has one.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    public function optionsFor(string $column): array
+    {
+        //  Get the options declared for the column
+        $options = $this->filterOptions()[$column] ?? [];
+
+        //  Run a closure now, so only the filter being opened is built
+        return $options instanceof Closure ? $options() : $options;
+    }
+
+    /**
+     * Return the row keys that get a select filter. Names the keys without running closures, so declare costly options as closures.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    public function filterKeys(): array
+    {
+        return array_keys($this->filterOptions());
     }
 
     /**

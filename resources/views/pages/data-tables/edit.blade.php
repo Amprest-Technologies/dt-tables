@@ -1,6 +1,7 @@
 @extends('dt-tables::pages.layouts.app')
 @section('title', prettify($dataTable->key))
 @section('content')
+    @php $isServerSide = $dataTable->isServerSide(); @endphp
     {{-- Header --}}
     <div class="flex items-center justify-between mb-6">
         <div>
@@ -12,12 +13,19 @@
             <h1 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
                 {{ prettify($dataTable->key) }}
                 <span class="font-mono text-xs bg-indigo-50 text-indigo-500 border border-indigo-100 px-2 py-0.5 rounded-full">{{ $dataTable->key }}</span>
+                <span class="text-xs bg-gray-100 text-gray-500 px-2.5 py-0.5 rounded-full">{{ prettify($dataTable->mode) }}</span>
             </h1>
         </div>
         <a href="{{ route('dt-tables.data-tables.index') }}" class="text-sm text-indigo-600 hover:underline">← Back</a>
     </div>
 
     {{-- Column Configurations --}}
+    @if($isServerSide)
+        <div class="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden mb-1 px-5 py-4">
+            <div class="text-sm font-semibold text-gray-800">Columns</div>
+            <div class="text-xs text-gray-400 mt-0.5">Filters come from the table class: a column with options in <code>filterOptions()</code> gets a select, any other searchable column in <code>columnMap()</code> gets an input.</div>
+        </div>
+    @else
     <div class="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden mb-1 px-5 py-4">
         <div class="py-4 border-b border-gray-100 flex items-center justify-between">
             <div>
@@ -100,6 +108,7 @@
             </div>
         @endif
     </div>
+    @endif
 
     {{-- Settings (all sections in one card) --}}
     <div class="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden">
@@ -120,6 +129,29 @@
                 @error('key')
                     <small class="mt-1 block text-red-700">{{ $message }}</small>
                 @enderror
+            </div>
+        </form>
+
+        {{-- Mode --}}
+        <form action="{{ route('dt-tables.data-tables.update', ['data_table' => $dataTable->key, 'type' => 'mode']) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="px-5 py-4 border-b border-gray-100">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm text-gray-500">Mode</span>
+                    <button class="btn shrink-0">Save</button>
+                </div>
+                <select name="mode" required>
+                    @foreach(Amprest\DtTables\Models\DataTable::MODES as $mode)
+                        <option value="{{ $mode }}" @selected($dataTable->mode === $mode)>{{ prettify($mode) }}</option>
+                    @endforeach
+                </select>
+                @error('mode')
+                    <small class="mt-1 block text-red-700">{{ $message }}</small>
+                @enderror
+                @if($isServerSide)
+                    <small class="mt-1 block text-gray-400">Rows are searched, sorted and paged by the server, one page per request. Copy and Excel export only the loaded page, so they are not offered.</small>
+                @endif
             </div>
         </form>
 
@@ -149,7 +181,7 @@
                     <button class="btn shrink-0">Save</button>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                    @foreach(config('dt-tables.settings.buttons') as $button)
+                    @foreach($isServerSide ? ['colvis'] : config('dt-tables.settings.buttons') as $button)
                         <div>
                             <label class="mb-2">{{ prettify($button) }}</label>
                             <div class="flex items-center gap-1.5">
@@ -179,7 +211,7 @@
                         <label class="mb-2">Page Length</label>
                         @php $pageLength = old('page_length', $behaviour->page_length ?? 10); @endphp
                         <select name="page_length">
-                            @foreach ([10, 25, 50, 100, -1] as $length)
+                            @foreach ($isServerSide ? [10, 25, 50, 100] : [10, 25, 50, 100, -1] as $length)
                                 <option value="{{ $length }}" @selected($pageLength == $length)>{{ $length === -1 ? 'All' : $length }}</option>
                             @endforeach
                         </select>
@@ -200,6 +232,7 @@
                             <option value="0" @selected(!$searching)>Disabled</option>
                         </select>
                     </div>
+@unless($isServerSide)
                     <div>
                         <label class="mb-2">Pagination</label>
                         @php $paging = old('paging', (bool) ($behaviour->paging ?? true)); @endphp
@@ -208,6 +241,7 @@
                             <option value="0" @selected(!$paging)>Disabled</option>
                         </select>
                     </div>
+@endunless
                     <div>
                         <label class="mb-2">Row Count Info</label>
                         @php $info = old('info', (bool) ($behaviour->info ?? true)); @endphp

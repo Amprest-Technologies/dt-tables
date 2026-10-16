@@ -7,7 +7,7 @@ Both routes live in `package/routes/api.php`, under the prefix `api/dt-tables` a
 | Route name | Method + Path | Purpose |
 |------------|---------------|---------|
 | `dt-tables.api.server-side.rows` | `POST /api/dt-tables/server-side` | One page of rows |
-| `dt-tables.api.server-side.options` | `POST /api/dt-tables/server-side/options` | Options of one select filter |
+| `dt-tables.api.server-side.options` | `POST /api/dt-tables/server-side/options` | Options of one select filter (`column`), or of several at once (`columns`, keyed by column); the browser batches the filters of a table into one request |
 
 `ServerSideController` is thin: it opens the token, calls the table's `authorize()`, then hands off to the runner the table returns from `runner()`: `Support\ServerSideQuery` for a `ServerSideTable` (SQL) or `Support\ApiQuery` for an `ApiTable` (HTTP). Validation lives in `ServerSideRowsRequest` and `ServerSideOptionsRequest`.
 
@@ -18,10 +18,13 @@ Both routes live in `package/routes/api.php`, under the prefix `api/dt-tables` a
 'server_side' => [
     'middleware' => ['web'],   // add 'auth' to restrict the endpoints
     'max_length' => 1000,      // the most rows one request may return
+    'count_cache' => 60,       // seconds a row count is reused; 0 counts on every request
 ],
 ```
 
 A request with `length: -1` ("show all") is capped at `max_length`.
+
+`count_cache` keeps the count of the unfiltered rows, and of each filtered set, for that many seconds, keyed by the query's SQL and bindings, so paging and re-filtering do not recount a large table. Totals can lag by up to that long after rows are added or removed. API tables are not counted by the package, so it does not apply to them.
 
 ## The Sealed Token
 

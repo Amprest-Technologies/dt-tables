@@ -241,3 +241,11 @@
         font-size: 1rem;
     }
 }
+
+.dt-tables-container table.dataTable {
+    th, td {
+        &.dtt-align-left { text-align: left !important; }
+        &.dtt-align-center { text-align: center !important; }
+        &.dtt-align-right { text-align: right !important; }
+    }
+}

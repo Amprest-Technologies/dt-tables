@@ -13,7 +13,9 @@ class ServerSideOptionsRequest extends ServerSideRequest
     {
         return [
             ...parent::rules(),
-            'column' => ['required', 'string'],
+            'column' => ['required_without:columns', 'string'],
+            'columns' => ['required_without:column', 'array', 'max:50'],
+            'columns.*' => ['string'],
         ];
     }
 
@@ -25,5 +27,15 @@ class ServerSideOptionsRequest extends ServerSideRequest
     public function column(): string
     {
         return $this->input('column');
+    }
+
+    /**
+     * Get the keys of the columns whose filter options are wanted in one request.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    public function columns(): array
+    {
+        return array_values(array_unique((array) $this->input('columns', [])));
     }
 }

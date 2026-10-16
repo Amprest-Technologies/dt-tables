@@ -29,15 +29,16 @@ Every route below is guarded by `Amprest\DtTables\Http\Middleware\PreventIfEnvir
 
 ## Index Page (`pages/data-tables/index.blade.php`)
 
-A form to register a new table (just a `key`, e.g. `invoices-table` — must match the `id` you'll use on `<x-data-table>`), and a list of existing tables with Edit/Delete actions.
+A form to register a new table: a `key` (e.g. `invoices-table` — must match the `id` you'll use on `<x-data-table>`) and a required `mode` (`inline`, `server_side` or `api`, stored in the table's JSON; files without one read as `inline`). The mode only shapes the admin UI — the `source` attribute on `<x-data-table>` still decides how a table runs. Server-side and API tables hide the settings that cannot apply to them: Copy/Excel buttons, the "All" page length and the Pagination toggle, and a list of existing tables with Edit/Delete actions.
 
 ## Edit Page (`pages/data-tables/edit.blade.php`)
 
 Two cards, each containing independent `<form>`s that submit individually (not one big form):
 
-1. **Columns card** — a form to add a new column (`key` + auto-defaulted `search_type: none`), and a table listing existing columns, each row with its own inline update form (`key`, `search_type` select) plus a delete form.
+1. **Columns card** (inline tables only: for `server_side` and `api` tables the card is replaced by a note and the column routes return 403, because the filters come from the table class and any `columns` in the JSON are ignored) — a form to add a new column (`key` + auto-defaulted `search_type: none`), and a table listing existing columns, each row with its own inline update form (`key`, `search_type` select) plus a delete form.
 2. **Settings card** — five separate forms, each `PUT`-ing to `dt-tables.data-tables.update` with a different `type` query parameter:
    - `type=name` — the table's `key`
+   - `type=mode` — the table's `mode` (required)
    - `type=theme` — `bootstrap` or `tailwind`
    - `type=buttons` — per-button active/inactive toggle (`copy`, `colvis`, `excel`)
    - `type=behaviour` — `page_length`, `ordering`, `searching`, `paging`, `info`, `scroll_x`

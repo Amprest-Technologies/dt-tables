@@ -6,8 +6,8 @@ use Amprest\DtTables\Http\Controllers\DataTableController;
 use Amprest\DtTables\Http\Middleware\PreventIfEnvironmentIsNotLocal;
 use Illuminate\Support\Facades\Route;
 
-//  Define the route for the datatable assets
-Route::get('assets/{name}', AssetController::class)->name('asset.show');
+//  Define the route for the datatable assets, which are static so they need no session or cookies
+Route::get('assets/{name}', AssetController::class)->name('asset.show')->withoutMiddleware('web');
 
 //  Define the middleware for the routes
 Route::middleware(PreventIfEnvironmentIsNotLocal::class)->group(function () {

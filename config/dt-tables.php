@@ -34,12 +34,14 @@ return [
     |
     | Tables given a `source` page, search and sort in the database, one page per
     | request. `middleware` guards the endpoints, so add `auth` to restrict them,
-    | and `max_length` caps how many rows one request may return.
+    | `max_length` caps how many rows one request may return, and `count_cache`
+    | is how many seconds a row count is reused (0 counts on every request).
     |
     */
     'server_side' => [
         'middleware' => ['web'],
         'max_length' => 1000,
+        'count_cache' => 60,
     ],
 
     /*

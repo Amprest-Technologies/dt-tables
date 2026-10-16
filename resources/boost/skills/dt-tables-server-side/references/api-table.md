@@ -226,7 +226,7 @@ class MessageTable extends ApiTable
 </x-data-table>
 ```
 
-Register `messages-table` (admin UI or `resources/data-tables/messages-table.json`) to give the columns a `search_type` of `input`, `select` or `none`.
+Register `messages-table` (admin UI or `resources/data-tables/messages-table.json`) with `mode` `api`. Leave its `columns` empty: the filters come from the class, a `select` for every key in `filterOptions()` and an `input` for every other searchable key in `columnMap()`.
 
 ## Page-only Enrichment
 

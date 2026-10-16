@@ -4,7 +4,7 @@
     "name": "rolldown-runtime"
   },
   "resources/css/admin.css": {
-    "file": "assets/admin-DsEE2vjE.css",
+    "file": "assets/admin-Ct5e4TAU.css",
     "name": "admin",
     "names": [
       "admin.css"
@@ -13,7 +13,7 @@
     "isEntry": true
   },
   "resources/css/client.css": {
-    "file": "assets/client-DLxqA5hy.css",
+    "file": "assets/client-CXJokf8V.css",
     "name": "client",
     "names": [
       "client.css"
@@ -31,7 +31,7 @@
     ]
   },
   "resources/js/client.js": {
-    "file": "assets/client-VhTDGzHv.js",
+    "file": "assets/client-CjnRtoZP.js",
     "name": "client",
     "src": "resources/js/client.js",
     "isEntry": true,

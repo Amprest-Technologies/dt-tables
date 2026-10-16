@@ -41,11 +41,13 @@ A string that is not a plain `table.column` name is used as raw SQL, for example
 
 ## What the Browser Is Told
 
-The component reads `columnMap()` once and sends the browser two lists, `searchable` and `orderable`. The JS then:
+The component reads `columnMap()` once and sends the browser three lists: `searchable`, `orderable` and `selects` (the keys named by `filterKeys()`, which defaults to the keys of `filterOptions()`). The JS then:
 
 - sets `orderable: false` / `searchable: false` on every other column, so no sort arrow is drawn;
-- skips creating the filter box or select for a column the server cannot search, even if its `resources/data-tables/{key}.json` entry asks for one;
+- draws a `select` filter for every searchable key in `selects`, an `input` filter for every other searchable key, and nothing for a key the server cannot search. The `columns` in the table's `resources/data-tables/{key}.json` are ignored for server-side and API tables;
 - never shows an arrow on `dtt-row-index` or `dtt-actions` columns, which are not in the map.
+
+To keep a column sortable but unfiltered, give it only a `sort` target (`'amount' => ['sort' => 'orders.amount']`). To align a column, put `dtt-align="left|center|right"` on its `<th>`; it aligns the header and the cells.
 
 A request on an unmapped key is silently ignored by the server as well.
 

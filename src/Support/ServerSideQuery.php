@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Expression;
+use Illuminate\Support\Facades\Cache;
 
 class ServerSideQuery implements ServerSideRunner
 {
@@ -48,10 +49,10 @@ class ServerSideQuery implements ServerSideRunner
         $searched = $this->search(clone $query, $request);
 
         //  Count the rows left after searching
-        $filtered = $this->count($searched);
+        $filtered = $this->cachedCount($searched);
 
         //  Count every row, which is the same number when nothing is being searched
-        $total = $this->isSearching($request) ? $this->count($query) : $filtered;
+        $total = $this->isSearching($request) ? $this->cachedCount($query) : $filtered;
 
         //  Order the rows
         $this->order($searched, $request, $defaultOrders);
@@ -77,7 +78,7 @@ class ServerSideQuery implements ServerSideRunner
     public function options(string $column): array
     {
         //  Get the options the table declared for the column
-        $options = $this->table->filterOptions()[$column] ?? [];
+        $options = $this->table->optionsFor($column);
 
         //  A plain list uses each value as its own label
         $isList = array_is_list($options);
@@ -116,10 +117,11 @@ class ServerSideQuery implements ServerSideRunner
             }
         }
 
-        //  Return both lists
+        //  Return both lists, and the keys that are filtered with a select
         return [
             'searchable' => $searchable,
             'orderable' => $orderable,
+            'selects' => array_map('strval', $this->table->filterKeys()),
         ];
     }
 
@@ -290,6 +292,31 @@ class ServerSideQuery implements ServerSideRunner
 
         //  Finish with the key column so paging is stable
         $query->orderBy($this->table->keyColumn());
+    }
+
+    /**
+     * Count the rows of a query, reusing a count of the same query made moments ago so paging and filtering do not recount.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function cachedCount(Builder|EloquentBuilder $query): int
+    {
+        //  Get how long a count is kept, where zero counts every time
+        $seconds = (int) config('dt-tables.server_side.count_cache', 60);
+
+        //  Count straight away when caching is off
+        if ($seconds <= 0) {
+            return $this->count($query);
+        }
+
+        //  Get the query that will be run
+        $base = $this->baseQuery($query);
+
+        //  Identify the count by the connection, the sql and its bindings
+        $key = 'dt-tables:count:'.md5($base->getConnection()->getName().$base->toSql().json_encode($base->getBindings()));
+
+        //  Count once and keep the number
+        return Cache::remember($key, $seconds, fn () => $this->count($query));
     }
 
     /**

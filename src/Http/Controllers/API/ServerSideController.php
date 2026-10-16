@@ -35,6 +35,15 @@ class ServerSideController
         //  Get the query runner for the table the token names
         $query = $this->query($request);
 
+        //  A batch of columns is answered in one go, keyed by column
+        if ($request->has('columns')) {
+            return response()->json([
+                'options' => collect($request->columns())
+                    ->mapWithKeys(fn (string $column) => [$column => $query->options($column)])
+                    ->all(),
+            ]);
+        }
+
         //  Return the options
         return response()->json([
             'options' => $query->options($request->column()),

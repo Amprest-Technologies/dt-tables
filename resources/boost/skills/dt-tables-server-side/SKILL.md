@@ -57,7 +57,7 @@ Both table types extend `ServerSideSource`, which holds `handle()`, `columnMap()
 </x-data-table>
 ```
 
-4. Register `orders-table` (admin UI or `resources/data-tables/orders-table.json`) to give columns a `search_type` of `input`, `select` or `none`.
+4. Register `orders-table` (admin UI or `resources/data-tables/orders-table.json`) with `mode` `server_side` or `api`. The JSON `columns` are ignored for these modes and the admin cannot edit them: the filters always come from the class, a `select` for every key in `filterOptions()` and an `input` for every other searchable key in `columnMap()`. Give a key no search target to leave it unfiltered.
 
 ## Quick Reference
 
@@ -65,7 +65,7 @@ Both table types extend `ServerSideSource`, which holds `handle()`, `columnMap()
 
 - Extend `Amprest\DtTables\Tables\ServerSideTable` (rows in your database)
 - Required: `query()`, `handle()`, `columnMap()`
-- Optional: `keyColumn()`, `filterOptions()`, `shared()`, `parameters()`, `authorize()`
+- Optional: `keyColumn()`, `filterOptions()`, `filterKeys()` (names the select keys without building the options; override it when the options are costly to build), `shared()`, `parameters()`, `authorize()`
 - `query()` must not call `limit()`, `offset()` or a final `orderBy` (a default `latest()` is fine)
 
 ### 2. The Column Map → `references/column-map.md`

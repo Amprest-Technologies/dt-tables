@@ -17,6 +17,9 @@ class DataTableColumnController
      */
     public function store(DataTableColumnRequest $request, DataTable $dataTable): RedirectResponse
     {
+        //  Server-side and API tables take their filters from the table class
+        abort_if($dataTable->isServerSide(), 403, trans('dt-tables::alerts.data-table-column.server-side'));
+
         //  Create the table columns
         DataTableColumn::create(array_merge($request->validated(), [
             'id' => strtolower(Str::ulid()),
@@ -39,6 +42,9 @@ class DataTableColumnController
      */
     public function update(DataTableColumnRequest $request, DataTable $dataTable, DataTableColumn $dataTableColumn): RedirectResponse
     {
+        //  Server-side and API tables take their filters from the table class
+        abort_if($dataTable->isServerSide(), 403, trans('dt-tables::alerts.data-table-column.server-side'));
+
         //  Update the table
         $dataTableColumn->update(array_merge($request->validated(), [
             'data_table' => $dataTable,

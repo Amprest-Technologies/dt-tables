@@ -9,11 +9,20 @@
         <div class="text-sm font-semibold text-gray-700 mb-3">Register a Table</div>
         <form action="{{ route('dt-tables.data-tables.store') }}" method="POST">
             @csrf
-            <div class="element-group">
+            <div class="flex items-stretch gap-2">
                 <input name="key" type="text" class="@error('key') border-red-500! @enderror" placeholder="e.g. invoices-table" value="{{ old('key') }}">
-                <button class="btn">Add Table</button>
+                <select name="mode" required class="w-48! shrink-0 @error('mode') border-red-500! @enderror">
+                    <option value="" disabled @selected(! old('mode'))>Select mode</option>
+                    @foreach(Amprest\DtTables\Models\DataTable::MODES as $mode)
+                        <option value="{{ $mode }}" @selected(old('mode') === $mode)>{{ prettify($mode) }}</option>
+                    @endforeach
+                </select>
+                <button class="btn shrink-0">Add Table</button>
             </div>
             @error('key')
+                <small class="mt-1 block text-red-700">{{ $message }}</small>
+            @enderror
+            @error('mode')
                 <small class="mt-1 block text-red-700">{{ $message }}</small>
             @enderror
         </form>
@@ -26,6 +35,7 @@
                     <tr>
                         <th class="w-[5%] text-center">#</th>
                         <th>Table Key</th>
+                        <th class="w-[15%]">Mode</th>
                         <th class="w-[15%] text-center">Actions</th>
                     </tr>
                 </thead>
@@ -34,6 +44,7 @@
                         <tr>
                             <td class="text-center text-gray-400">{{ $loop->iteration }}</td>
                             <td class="font-mono text-sm">{{ $dataTable->key }}</td>
+                            <td class="text-sm text-gray-500">{{ prettify(in_array($dataTable->mode ?? null, Amprest\DtTables\Models\DataTable::MODES, true) ? $dataTable->mode : 'inline') }}</td>
                             <td>
                                 <div class="element-group justify-center">
                                     <a href="{{ route('dt-tables.data-tables.edit', ['data_table' => $dataTable->key]) }}" class="btn">Edit</a>
