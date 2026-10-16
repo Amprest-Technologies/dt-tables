@@ -8,6 +8,11 @@ use Illuminate\Support\Str;
 class TablePresenter
 {
     /**
+     * The number of tables shown on a page of the list.
+     */
+    public const PER_PAGE = 6;
+
+    /**
      * Describe each mode, for the badges, the filter tabs and the pickers.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>

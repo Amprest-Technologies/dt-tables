@@ -37,7 +37,7 @@
         </div>
 
         {{-- Table cards --}}
-        <div id="table-grid" class="grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div id="table-grid" class="grid gap-1 sm:grid-cols-2 lg:grid-cols-3" data-per-page="{{ $perPage }}">
             @foreach($tables as $table)
                 <div class="table-card flex flex-col rounded-xl border border-gray-200 bg-white shadow-xs transition hover:border-gray-300 hover:shadow-sm"
                      data-key="{{ strtolower($table['key']) }}" data-mode="{{ $table['mode'] }}">
@@ -80,6 +80,20 @@
                 </div>
             @endforeach
         </div>
+
+        {{-- Pagination, shown when the tables that match fill more than one page --}}
+        <nav id="table-pager" class="hidden" aria-label="Pagination">
+            <div class="mt-2 flex flex-wrap items-center justify-between gap-3 px-1">
+                <p class="text-sm text-gray-500" data-pager-summary></p>
+                <div class="flex items-center gap-1">
+                    <button type="button" data-pager="prev" class="btn-secondary disabled:cursor-not-allowed disabled:opacity-40">Previous</button>
+                    <button type="button" data-pager="next" class="btn-secondary disabled:cursor-not-allowed disabled:opacity-40">Next</button>
+                </div>
+            </div>
+        </nav>
+        <template id="pager-page">
+            <button type="button" class="min-w-8 cursor-pointer rounded-sm bg-white px-2 py-1 text-sm font-medium text-gray-600 ring-1 ring-inset ring-gray-200 hover:bg-gray-100 aria-[current=page]:bg-primary-darker aria-[current=page]:text-white aria-[current=page]:ring-primary-darker aria-[current=page]:hover:bg-primary-darker"></button>
+        </template>
 
         {{-- Shown when the search and filter leave nothing --}}
         <div id="no-results" class="hidden rounded-xl border border-dashed border-gray-300 bg-white py-12 text-center text-sm text-gray-400">

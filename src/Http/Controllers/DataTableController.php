@@ -25,6 +25,7 @@ class DataTableController
             'tables' => $tables,
             'modes' => $presenter->modes(),
             'counts' => $tables->countBy('mode'),
+            'perPage' => TablePresenter::PER_PAGE,
         ]);
     }
 

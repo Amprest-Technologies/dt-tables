@@ -10,7 +10,8 @@
 <h2>The table list</h2>
 <p>
     Every registered table appears as a card showing its mode, theme, and a short summary. Use the search box to find a table by key, and the tabs
-    to show one mode at a time. <strong>Edit</strong> opens the table, and <strong>Delete</strong> removes its file after a confirmation.
+    to show one mode at a time. Tables are shown six to a page, and the pager under the cards appears when more than six match. Searching or
+    choosing a mode starts again from the first page. <strong>Edit</strong> opens the table, and <strong>Delete</strong> removes its file after a confirmation.
 </p>
 
 <h2>Registering a table</h2>

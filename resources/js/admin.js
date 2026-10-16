@@ -48,44 +48,82 @@ let setupTableDialog = function () {
 };
 
 /* -----------------------------------------------------------------
- * Set up the search and mode filter of the table cards
+ * Set up the search, the mode filter and the pages of the table cards
  * ------------------------------------------------------------------
  */
 let setupTableFilter = function () {
-    //  Get the search box, the cards and the mode tabs
+    //  Get the search box, the grid, the cards and the mode tabs
     let search = document.getElementById('table-search');
+    let grid = document.getElementById('table-grid');
     let cards = [...document.querySelectorAll('.table-card')];
     let tabs = [...document.querySelectorAll('[data-mode-filter]')];
 
     //  Nothing to filter on pages without cards
     if (! search) { return; }
 
-    //  Track the mode being shown, where an empty one shows every mode
-    let selectedMode = '';
+    //  Get the pager, the template of its page buttons and the size of a page
+    let pager = document.getElementById('table-pager');
+    let template = document.getElementById('pager-page');
+    let perPage = Number(grid.dataset.perPage) || 6;
 
-    //  Show the cards that match, and the empty message when none do
-    let applyFilter = function () {
+    //  Track the mode being shown, where an empty one shows every mode, and the page being shown
+    let selectedMode = '';
+    let page = 1;
+
+    //  Draw the pager for the cards that match
+    let drawPager = function (total, pages) {
+        //  Only offer pages when there is more than one
+        pager.classList.toggle('hidden', pages <= 1);
+
+        //  Say which cards are showing
+        let first = (page - 1) * perPage + 1;
+        let last = Math.min(page * perPage, total);
+        pager.querySelector('[data-pager-summary]').textContent = `Showing ${first}\u2013${last} of ${total} tables`;
+
+        //  Switch off the ends
+        pager.querySelector('[data-pager="prev"]').disabled = page === 1;
+        pager.querySelector('[data-pager="next"]').disabled = page === pages;
+
+        //  Replace the page buttons
+        pager.querySelectorAll('[data-page]').forEach(button => button.remove());
+
+        //  Add one button per page, before the next button
+        for (let number = 1; number <= pages; number++) {
+            //  Create the button from the template
+            let button = template.content.firstElementChild.cloneNode(true);
+
+            //  Fill it in
+            button.textContent = number;
+            button.dataset.page = number;
+            button.setAttribute('aria-current', number === page ? 'page' : 'false');
+
+            //  Put it in the pager
+            pager.querySelector('[data-pager="next"]').before(button);
+        }
+    };
+
+    //  Show the page of cards that match, and the empty message when none do
+    let render = function () {
         //  Get the text being searched for
         let text = search.value.trim().toLowerCase();
 
-        //  Count the cards left showing
-        let visible = 0;
+        //  Find the cards that match on their key and the selected mode
+        let matching = cards.filter(card => card.dataset.key.includes(text)
+            && (! selectedMode || card.dataset.mode === selectedMode));
 
-        //  Show or hide each card
-        cards.forEach(card => {
-            //  A card matches on its key and the selected mode
-            let matches = card.dataset.key.includes(text)
-                && (! selectedMode || card.dataset.mode === selectedMode);
+        //  Work out the pages, and stay on one that exists
+        let pages = Math.max(1, Math.ceil(matching.length / perPage));
+        page = Math.min(page, pages);
 
-            //  Toggle the card
-            card.classList.toggle('hidden', ! matches);
+        //  Hide every card, then show the ones on this page
+        cards.forEach(card => card.classList.add('hidden'));
+        matching.slice((page - 1) * perPage, page * perPage).forEach(card => card.classList.remove('hidden'));
 
-            //  Count the card
-            visible += matches ? 1 : 0;
-        });
+        //  Show the message when no card matches
+        document.getElementById('no-results').classList.toggle('hidden', matching.length > 0);
 
-        //  Show the message when no card is left
-        document.getElementById('no-results').classList.toggle('hidden', visible > 0);
+        //  Draw the pager
+        drawPager(matching.length, pages);
     };
 
     //  Mark the tab of the selected mode, which the markup styles
@@ -93,20 +131,44 @@ let setupTableFilter = function () {
         tabs.forEach(tab => tab.setAttribute('aria-selected', tab.dataset.modeFilter === selectedMode));
     };
 
-    //  Filter as the user types
-    search.addEventListener('input', applyFilter);
+    //  Filter as the user types, starting again from the first page
+    search.addEventListener('input', () => {
+        page = 1;
+        render();
+    });
 
     //  Filter when a mode tab is chosen
     tabs.forEach(tab => tab.addEventListener('click', () => {
-        //  Remember the mode
+        //  Remember the mode and start from the first page
         selectedMode = tab.dataset.modeFilter;
+        page = 1;
 
         //  Mark the tab
         selectTab();
 
-        //  Filter the cards
-        applyFilter();
+        //  Show the cards
+        render();
     }));
+
+    //  Move between pages
+    pager.addEventListener('click', event => {
+        //  Find the button that was clicked
+        let button = event.target.closest('button');
+
+        //  Ignore clicks that are not on a button
+        if (! button) { return; }
+
+        //  Work out the page it leads to
+        if (button.dataset.pager === 'prev') { page--; }
+        else if (button.dataset.pager === 'next') { page++; }
+        else { page = Number(button.dataset.page); }
+
+        //  Show it
+        render();
+    });
+
+    //  Show the first page
+    render();
 };
 
 /* -----------------------------------------------------------------
