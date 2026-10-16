@@ -4,6 +4,7 @@ namespace Amprest\DtTables\Http\Controllers;
 
 use Amprest\DtTables\Http\Requests\DataTableRequest;
 use Amprest\DtTables\Models\DataTable;
+use Amprest\DtTables\Support\TablePresenter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -14,14 +15,16 @@ class DataTableController
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    public function index(): View
+    public function index(TablePresenter $presenter): View
     {
-        //  Get the list of tables
-        $dataTables = DataTable::all();
+        //  Summarise every table for its card
+        $tables = DataTable::all()->map(fn ($table) => $presenter->card($table));
 
         //  Return the view with the list of tables
         return view('dt-tables::pages.data-tables.index', [
-            'dataTables' => $dataTables,
+            'tables' => $tables,
+            'modes' => $presenter->modes(),
+            'counts' => $tables->countBy('mode'),
         ]);
     }
 
@@ -54,12 +57,12 @@ class DataTableController
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    public function edit(DataTable $dataTable): View
+    public function edit(DataTable $dataTable, TablePresenter $presenter): View
     {
         return view('dt-tables::pages.data-tables.edit', [
             'dataTable' => $dataTable,
-            'columns' => $dataTable->columns,
-            'settings' => $dataTable->settings,
+            'modes' => $presenter->modes(),
+            'page' => $presenter->edit($dataTable),
         ]);
     }
 
@@ -96,8 +99,8 @@ class DataTableController
         //  Update the json file
         DataTable::destroy($dataTable);
 
-        //  Return the view with the list of tables
-        return redirect()->back()->with([
+        //  Return to the list, since the table's own page no longer exists
+        return redirect()->route('dt-tables.data-tables.index')->with([
             'alert' => [
                 'type' => 'success',
                 'message' => trans('dt-tables::alerts.data-table.destroyed'),

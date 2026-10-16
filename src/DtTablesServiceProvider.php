@@ -9,6 +9,9 @@ use Amprest\DtTables\Services\HelpersService;
 use Amprest\DtTables\Support\LegacyDataMigrator;
 use Amprest\DtTables\Views\Components\DataTable;
 use Amprest\DtTables\Views\Components\DataTableAssets;
+use Amprest\DtTables\Views\Components\Docs\Callout;
+use Amprest\DtTables\Views\Components\Docs\Code;
+use Amprest\DtTables\Views\Components\Docs\Table;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Blade;
@@ -70,6 +73,11 @@ class DtTablesServiceProvider extends ServiceProvider
 
         //  Load the assets blade component
         Blade::component('data-table-assets', DataTableAssets::class);
+
+        //  Load the components used to write the documentation
+        Blade::component('docs-code', Code::class);
+        Blade::component('docs-callout', Callout::class);
+        Blade::component('docs-table', Table::class);
     }
 
     /**

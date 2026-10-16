@@ -4,7 +4,7 @@
     "name": "rolldown-runtime"
   },
   "resources/css/admin.css": {
-    "file": "assets/admin-Ct5e4TAU.css",
+    "file": "assets/admin-P23kEF0R.css",
     "name": "admin",
     "names": [
       "admin.css"
@@ -22,7 +22,7 @@
     "isEntry": true
   },
   "resources/js/admin.js": {
-    "file": "assets/admin-Br6_c_eD.js",
+    "file": "assets/admin-B5gUwR94.js",
     "name": "admin",
     "src": "resources/js/admin.js",
     "isEntry": true,
