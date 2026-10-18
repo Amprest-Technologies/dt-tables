@@ -98,12 +98,12 @@ Columns can be conditionally shown based on context:
 
         {{-- Only show for relocated/archived tenants --}}
         @if(in_array($status, ['relocated', 'archived']))
-            <th>@prettify($status) At</th>
+            <th>{{ Str::headline($status) }} At</th>
         @endif
 
         {{-- Only show zone column when multiple zones are selected --}}
         @if($organization->hasMultipleZonesSelected())
-            <th dtt-title="zone">@prettify($zoneDisplayName)</th>
+            <th dtt-title="zone">{{ Str::headline($zoneDisplayName) }}</th>
         @endif
 
         <th>Name</th>
@@ -137,7 +137,7 @@ Columns can be conditionally shown based on context:
                 <th>Created At</th>
                 <th class="text-start">Invoice No</th>
                 @if($organization->hasMultipleZonesSelected())
-                    <th dtt-title="zone">@prettify($zoneDisplayName)</th>
+                    <th dtt-title="zone">{{ Str::headline($zoneDisplayName) }}</th>
                 @endif
                 <th dtt-title="tenant_name">Tenant Name</th>
                 <th dtt-title="house_no" class="text-start">House No</th>

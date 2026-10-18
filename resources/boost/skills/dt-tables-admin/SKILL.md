@@ -86,10 +86,10 @@ A sidebar of sections with one section visible at a time, and a "{mode} guide" b
 
 ## Error Scoping and Old Input
 
-Several forms share the page, so errors are scoped with named bags. The `bag()` helper (from `package/src/Utils/Global.php`) outputs a hidden `_bag` input; `DataTableColumnRequest::prepareForValidation()` reads it into `$this->errorBag`:
+Several forms share the page, so errors are scoped with named bags. A form sends a hidden `_bag` input carrying its bag name, and `DataTableColumnRequest::prepareForValidation()` reads it into `$this->errorBag`. Write the input in the view:
 
 ```blade
-{!! bag('some-unique-id') !!}   {{-- <input type="hidden" name="_bag" value="some-unique-id"> --}}
+<input type="hidden" name="_bag" value="some-unique-id">
 
 @error('key', 'some-unique-id')
     <small class="text-red-700">{{ $message }}</small>

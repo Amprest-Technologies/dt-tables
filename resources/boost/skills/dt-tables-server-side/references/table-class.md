@@ -46,6 +46,7 @@ use Amprest\DtTables\Tables\ServerSideTable;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class OrderTable extends ServerSideTable
 {
@@ -123,7 +124,7 @@ class OrderTable extends ServerSideTable
             'customer_name' => $order->customer_name,
             'total' => ['value' => number_format($order->total, 2), 'classes' => 'text-end fw-bold'],
             'status' => [
-                'value' => prettify($order->status),
+                'value' => Str::headline($order->status),
                 'classes' => DataTable::columnClasses([
                     'fw-bold',
                     'text-success' => $order->status === 'paid',

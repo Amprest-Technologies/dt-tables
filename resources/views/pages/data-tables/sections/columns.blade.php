@@ -1,7 +1,7 @@
 <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xs">
     <form action="{{ $section['storeAction'] }}" method="POST" class="border-b border-gray-100 px-5 py-4">
         @csrf
-        {!! bag('new-column') !!}
+        <input type="hidden" name="_bag" value="new-column">
         <div class="element-group">
             <input name="key" type="text" class="@error('key', 'new-column') border-red-500! @enderror" placeholder="New column key e.g. tenant_name" value="{{ $section['newKey'] }}" autocomplete="off">
             <button class="btn shrink-0">Add Column</button>
@@ -50,7 +50,7 @@
                     </tr>
                     <form id="{{ $column['updateForm'] }}" action="{{ $column['updateAction'] }}" method="POST">
                         @csrf
-                        {!! bag($column['id']) !!}
+                        <input type="hidden" name="_bag" value="{{ $column['id'] }}">
                         @method('PUT')
                     </form>
                     <form id="{{ $column['deleteForm'] }}" action="{{ $column['deleteAction'] }}" method="POST">

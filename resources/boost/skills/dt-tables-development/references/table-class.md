@@ -167,7 +167,7 @@ public function handle(mixed $house, mixed $key): mixed
 
 ```php
 'status' => [
-    'value' => prettify($status),
+    'value' => Str::headline($status),
     'classes' => DataTable::columnClasses([
         'fw-bold',
         'text-danger' => $status === 'archived',
@@ -347,6 +347,7 @@ use Amprest\DtTables\Tables\BaseTable;
 use App\Models\Organization;
 use App\Models\Zone;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class ZoneTable extends BaseTable
 {
@@ -386,7 +387,7 @@ class ZoneTable extends BaseTable
             'name' => $zone->name,
             'group' => $zone->group,
             'status' => [
-                'value' => prettify($status = $zone->status),
+                'value' => Str::headline($status = $zone->status),
                 'classes' => DataTable::columnClasses([
                     'fw-bold text-success',
                     'text-danger' => $status == 'archived',

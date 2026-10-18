@@ -57,7 +57,7 @@ class TablePresenter
         //  Return the summary
         return [
             'key' => $table->key,
-            'name' => prettify($table->key),
+            'name' => Str::headline($table->key),
             'mode' => $mode,
             'theme' => data_get($table, 'settings.theme', 'bootstrap'),
             'filters' => $mode === 'inline' ? count((array) data_get($table, 'columns', [])) : 'From class',
@@ -68,7 +68,7 @@ class TablePresenter
     }
 
     /**
-     * Build everything the edit page shows: its sections, the one to open first and the guide of the table's mode.
+     * Build everything the edit page shows: its name, its sections, the one to open first and the guide of the table's mode.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
@@ -79,6 +79,7 @@ class TablePresenter
 
         //  Return the page
         return [
+            'name' => Str::headline($table->key),
             'sections' => $sections,
             'initial' => $this->sectionWithErrors($sections) ?? 'general',
             'guide' => $this->guide($table),
@@ -188,10 +189,10 @@ class TablePresenter
         //  Return the row
         return [
             'id' => $column->id,
-            'key' => $failed ? old('key') : prettify($column->key),
+            'key' => $failed ? old('key') : Str::headline($column->key),
             'searchType' => $failed ? old('search_type') : $column->search_type,
             'searchTypes' => collect(config('dt-tables.columns.search_types'))
-                ->mapWithKeys(fn ($type) => [$type => prettify($type)])
+                ->mapWithKeys(fn ($type) => [$type => Str::headline($type)])
                 ->all(),
             'updateForm' => "update-{$column->id}-form",
             'deleteForm' => "delete-{$column->id}-form",
@@ -252,7 +253,7 @@ class TablePresenter
         //  Build a field per button
         $fields = collect($available)->map(fn ($button) => $this->select(
             "buttons[{$button}]",
-            prettify($button),
+            Str::headline($button),
             (string) (int) old("buttons.{$button}", in_array($button, $active, true)),
             $this->toggle('Active', 'Inactive'),
             "buttons.{$button}",

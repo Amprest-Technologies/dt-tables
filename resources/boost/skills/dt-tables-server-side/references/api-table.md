@@ -103,6 +103,7 @@ use Amprest\DtTables\Tables\ApiTable;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class MessageTable extends ApiTable
 {
@@ -190,7 +191,7 @@ class MessageTable extends ApiTable
     {
         return [
             'recipient' => $message['recipient'],
-            'status' => prettify($message['status']),
+            'status' => Str::headline($message['status']),
             'created_at' => $message['created_at'],
         ];
     }

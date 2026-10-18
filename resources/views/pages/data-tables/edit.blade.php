@@ -1,5 +1,5 @@
 @extends('dt-tables::pages.layouts.app')
-@section('title', prettify($dataTable->key))
+@section('title', $page['name'])
 @section('content')
     {{-- Header --}}
     <div class="flex flex-wrap items-start justify-between gap-3 mb-5">
@@ -7,10 +7,10 @@
             <nav class="text-xs text-gray-400 mb-1">
                 <a href="{{ route('dt-tables.data-tables.index') }}" class="hover:text-primary-darker">Tables</a>
                 <span class="mx-1">/</span>
-                <span>{{ prettify($dataTable->key) }}</span>
+                <span>{{ $page['name'] }}</span>
             </nav>
             <h1 class="flex flex-wrap items-center gap-2 text-xl font-semibold text-secondary">
-                {{ prettify($dataTable->key) }}
+                {{ $page['name'] }}
                 <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset {{ $modes[$dataTable->mode]['badge'] }}">
                     <span class="h-1.5 w-1.5 rounded-full {{ $modes[$dataTable->mode]['dot'] }}"></span>
                     {{ $modes[$dataTable->mode]['label'] }}

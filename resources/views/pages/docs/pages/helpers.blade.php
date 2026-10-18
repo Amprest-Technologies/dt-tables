@@ -51,7 +51,6 @@ $template = DataTable::renderTemplate('tables.attendance.check-out', ['label' =>
 <x-docs-table
     :columns="['Function', 'What it does']"
     :rows="[
-        ['`prettify($text)`', 'Turns `payment_method` or `payment-method` into `Payment Method`.'],
         ['`dt_tables_storage_path()`', 'Returns the folder that holds the table files, `resources/data-tables`.'],
     ]"
 />
