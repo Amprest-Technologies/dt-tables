@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "427691862510bf90da9ae9cee8599568",
+    "content-hash": "804bf1e251b31b82a1967c60409ea6e8",
     "packages": [
         {
             "name": "brick/math",
@@ -5040,16 +5040,16 @@
         },
         {
             "name": "nyumbani/docs",
-            "version": "v1.0.4",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nyumbani-tech-solutions/docs.git",
-                "reference": "73273d6915557bfb973c2892e6dcee13d65fab32"
+                "reference": "0368f358a1b7d586cbc2683b23a44e3536497658"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nyumbani-tech-solutions/docs/zipball/73273d6915557bfb973c2892e6dcee13d65fab32",
-                "reference": "73273d6915557bfb973c2892e6dcee13d65fab32",
+                "url": "https://api.github.com/repos/nyumbani-tech-solutions/docs/zipball/0368f358a1b7d586cbc2683b23a44e3536497658",
+                "reference": "0368f358a1b7d586cbc2683b23a44e3536497658",
                 "shasum": ""
             },
             "require": {
@@ -5094,9 +5094,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nyumbani-tech-solutions/docs/issues",
-                "source": "https://github.com/nyumbani-tech-solutions/docs/tree/v1.5.3"
+                "source": "https://github.com/nyumbani-tech-solutions/docs/tree/v1.1.0"
             },
-            "time": "2026-10-23T17:38:12+00:00"
+            "time": "2026-10-23T18:32:59+00:00"
         },
         {
             "name": "symfony/routing",
