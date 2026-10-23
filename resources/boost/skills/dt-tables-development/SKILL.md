@@ -1,16 +1,16 @@
 ---
 name: dt-tables-development
-description: "Use this skill whenever creating, modifying, or debugging DataTables using the amprest/dt-tables package. Covers creating Table classes in app/DataTables/, defining queries with Eloquent, mapping rows via handle(), configuring column search types, rendering tables in Blade views with <x-data-table>, passing data from controllers, using the DataTable facade for attributes and styling, and registering tables as resources/data-tables/{key}.json files. Also covers export configuration, action buttons, shared data patterns, conditional columns, the before()/after() lifecycle hooks, and listening for the DtButtonTriggered event fired when copy/excel export buttons are clicked. Do not use for generic HTML tables, Livewire tables, or JavaScript-only table libraries. For tables that should page, search and sort in the database (ServerSideTable, ApiTable, <x-data-table :source>), use the dt-tables-server-side skill. For the package's built-in admin UI at /dt-tables/data-tables (registering tables, editing columns/settings), use the dt-tables-admin skill instead."
+description: "Use this skill whenever creating, modifying, or debugging DataTables using the nyumbani/dt-tables package. Covers creating Table classes in app/DataTables/, defining queries with Eloquent, mapping rows via handle(), configuring column search types, rendering tables in Blade views with <x-data-table>, passing data from controllers, using the DataTable facade for attributes and styling, and registering tables as resources/data-tables/{key}.json files. Also covers export configuration, action buttons, shared data patterns, conditional columns, the before()/after() lifecycle hooks, and listening for the DtButtonTriggered event fired when copy/excel export buttons are clicked. Do not use for generic HTML tables, Livewire tables, or JavaScript-only table libraries. For tables that should page, search and sort in the database (ServerSideTable, ApiTable, <x-data-table :source>), use the dt-tables-server-side skill. For the package's built-in admin UI at /dt-tables/data-tables (registering tables, editing columns/settings), use the dt-tables-admin skill instead."
 license: MIT
 metadata:
-  author: Amprest Technologies
+  author: Nyumbani Tech Solutions
 ---
 
-# DataTable Development with amprest/dt-tables
+# DataTable Development with nyumbani/dt-tables
 
 ## Package Overview
 
-The `amprest/dt-tables` package provides a DataTable system with three modes:
+The `nyumbani/dt-tables` package provides a DataTable system with three modes:
 - **Inline** (this skill): a `BaseTable` class builds every row up front and the browser searches and sorts them
 - **Server-side SQL** (`dt-tables-server-side` skill): a `ServerSideTable` class is queried one page at a time, with search, sort and paging in SQL — use it for tables with thousands of rows
 - **Server-side API** (`dt-tables-server-side` skill): an `ApiTable` class asks a remote HTTP API for one page at a time, passing it the search and order — use it when another service owns the rows
@@ -36,7 +36,7 @@ Controller → Table::build(...) → BaseTable pipeline → View → <x-data-tab
 
 ### 1. Table Class Structure → `references/table-class.md`
 
-- Extend `Amprest\DtTables\Tables\BaseTable`, use constructor property promotion
+- Extend `Nyumbani\DtTables\Tables\BaseTable`, use constructor property promotion
 - Override `query()`, `handle()`, `shared()`, `parameters()`
 - Optional `before()` and `after()` hooks for pre/post-processing
 - Use `DataTable::parseAttributes()` for action buttons

@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\DtTables\Tables;
+namespace Nyumbani\DtTables\Tables;
 
 use Illuminate\Support\Collection;
 

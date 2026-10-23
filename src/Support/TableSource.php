@@ -1,11 +1,11 @@
 <?php
 
-namespace Amprest\DtTables\Support;
+namespace Nyumbani\DtTables\Support;
 
-use Amprest\DtTables\Tables\ServerSideSource;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
 use InvalidArgumentException;
+use Nyumbani\DtTables\Tables\ServerSideSource;
 
 class TableSource
 {

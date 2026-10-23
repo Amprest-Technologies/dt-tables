@@ -1,10 +1,10 @@
 <?php
 
-namespace Amprest\DtTables\Http\Controllers;
+namespace Nyumbani\DtTables\Http\Controllers;
 
-use Amprest\DtTables\Models\DataTable;
-use Amprest\DtTables\Support\Docs;
 use Illuminate\View\View;
+use Nyumbani\DtTables\Docs\DtTablesDocs;
+use Nyumbani\DtTables\Models\DataTable;
 
 class HomeController
 {
@@ -13,11 +13,11 @@ class HomeController
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    public function __invoke(Docs $docs): View
+    public function __invoke(): View
     {
         return view('dt-tables::pages.home', [
             'tableCount' => DataTable::all()->count(),
-            'pageCount' => $docs->pages()->count(),
+            'docs' => DtTablesDocs::registered(),
         ]);
     }
 }

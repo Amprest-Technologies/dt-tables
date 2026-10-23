@@ -1,10 +1,10 @@
 <?php
 
-namespace Amprest\DtTables\Rules;
+namespace Nyumbani\DtTables\Rules;
 
-use Amprest\DtTables\Models\DataTable;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Nyumbani\DtTables\Models\DataTable;
 
 class TableNameIsUnique implements ValidationRule
 {

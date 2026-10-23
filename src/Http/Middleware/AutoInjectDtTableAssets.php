@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\DtTables\Http\Middleware;
+namespace Nyumbani\DtTables\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

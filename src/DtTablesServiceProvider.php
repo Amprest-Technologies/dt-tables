@@ -1,24 +1,34 @@
 <?php
 
-namespace Amprest\DtTables;
+namespace Nyumbani\DtTables;
 
-use Amprest\DtTables\Console\Commands\MakeDataTableCommand;
-use Amprest\DtTables\Http\Middleware\AutoInjectDtTableAssets;
-use Amprest\DtTables\Providers\RouteServiceProvider;
-use Amprest\DtTables\Services\HelpersService;
-use Amprest\DtTables\Support\LegacyDataMigrator;
-use Amprest\DtTables\Views\Components\DataTable;
-use Amprest\DtTables\Views\Components\DataTableAssets;
-use Amprest\DtTables\Views\Components\Docs\Callout;
-use Amprest\DtTables\Views\Components\Docs\Code;
-use Amprest\DtTables\Views\Components\Docs\Table;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Nyumbani\Docs\DocsRegistry;
+use Nyumbani\DtTables\Console\Commands\MakeDataTableCommand;
+use Nyumbani\DtTables\Docs\DtTablesDocs;
+use Nyumbani\DtTables\Http\Middleware\AutoInjectDtTableAssets;
+use Nyumbani\DtTables\Providers\RouteServiceProvider;
+use Nyumbani\DtTables\Services\HelpersService;
+use Nyumbani\DtTables\Support\Filesystem;
+use Nyumbani\DtTables\Support\LegacyDataMigrator;
+use Nyumbani\DtTables\Views\Components\DataTable;
+use Nyumbani\DtTables\Views\Components\DataTableAssets;
 
 class DtTablesServiceProvider extends ServiceProvider
 {
+    /**
+     * Get a path inside the DtTables package, wherever Composer installed it.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    public static function path(string $path = ''): string
+    {
+        return dirname(__DIR__).($path === '' ? '' : '/'.ltrim($path, '/'));
+    }
+
     /**
      * Register the application services.
      *
@@ -46,13 +56,13 @@ class DtTablesServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //  Load the configuration file
-        $this->mergeConfigFrom(package_path('config/dt-tables.php'), 'dt-tables');
+        $this->mergeConfigFrom(self::path('config/dt-tables.php'), 'dt-tables');
 
         //  Load the views file
-        $this->loadViewsFrom(package_path('resources/views'), 'dt-tables');
+        $this->loadViewsFrom(self::path('resources/views'), 'dt-tables');
 
         //  Publish the configuration file
-        $this->loadTranslationsFrom(package_path('lang'), 'dt-tables');
+        $this->loadTranslationsFrom(self::path('lang'), 'dt-tables');
 
         //  Load the routes files
         $this->loadRoutes();
@@ -74,10 +84,24 @@ class DtTablesServiceProvider extends ServiceProvider
         //  Load the assets blade component
         Blade::component('data-table-assets', DataTableAssets::class);
 
-        //  Load the components used to write the documentation
-        Blade::component('docs-code', Code::class);
-        Blade::component('docs-callout', Callout::class);
-        Blade::component('docs-table', Table::class);
+        //  Add the docs when Nyumbani Docs is installed to show them
+        $this->registerDocs();
+    }
+
+    /**
+     * Add the DtTables docs to the Nyumbani docs, which Nyumbani Docs serves.
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected function registerDocs(): void
+    {
+        //  Skip when Nyumbani Docs is not installed
+        if (! class_exists(DocsRegistry::class)) {
+            return;
+        }
+
+        //  Describe the pages
+        $this->app->make(DocsRegistry::class)->register(DtTablesDocs::describe());
     }
 
     /**
@@ -108,7 +132,7 @@ class DtTablesServiceProvider extends ServiceProvider
         }
 
         //  Create the directory
-        ensure_directory_exists($directory);
+        Filesystem::ensureDirectoryExists($directory);
     }
 
     /**
@@ -123,13 +147,13 @@ class DtTablesServiceProvider extends ServiceProvider
             ->name('dt-tables.')
             ->prefix('dt-tables')
             ->middleware('web')
-            ->group(fn () => $this->loadRoutesFrom(package_path('routes/web.php')));
+            ->group(fn () => $this->loadRoutesFrom(self::path('routes/web.php')));
 
         //  Load the API file
         $this->app[Router::class]
             ->name('dt-tables.api.')
             ->prefix('api/dt-tables')
             ->middleware('api')
-            ->group(fn () => $this->loadRoutesFrom(package_path('routes/api.php')));
+            ->group(fn () => $this->loadRoutesFrom(self::path('routes/api.php')));
     }
 }

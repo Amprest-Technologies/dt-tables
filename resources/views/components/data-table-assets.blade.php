@@ -1,4 +1,5 @@
-@if(is_file(package_path('public/hot')))
+@use('Nyumbani\DtTables\DtTablesServiceProvider')
+@if(is_file(DtTablesServiceProvider::path('public/hot')))
     {{ $vite }}
 @else
     @foreach ($assets() as $asset)

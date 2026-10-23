@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\DtTables\Events;
+namespace Nyumbani\DtTables\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;

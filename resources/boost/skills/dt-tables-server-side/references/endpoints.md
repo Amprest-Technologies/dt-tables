@@ -68,7 +68,7 @@ The JSON response is `{draw, recordsTotal, recordsFiltered, data, parameters}`. 
 ## Testing
 
 ```php
-use Amprest\DtTables\Support\TableSource;
+use Nyumbani\DtTables\Support\TableSource;
 
 it('pages orders', function () {
     $response = $this->postJson(route('dt-tables.api.server-side.rows'), [

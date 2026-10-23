@@ -1,12 +1,12 @@
 <?php
 
-namespace Amprest\DtTables\Http\Controllers;
+namespace Nyumbani\DtTables\Http\Controllers;
 
-use Amprest\DtTables\Http\Requests\DataTableColumnRequest;
-use Amprest\DtTables\Models\DataTable;
-use Amprest\DtTables\Models\DataTableColumn;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
+use Nyumbani\DtTables\Http\Requests\DataTableColumnRequest;
+use Nyumbani\DtTables\Models\DataTable;
+use Nyumbani\DtTables\Models\DataTableColumn;
 
 class DataTableColumnController
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\DtTables\Support;
+namespace Nyumbani\DtTables\Support;
 
 class TableSearch
 {

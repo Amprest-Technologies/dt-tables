@@ -156,7 +156,7 @@ Columns can be conditionally shown based on context:
 
 ## How the Component Works Internally
 
-The `<x-data-table>` component (`Amprest\DtTables\Views\Components\DataTable`):
+The `<x-data-table>` component (`Nyumbani\DtTables\Views\Components\DataTable`):
 
 1. Accepts `:payload` and extracts `$payload['table']` as `$tableData` and `$payload['parameters']` as `$tableParams`
 2. Looks up `resources/data-tables/{key}.json` for a matching `key` to load column configuration (search types, themes, buttons)

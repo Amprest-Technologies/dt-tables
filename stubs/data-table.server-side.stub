@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use Amprest\DtTables\Tables\ServerSideTable;
+use Nyumbani\DtTables\Tables\ServerSideTable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 

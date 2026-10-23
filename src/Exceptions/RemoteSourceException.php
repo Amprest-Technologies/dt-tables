@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\DtTables\Exceptions;
+namespace Nyumbani\DtTables\Exceptions;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 

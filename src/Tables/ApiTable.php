@@ -1,15 +1,15 @@
 <?php
 
-namespace Amprest\DtTables\Tables;
+namespace Nyumbani\DtTables\Tables;
 
-use Amprest\DtTables\Exceptions\RemoteSourceException;
-use Amprest\DtTables\Support\ApiQuery;
-use Amprest\DtTables\Support\Page;
-use Amprest\DtTables\Support\PageRequest;
-use Amprest\DtTables\Support\ServerSideRunner;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use Nyumbani\DtTables\Exceptions\RemoteSourceException;
+use Nyumbani\DtTables\Support\ApiQuery;
+use Nyumbani\DtTables\Support\Page;
+use Nyumbani\DtTables\Support\PageRequest;
+use Nyumbani\DtTables\Support\ServerSideRunner;
 
 abstract class ApiTable extends ServerSideSource
 {
@@ -70,8 +70,8 @@ abstract class ApiTable extends ServerSideSource
         return new Page(
             rows: array_values($rows),
             total: (int) ($response->json('meta.total') ?? count($rows)),
-            filtered: $response->json('meta.filtered') === null 
-                ? null 
+            filtered: $response->json('meta.filtered') === null
+                ? null
                 : (int) $response->json('meta.filtered'),
         );
     }

@@ -1,13 +1,13 @@
 <?php
 
-namespace Amprest\DtTables\Http\Controllers\API;
+namespace Nyumbani\DtTables\Http\Controllers\API;
 
-use Amprest\DtTables\Http\Requests\ServerSideOptionsRequest;
-use Amprest\DtTables\Http\Requests\ServerSideRequest;
-use Amprest\DtTables\Http\Requests\ServerSideRowsRequest;
-use Amprest\DtTables\Support\ServerSideRunner;
-use Amprest\DtTables\Support\TableSource;
 use Illuminate\Http\JsonResponse;
+use Nyumbani\DtTables\Http\Requests\ServerSideOptionsRequest;
+use Nyumbani\DtTables\Http\Requests\ServerSideRequest;
+use Nyumbani\DtTables\Http\Requests\ServerSideRowsRequest;
+use Nyumbani\DtTables\Support\ServerSideRunner;
+use Nyumbani\DtTables\Support\TableSource;
 
 class ServerSideController
 {

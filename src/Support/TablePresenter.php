@@ -1,9 +1,10 @@
 <?php
 
-namespace Amprest\DtTables\Support;
+namespace Nyumbani\DtTables\Support;
 
-use Amprest\DtTables\Models\DataTable;
 use Illuminate\Support\Str;
+use Nyumbani\DtTables\Docs\DtTablesDocs;
+use Nyumbani\DtTables\Models\DataTable;
 
 class TablePresenter
 {
@@ -91,7 +92,7 @@ class TablePresenter
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
-    protected function guide(DataTable $table): array
+    protected function guide(DataTable $table): ?array
     {
         //  Pick the page that explains how the table is fed
         $slug = match ($table->mode) {
@@ -100,10 +101,15 @@ class TablePresenter
             default => 'inline-tables',
         };
 
+        //  Leave the link out when the docs are not served
+        if (is_null($url = DtTablesDocs::url($slug))) {
+            return null;
+        }
+
         //  Return the link
         return [
             'label' => $this->modes()[$table->mode]['label'].' guide',
-            'url' => route('dt-tables.docs.show', ['page' => $slug]),
+            'url' => $url,
         ];
     }
 

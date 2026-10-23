@@ -1,4 +1,4 @@
-<form action="{{ $form['action'] }}" method="POST" class="rounded-xl border border-gray-200 bg-white shadow-xs">
+<form action="{{ $form['action'] }}" method="POST" class="rounded-lg border border-gray-200 bg-white shadow-sm">
     @csrf
     @method('PUT')
     <div class="flex items-center justify-between gap-3 border-b border-gray-100 px-5 py-3">

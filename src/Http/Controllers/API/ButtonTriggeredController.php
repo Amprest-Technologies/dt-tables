@@ -1,10 +1,10 @@
 <?php
 
-namespace Amprest\DtTables\Http\Controllers\API;
+namespace Nyumbani\DtTables\Http\Controllers\API;
 
-use Amprest\DtTables\Events\DtButtonTriggered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Nyumbani\DtTables\Events\DtButtonTriggered;
 use Throwable;
 
 class ButtonTriggeredController

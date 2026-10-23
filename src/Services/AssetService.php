@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\DtTables\Services;
+namespace Nyumbani\DtTables\Services;
 
 class AssetService
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Amprest\DtTables\Providers;
+namespace Nyumbani\DtTables\Providers;
 
-use Amprest\DtTables\Models\DataTable;
-use Amprest\DtTables\Models\DataTableColumn;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Nyumbani\DtTables\Models\DataTable;
+use Nyumbani\DtTables\Models\DataTableColumn;
 
 class RouteServiceProvider extends ServiceProvider
 {

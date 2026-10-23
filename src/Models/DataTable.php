@@ -1,6 +1,8 @@
 <?php
 
-namespace Amprest\DtTables\Models;
+namespace Nyumbani\DtTables\Models;
+
+use Nyumbani\DtTables\Support\Filesystem;
 
 class DataTable extends Model
 {
@@ -58,7 +60,7 @@ class DataTable extends Model
     protected function create(array $data): self
     {
         //  Check if the directory exists
-        ensure_directory_exists($this->directory);
+        Filesystem::ensureDirectoryExists($this->directory);
 
         //  Prepare the data to be stored in the json file
         $data = array_merge($data, [

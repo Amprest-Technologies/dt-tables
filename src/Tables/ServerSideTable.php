@@ -1,11 +1,11 @@
 <?php
 
-namespace Amprest\DtTables\Tables;
+namespace Nyumbani\DtTables\Tables;
 
-use Amprest\DtTables\Support\ServerSideQuery;
-use Amprest\DtTables\Support\ServerSideRunner;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
+use Nyumbani\DtTables\Support\ServerSideQuery;
+use Nyumbani\DtTables\Support\ServerSideRunner;
 
 abstract class ServerSideTable extends ServerSideSource
 {

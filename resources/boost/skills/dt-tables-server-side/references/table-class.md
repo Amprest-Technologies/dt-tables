@@ -4,7 +4,7 @@
 
 ## ServerSideTable Methods
 
-All server-side tables extend `Amprest\DtTables\Tables\ServerSideTable`. Scaffold with `php artisan make:data-table {Name} --server-side` (alias `-s`).
+All server-side tables extend `Nyumbani\DtTables\Tables\ServerSideTable`. Scaffold with `php artisan make:data-table {Name} --server-side` (alias `-s`).
 
 | Method | Required | Purpose |
 |--------|----------|---------|
@@ -41,8 +41,8 @@ Parameters are JSON-encoded into the sealed token, so they must be scalars or ar
 
 namespace App\DataTables;
 
-use Amprest\DtTables\Facades\DataTable;
-use Amprest\DtTables\Tables\ServerSideTable;
+use Nyumbani\DtTables\Facades\DataTable;
+use Nyumbani\DtTables\Tables\ServerSideTable;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;

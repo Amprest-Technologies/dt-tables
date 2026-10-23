@@ -1,12 +1,12 @@
 <?php
 
-namespace Amprest\DtTables\Http\Requests;
+namespace Nyumbani\DtTables\Http\Requests;
 
-use Amprest\DtTables\Rules\ColumnNameIsUnique;
 use Illuminate\Container\Attributes\RouteParameter;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Nyumbani\DtTables\Rules\ColumnNameIsUnique;
 
 class DataTableColumnRequest extends FormRequest
 {

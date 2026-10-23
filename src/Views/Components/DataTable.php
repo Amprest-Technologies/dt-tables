@@ -1,13 +1,13 @@
 <?php
 
-namespace Amprest\DtTables\Views\Components;
+namespace Nyumbani\DtTables\Views\Components;
 
-use Amprest\DtTables\Models\DataTable as DataTableModel;
-use Amprest\DtTables\Support\TableSource;
 use Illuminate\Support\Facades\App;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 use InvalidArgumentException;
+use Nyumbani\DtTables\Models\DataTable as DataTableModel;
+use Nyumbani\DtTables\Support\TableSource;
 
 class DataTable extends Component
 {

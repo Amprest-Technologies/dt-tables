@@ -1,10 +1,10 @@
 <?php
 
-namespace Amprest\DtTables\Tables;
+namespace Nyumbani\DtTables\Tables;
 
-use Amprest\DtTables\Support\ServerSideRunner;
 use Closure;
 use Illuminate\Http\Request;
+use Nyumbani\DtTables\Support\ServerSideRunner;
 
 abstract class ServerSideSource
 {

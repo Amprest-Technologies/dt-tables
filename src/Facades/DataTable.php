@@ -1,9 +1,9 @@
 <?php
 
-namespace Amprest\DtTables\Facades;
+namespace Nyumbani\DtTables\Facades;
 
-use Amprest\DtTables\Services\HelpersService;
 use Illuminate\Support\Facades\Facade;
+use Nyumbani\DtTables\Services\HelpersService;
 
 /**
  * @see HelpersService

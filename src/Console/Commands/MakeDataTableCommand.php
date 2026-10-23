@@ -1,8 +1,9 @@
 <?php
 
-namespace Amprest\DtTables\Console\Commands;
+namespace Nyumbani\DtTables\Console\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Nyumbani\DtTables\DtTablesServiceProvider;
 use Symfony\Component\Console\Input\InputOption;
 
 class MakeDataTableCommand extends GeneratorCommand
@@ -35,7 +36,7 @@ class MakeDataTableCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return package_path(match (true) {
+        return DtTablesServiceProvider::path(match (true) {
             $this->option('api') => 'stubs/data-table.api.stub',
             $this->option('server-side') => 'stubs/data-table.server-side.stub',
             default => 'stubs/data-table.stub',

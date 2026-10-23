@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\DtTables\Models;
+namespace Nyumbani\DtTables\Models;
 
 class DataTableColumn extends Model
 {

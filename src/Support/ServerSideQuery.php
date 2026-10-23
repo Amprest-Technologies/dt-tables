@@ -1,14 +1,14 @@
 <?php
 
-namespace Amprest\DtTables\Support;
+namespace Nyumbani\DtTables\Support;
 
-use Amprest\DtTables\Http\Requests\ServerSideRowsRequest;
-use Amprest\DtTables\Tables\ServerSideTable;
 use Closure;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\Cache;
+use Nyumbani\DtTables\Http\Requests\ServerSideRowsRequest;
+use Nyumbani\DtTables\Tables\ServerSideTable;
 
 class ServerSideQuery implements ServerSideRunner
 {

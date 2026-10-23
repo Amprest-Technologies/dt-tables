@@ -4,7 +4,7 @@
 
 ## BaseTable Pipeline
 
-All Table classes extend `Amprest\DtTables\Tables\BaseTable`. The pipeline runs via the static `build()` method:
+All Table classes extend `Nyumbani\DtTables\Tables\BaseTable`. The pipeline runs via the static `build()` method:
 
 ```
 ::build(args) → new static(args) → query() → get() → shared() → before() → handle() per row → after() → return ['table' => [...], 'parameters' => [...]]
@@ -28,8 +28,8 @@ Create a new file in `app/DataTables/`. Name it `{Entity}Table.php`:
 
 namespace App\DataTables;
 
-use Amprest\DtTables\Facades\DataTable;
-use Amprest\DtTables\Tables\BaseTable;
+use Nyumbani\DtTables\Facades\DataTable;
+use Nyumbani\DtTables\Tables\BaseTable;
 use App\Models\House;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Builder;
@@ -342,8 +342,8 @@ protected function parameters(): array
 
 namespace App\DataTables;
 
-use Amprest\DtTables\Facades\DataTable;
-use Amprest\DtTables\Tables\BaseTable;
+use Nyumbani\DtTables\Facades\DataTable;
+use Nyumbani\DtTables\Tables\BaseTable;
 use App\Models\Organization;
 use App\Models\Zone;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

@@ -2,8 +2,8 @@
 
 namespace {{ namespace }};
 
-use Amprest\DtTables\Support\PageRequest;
-use Amprest\DtTables\Tables\ApiTable;
+use Nyumbani\DtTables\Support\PageRequest;
+use Nyumbani\DtTables\Tables\ApiTable;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;

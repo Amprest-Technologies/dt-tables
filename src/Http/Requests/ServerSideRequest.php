@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\DtTables\Http\Requests;
+namespace Nyumbani\DtTables\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\DtTables\Models;
+namespace Nyumbani\DtTables\Models;
 
 use Illuminate\Support\Collection;
 use ReflectionClass;
@@ -124,7 +124,7 @@ class Model
         foreach ($items as $key => $item) {
             //  Handle array items
             if (is_array($item)) {
-                $item = to_object($item);
+                $item = static::toObject($item);
 
                 //  Check if the item is an array and convert it to a collection
                 if (is_array($item)) {
@@ -183,6 +183,16 @@ class Model
         ]);
 
         //  Return the attributes as an array
-        return to_object($atrributes->toArray(), true);
+        return static::toObject($atrributes->toArray(), true);
+    }
+
+    /**
+     * Convert a value to an object, or to an array when asked for an associative result
+     *
+     * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
+     */
+    protected static function toObject(mixed $value, ?bool $associative = null): array|object
+    {
+        return json_decode(json_encode($value), $associative);
     }
 }

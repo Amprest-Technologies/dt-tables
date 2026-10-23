@@ -97,9 +97,9 @@ The table is never silently drawn empty when the API fails. Configure timeouts a
 
 namespace App\DataTables;
 
-use Amprest\DtTables\Facades\DataTable;
-use Amprest\DtTables\Support\PageRequest;
-use Amprest\DtTables\Tables\ApiTable;
+use Nyumbani\DtTables\Facades\DataTable;
+use Nyumbani\DtTables\Support\PageRequest;
+use Nyumbani\DtTables\Tables\ApiTable;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -272,7 +272,7 @@ public function parse(Response $response): Page
 Fake the API with `Http::fake()` and post to `route('dt-tables.api.server-side.rows')` with `TableSource::seal(MessageTable::class, [...])`, then assert what the API received with `Http::assertSent()`:
 
 ```php
-use Amprest\DtTables\Support\TableSource;
+use Nyumbani\DtTables\Support\TableSource;
 use Illuminate\Support\Facades\Http;
 
 it('asks the api for the requested page', function () {

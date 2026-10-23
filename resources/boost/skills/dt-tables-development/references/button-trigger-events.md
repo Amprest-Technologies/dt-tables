@@ -22,10 +22,10 @@ fetch(route('dt-tables.api.button-triggered'), {
 
 ## What Happens Server-Side
 
-`POST /api/dt-tables/button-triggered` (route `dt-tables.api.button-triggered`) is handled by `Amprest\DtTables\Http\Controllers\API\ButtonTriggeredController`, which dispatches:
+`POST /api/dt-tables/button-triggered` (route `dt-tables.api.button-triggered`) is handled by `Nyumbani\DtTables\Http\Controllers\API\ButtonTriggeredController`, which dispatches:
 
 ```php
-Amprest\DtTables\Events\DtButtonTriggered::dispatch($request->all());
+Nyumbani\DtTables\Events\DtButtonTriggered::dispatch($request->all());
 ```
 
 The event's single public property is `$payload`, an array shaped:
@@ -40,14 +40,14 @@ The event's single public property is `$payload`, an array shaped:
 
 ## Listening For It
 
-Register a listener for `Amprest\DtTables\Events\DtButtonTriggered` — Laravel auto-discovers a `handle(DtButtonTriggered $event)` method on any class in `app/Listeners`, no manual registration needed:
+Register a listener for `Nyumbani\DtTables\Events\DtButtonTriggered` — Laravel auto-discovers a `handle(DtButtonTriggered $event)` method on any class in `app/Listeners`, no manual registration needed:
 
 ```php
 <?php
 
 namespace App\Listeners;
 
-use Amprest\DtTables\Events\DtButtonTriggered;
+use Nyumbani\DtTables\Events\DtButtonTriggered;
 
 class LogTableExport
 {

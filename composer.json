@@ -1,8 +1,8 @@
 {
-	"name": "amprest/dt-tables",
+	"name": "nyumbani/dt-tables",
 	"type": "library",
 	"description": "This is a package that provides a customizable data tables component for the Laravel Framework.",
-	"homepage": "https://amprest.co.ke/",
+	"homepage": "https://nyumbanitech.co.ke/",
 	"keywords": [ "laravel", "datatables" ],
 	"license": "MIT",
 	"minimum-stability": "dev",
@@ -14,17 +14,29 @@
 		}
 	],
 	"require": {
-		"php": "^8.1"
+		"php": "^8.2",
+		"illuminate/console": "^12.0||^13.0",
+		"illuminate/database": "^12.0||^13.0",
+		"illuminate/http": "^12.0||^13.0",
+		"illuminate/support": "^12.0||^13.0",
+		"illuminate/validation": "^12.0||^13.0",
+		"illuminate/view": "^12.0||^13.0"
+	},
+	"require-dev": {
+		"nyumbani/docs": "^1.0"
+	},
+	"suggest": {
+		"nyumbani/docs": "Serves the DtTables docs at /nyumbani-dt-tables/docs in the local environment, in any Laravel app. Nyumbani Essentials requires it."
 	},
 	"autoload": {
 		"psr-4": {
-			"Amprest\\DtTables\\": "src/"
+			"Nyumbani\\DtTables\\": "src/"
 		}
 	},
 	"extra": {
 		"laravel": {
 			"providers": [
-				"Amprest\\DtTables\\DtTablesServiceProvider"
+				"Nyumbani\\DtTables\\DtTablesServiceProvider"
 			]
 		}
 	}

@@ -1,4 +1,4 @@
-<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xs">
+<div class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
     <form action="{{ $section['storeAction'] }}" method="POST" class="border-b border-gray-100 px-5 py-4">
         @csrf
         <input type="hidden" name="_bag" value="new-column">

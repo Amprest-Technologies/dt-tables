@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\DtTables\Support;
+namespace Nyumbani\DtTables\Support;
 
 use Throwable;
 
@@ -64,7 +64,7 @@ class LegacyDataMigrator
         $tables = $tables ?: [];
 
         //  Create the migration directory
-        ensure_directory_exists($this->directory);
+        Filesystem::ensureDirectoryExists($this->directory);
 
         //  Migrate each table
         foreach ($tables as $table) {

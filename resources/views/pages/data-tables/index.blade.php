@@ -2,18 +2,17 @@
 @section('title', 'Data Tables')
 @section('content')
     {{-- Header --}}
-    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <div>
-            <h1 class="text-xl font-semibold text-secondary">Data Tables</h1>
-            <p class="text-sm text-gray-500 mt-0.5">
-                {{ $tables->count() }} {{ Str::plural('table', $tables->count()) }} registered in <code class="text-xs">resources/data-tables</code>
-            </p>
-        </div>
-        <button type="button" class="btn inline-flex items-center gap-1.5 py-2!" data-open-dialog="new-table">
+    @push('heading-actions')
+        <button type="button" class="btn" data-open-dialog="new-table">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
             New table
         </button>
-    </div>
+    @endpush
+    @include('dt-tables::pages.partials.heading', [
+        'eyebrow' => 'Admin',
+        'title' => 'Data tables',
+        'lead' => $tables->count().' '.Str::plural('table', $tables->count()).' registered in resources/data-tables.',
+    ])
 
     @if($tables->isNotEmpty())
         {{-- Search and mode filter --}}
@@ -37,9 +36,9 @@
         </div>
 
         {{-- Table cards --}}
-        <div id="table-grid" class="grid gap-1 sm:grid-cols-2 lg:grid-cols-3" data-per-page="{{ $perPage }}">
+        <div id="table-grid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-per-page="{{ $perPage }}">
             @foreach($tables as $table)
-                <div class="table-card flex flex-col rounded-xl border border-gray-200 bg-white shadow-xs transition hover:border-gray-300 hover:shadow-sm"
+                <div class="table-card flex flex-col rounded-lg border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-primary hover:shadow-md"
                      data-key="{{ strtolower($table['key']) }}" data-mode="{{ $table['mode'] }}">
                     <div class="flex-1 p-5">
                         <div class="flex items-start justify-between gap-3">
@@ -50,7 +49,7 @@
                             <span class="text-xs text-gray-400">{{ $table['theme'] }}</span>
                         </div>
                         <a href="{{ route('dt-tables.data-tables.edit', ['data_table' => $table['key']]) }}" class="mt-3 block">
-                            <div class="font-semibold text-secondary hover:text-primary-darker truncate">{{ $table['name'] }}</div>
+                            <div class="font-semibold text-secondary-dark hover:text-primary-dark truncate">{{ $table['name'] }}</div>
                             <div class="font-mono text-xs text-gray-400 truncate">{{ $table['key'] }}</div>
                         </a>
                         <dl class="mt-4 grid grid-cols-3 gap-2 text-xs">
@@ -96,12 +95,12 @@
         </template>
 
         {{-- Shown when the search and filter leave nothing --}}
-        <div id="no-results" class="hidden rounded-xl border border-dashed border-gray-300 bg-white py-12 text-center text-sm text-gray-400">
+        <div id="no-results" class="hidden rounded-lg border border-dashed border-gray-300 bg-white py-12 text-center text-sm text-gray-400">
             No tables match your search.
         </div>
     @else
         {{-- Empty state --}}
-        <div class="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12">
+        <div class="rounded-lg border border-dashed border-gray-300 bg-white px-6 py-12">
             <div class="mx-auto max-w-2xl text-center">
                 <h2 class="text-lg font-semibold text-secondary">Register your first table</h2>
                 <p class="mt-1 text-sm text-gray-500">Pick how the table gets its rows. You can change this later.</p>
@@ -124,7 +123,7 @@
     @endif
 
     {{-- New table dialog --}}
-    <dialog id="new-table" @if($errors->has('key') || $errors->has('mode')) data-open @endif class="m-auto w-full max-w-xl rounded-xl p-0 shadow-xl backdrop:bg-secondary-darker/50">
+    <dialog id="new-table" @if($errors->has('key') || $errors->has('mode')) data-open @endif class="m-auto w-full max-w-xl rounded-lg p-0 shadow-xl backdrop:bg-secondary-darker/50">
         <form action="{{ route('dt-tables.data-tables.store') }}" method="POST">
             @csrf
             <div class="border-b border-gray-100 px-6 py-4">

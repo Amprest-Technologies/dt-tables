@@ -1,20 +1,20 @@
 ---
 name: dt-tables-admin
-description: "Use when working with the amprest/dt-tables package's own web UI under /dt-tables: the landing page (/dt-tables), the table admin at /dt-tables/data-tables (registering a DataTable and its mode, the cards list with search and mode tabs, the edit page with its sidebar sections, columns and search types, name/mode/theme/buttons/behaviour/loader settings, rename and delete), the documentation at /dt-tables/docs (adding or editing a docs page, the docs-code, docs-callout and docs-table components, the Docs navigation class), or debugging why a table isn't picking up its resources/data-tables/{key}.json configuration. Covers the package's own routes, controllers, TablePresenter, Blade views and admin.js under package/src and package/resources. Do not use for writing Table classes in app/DataTables/, the <x-data-table> component itself, or the DataTables JS/CSS bundle (client.js) — see the dt-tables-development and dt-tables-server-side skills for those."
+description: "Use when working with the nyumbani/dt-tables package's own web UI under /dt-tables: the landing page (/dt-tables), the table admin at /dt-tables/data-tables (registering a DataTable and its mode, the cards list with search and mode tabs, the edit page with its sidebar sections, columns and search types, name/mode/theme/buttons/behaviour/loader settings, rename and delete), the documentation at /nyumbani-dt-tables/docs (adding or editing a docs page, the x-docs components of nyumbani/docs, the DtTablesDocs page list), or debugging why a table isn't picking up its resources/data-tables/{key}.json configuration. Covers the package's own routes, controllers, TablePresenter, Blade views and admin.js under package/src and package/resources. Do not use for writing Table classes in app/DataTables/, the <x-data-table> component itself, or the DataTables JS/CSS bundle (client.js) — see the dt-tables-development and dt-tables-server-side skills for those."
 license: MIT
 metadata:
-  author: Amprest Technologies
+  author: Nyumbani Tech Solutions
 ---
 
 # DataTable Admin UI and Docs
 
 ## Package Overview
 
-`amprest/dt-tables` ships a small local-only web UI under `/dt-tables`:
+`nyumbani/dt-tables` ships a small local-only web UI under `/dt-tables`:
 
 - a **landing page** (`/dt-tables`) that leads to the tables and the docs,
 - an **admin** (`/dt-tables/data-tables`) for managing the `resources/data-tables/` store without hand-editing files, and
-- **documentation** (`/dt-tables/docs`), a Laravel-docs-style guide with one page per topic.
+- **documentation** (`/nyumbani-dt-tables/docs`), served by the `nyumbani/docs` engine like the Daraja and Messaging docs, with one page per topic.
 
 Each table lives in its own `resources/data-tables/{key}.json` file. The UI shares one layout (`pages/layouts/app.blade.php`: sticky navy header with Tables and Docs tabs, `max-w-7xl` content), one admin bundle (`resources/js/admin.js` and `resources/css/admin.css`, loaded with `<x-data-table-assets mode="admin" />`) and the Nyumbani sales palette defined as `@theme` tokens in `resources/css/utils/tailwind.css` (amber `primary-*`, navy `secondary-*`, plus the `-soft` tints). The type scale and line heights are overridden in the same `@theme` block, so change them there rather than per view.
 
@@ -25,8 +25,6 @@ Every route below except the asset route is inside the `PreventIfEnvironmentIsNo
 | Route name | Method + Path | Controller action |
 |-----------|--------------|------------------|
 | `dt-tables.home` | `GET /dt-tables` | `HomeController` |
-| `dt-tables.docs.index` | `GET /dt-tables/docs` | `DocsController@index` (redirects to the first page) |
-| `dt-tables.docs.show` | `GET /dt-tables/docs/{page}` | `DocsController@show` |
 | `dt-tables.data-tables.index` | `GET /dt-tables/data-tables` | `DataTableController@index` |
 | `dt-tables.data-tables.store` | `POST /dt-tables/data-tables` | `DataTableController@store` |
 | `dt-tables.data-tables.edit` | `GET /dt-tables/data-tables/{data_table}/edit` | `DataTableController@edit` |
@@ -98,34 +96,32 @@ Several forms share the page, so errors are scoped with named bags. A form sends
 
 Column rows use the column's own `id` as the bag id, and the add-column form uses `new-column`. Old input must also be scoped, because `old('key')` is the same for every form that has a `key` field: the presenter only reads `old()` for a column row whose bag has errors (`session('errors')?->hasBag($id)`), for the add-column field when the `new-column` bag has errors, and for the rename field when the default bag has a `key` error. Never read `old('key')` unconditionally, or a failed column save pre-fills the rename form and Save would rename the table.
 
-## Documentation (`/dt-tables/docs`)
+## Documentation (`/nyumbani-dt-tables/docs`)
 
-`Support\Docs::sections()` is the single list of sections and pages (`slug`, `title`, `description`) in reading order. `DocsController@show` renders `pages/docs/show.blade.php` (sidebar, article, "On this page" list, previous/next) and includes the page view `pages/docs/pages/{slug}.blade.php`. The docs tests fail if a page file is missing from `Docs` or a page in `Docs` has no file.
+The docs are served by the `nyumbani/docs` engine, in the local environment only, with its own styles and scripts. `Docs\DtTablesDocs::describe()` is the single list of sections and pages (slug => title) in reading order, and `DtTablesServiceProvider::registerDocs()` registers it when `nyumbani/docs` is installed (it is a suggested package, so the admin hides its Docs links without it). Each page is `resources/views/docs/{slug}.blade.php`, which extends `docs::layout` and fills the `page`, `lead` and `content` sections. The Essentials docs link to them from their Data tables page.
 
-To add a page: create `resources/views/pages/docs/pages/{slug}.blade.php` (the body only: the layout prints the title and description) and add its entry to `Docs::sections()`.
-
-Write pages with the shared components, never raw markup for these:
+To add a page: create the view and add its slug to `DtTablesDocs::describe()`. Write pages with the engine's components, never raw markup for these:
 
 | Component | Use |
 |-----------|-----|
-| `<x-docs-code lang="php\|blade\|json\|bash\|js" title="path/or/label">` | A highlighted, copyable code block |
-| `<x-docs-callout type="note\|tip\|warning">` | A call-out |
-| `<x-docs-table :columns="[...]" :rows="[[...]]">` | A table; text between backticks becomes inline code |
+| `<x-docs::section id="..." title="...">` | A heading and its body; it feeds the "On this page" list |
+| `<x-docs::code lang="php\|blade\|json\|bash" title="path/or/label">` | A highlighted, copyable code block |
+| `<x-docs::callout type="note\|tip\|warning">` | A call-out |
+| `<x-docs::table :columns="[...]" :rows="[[...]]">` | A table; text between backticks becomes inline code |
 
 Rules for snippets:
 
 - Wrap every snippet in `@verbatim ... @endverbatim`, so Blade does not run `{{ }}`, directives or `<x-...>` tags inside it.
-- Write an opening PHP tag as `&lt;?php`. Blade executes a literal one even inside `@verbatim`; `Code::dedent()` turns the entity back.
+- Write an opening PHP tag as `&lt;?php`. Blade executes a literal one even inside `@verbatim`; the code block turns the entity back.
 - In prose, escape `<x-data-table>` as `&lt;x-data-table&gt;` and avoid a bare `@directive` or `{{` outside a snippet.
 - `:rows` cells are PHP strings, so avoid apostrophes or escape them as `\'`.
 - Check every example against the code before documenting it.
-
-Highlighting, the "On this page" list and the copy buttons are in `resources/js/utils/docs.js` (`setupDocs` and `setupCopyButtons`, using `highlight.js` core with PHP, XML (for Blade), JSON, bash and JavaScript), which `admin.js` imports and calls. Tailwind only scans `resources/views/pages` and `resources/views/components/docs`, so a class that appears only in JS or in a PHP class is never generated; put classes in the views.
+- After adding or changing a docs view, run `npm run build` in `packages/docs` and commit its `resources/dist`: the stylesheet is built from the docs views of every package.
 
 ## Layout & Alerts (`pages/layouts/app.blade.php`)
 
 ```blade
-<x-data-table-assets mode="admin" />  {{-- loads the admin bundle (toastr, highlight.js, page scripts), not the DataTables bundle --}}
+<x-data-table-assets mode="admin" />  {{-- loads the admin bundle (toastr and the page scripts), not the DataTables bundle --}}
 ```
 
 Every controller action redirects with a flash `alert`; the layout renders it via toastr:

@@ -1,12 +1,13 @@
 <?php
 
-namespace Amprest\DtTables\Views\Components;
+namespace Nyumbani\DtTables\Views\Components;
 
 use Illuminate\Foundation\Vite;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 use Illuminate\View\Component;
 use Illuminate\View\View;
+use Nyumbani\DtTables\DtTablesServiceProvider;
 
 class DataTableAssets extends Component
 {
@@ -23,14 +24,14 @@ class DataTableAssets extends Component
     public function __construct(public string $mode = 'client')
     {
         //  Get the path of the hot file
-        $path = package_path('public/hot');
+        $path = DtTablesServiceProvider::path('public/hot');
 
         //  Build the vite instance
         $this->vite = app(Vite::class)
             ->useHotFile(is_file($path) ? $path : null)
             ->withEntryPoints([
-                package_path("resources/js/{$mode}.js"),
-                package_path("resources/css/{$mode}.css"),
+                DtTablesServiceProvider::path("resources/js/{$mode}.js"),
+                DtTablesServiceProvider::path("resources/css/{$mode}.css"),
             ]);
     }
 
@@ -55,7 +56,7 @@ class DataTableAssets extends Component
     public function parseManifest(): array
     {
         //  Get the manifest file
-        $manifest = json_decode(file_get_contents(package_path('public/build/manifest.json')));
+        $manifest = json_decode(file_get_contents(DtTablesServiceProvider::path('public/build/manifest.json')));
 
         //  Get all assets
         $assets = collect($manifest);
@@ -68,7 +69,7 @@ class DataTableAssets extends Component
         //  Loop through the assets
         foreach ($entryAssets as $asset) {
             //  Get the asset path
-            $files[] = package_path("public/build/assets/{$asset->file}");
+            $files[] = DtTablesServiceProvider::path("public/build/assets/{$asset->file}");
 
             //  Get the imports
             foreach ($asset->imports ?? [] as $file) {
@@ -77,13 +78,13 @@ class DataTableAssets extends Component
 
                 //  Add the asset path if it exists
                 if ($path) {
-                    $files[] = package_path("public/build/assets/{$path->file}");
+                    $files[] = DtTablesServiceProvider::path("public/build/assets/{$path->file}");
                 }
             }
 
             //  Get the css files
             foreach ($asset->css ?? [] as $file) {
-                $files[] = package_path("public/build/assets/{$file}");
+                $files[] = DtTablesServiceProvider::path("public/build/assets/{$file}");
             }
         }
 

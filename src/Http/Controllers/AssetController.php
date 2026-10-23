@@ -1,8 +1,9 @@
 <?php
 
-namespace Amprest\DtTables\Http\Controllers;
+namespace Nyumbani\DtTables\Http\Controllers;
 
-use Amprest\DtTables\Services\AssetService;
+use Nyumbani\DtTables\DtTablesServiceProvider;
+use Nyumbani\DtTables\Services\AssetService;
 
 class AssetController
 {
@@ -13,8 +14,14 @@ class AssetController
      */
     public function __invoke(AssetService $service, string $name): mixed
     {
+        //  Only the built scripts and styles are served
+        abort_unless(preg_match('/^[\w.-]+\.(js|css)$/', $name) === 1, 404);
+
         //  Get the file path
-        $filePath = package_path("public/build/assets/{$name}");
+        $filePath = DtTablesServiceProvider::path("public/build/assets/{$name}");
+
+        //  A file that was never built is not found
+        abort_unless(is_file($filePath), 404);
 
         //  Load the file
         return $service->load($filePath);

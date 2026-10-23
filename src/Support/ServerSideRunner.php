@@ -1,8 +1,8 @@
 <?php
 
-namespace Amprest\DtTables\Support;
+namespace Nyumbani\DtTables\Support;
 
-use Amprest\DtTables\Http\Requests\ServerSideRowsRequest;
+use Nyumbani\DtTables\Http\Requests\ServerSideRowsRequest;
 
 interface ServerSideRunner
 {

@@ -3,10 +3,10 @@ name: dt-tables-server-side
 description: "Use when a DataTable has too many rows to load at once and should page, search and sort on the server instead, either in the database (ServerSideTable) or through an HTTP API (ApiTable): creating ServerSideTable classes in app/DataTables/ (php artisan make:data-table --server-side), ApiTable classes for tables whose rows come from a remote API (php artisan make:data-table --api; client(), endpoint(), params(), parse(), PageRequest, Page, 502/504 errors, page-only enrichment), defining query(), columnMap() (SQL expressions, search closures, the global opt-out, or remote field names for APIs), keyColumn(), filterOptions() and authorize(), rendering with <x-data-table :source :params>, the server-side endpoints and config('dt-tables.server_side') settings, and debugging searches, sorting, counts, loader/error messages or 403/419 responses. Do not use for inline tables built with BaseTable::build() and :payload, or for the admin UI — see the dt-tables-development and dt-tables-admin skills."
 license: MIT
 metadata:
-  author: Amprest Technologies
+  author: Nyumbani Tech Solutions
 ---
 
-# Server-side DataTables with amprest/dt-tables
+# Server-side DataTables with nyumbani/dt-tables
 
 ## When to Use It
 
@@ -45,7 +45,9 @@ Both table types extend `ServerSideSource`, which holds `handle()`, `columnMap()
 3. Render it:
 
 ```blade
-<x-data-table id="orders-table" :source="App\DataTables\OrderTable::class" :params="['status' => 'paid']" title="Orders" class="table table-sm">
+@use('App\DataTables\OrderTable')
+
+<x-data-table id="orders-table" :source="OrderTable::class" :params="['status' => 'paid']" title="Orders" class="table table-sm">
     <thead>
         <tr>
             <th dtt-row-index>#</th>
@@ -63,7 +65,7 @@ Both table types extend `ServerSideSource`, which holds `handle()`, `columnMap()
 
 ### 1. The Table Class → `references/table-class.md`
 
-- Extend `Amprest\DtTables\Tables\ServerSideTable` (rows in your database)
+- Extend `Nyumbani\DtTables\Tables\ServerSideTable` (rows in your database)
 - Required: `query()`, `handle()`, `columnMap()`
 - Optional: `keyColumn()`, `filterOptions()`, `filterKeys()` (names the select keys without building the options; override it when the options are costly to build), `shared()`, `parameters()`, `authorize()`
 - `query()` must not call `limit()`, `offset()` or a final `orderBy` (a default `latest()` is fine)
@@ -76,7 +78,7 @@ Both table types extend `ServerSideSource`, which holds `handle()`, `columnMap()
 
 ### 3. API-Backed Tables → `references/api-table.md`
 
-- Extend `Amprest\DtTables\Tables\ApiTable` when another service owns the rows and pages, searches and sorts them
+- Extend `Nyumbani\DtTables\Tables\ApiTable` when another service owns the rows and pages, searches and sorts them
 - Required: `client()`, `endpoint()`, `columnMap()` (remote field names), `handle()`
 - Optional: `params()` (translate the `PageRequest`), `parse()` (read rows and counts), `method()` (`'post'` for long lists), `filterOptions()`, `authorize()`
 - The default request sends `page`, `per_page`, `search`, `search_fields`, `filters`, `sort`, `dir`; the default response is `data` plus `meta.total` and `meta.filtered`

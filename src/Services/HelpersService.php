@@ -1,6 +1,6 @@
 <?php
 
-namespace Amprest\DtTables\Services;
+namespace Nyumbani\DtTables\Services;
 
 use Illuminate\Support\Arr;
 use Illuminate\View\ComponentAttributeBag;

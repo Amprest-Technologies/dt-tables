@@ -139,7 +139,7 @@ Each table can override the default theme in its `resources/data-tables/{key}.js
 
 ## DataTable Facade
 
-The `Amprest\DtTables\Facades\DataTable` facade provides helper methods:
+The `Nyumbani\DtTables\Facades\DataTable` facade provides helper methods:
 
 ### `DataTable::parseAttributes(array $attributes): string`
 
