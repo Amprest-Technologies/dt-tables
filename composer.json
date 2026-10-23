@@ -23,7 +23,7 @@
 		"illuminate/view": "^12.0||^13.0"
 	},
 	"require-dev": {
-		"nyumbani/docs": "^1.0"
+		"nyumbani/docs": "^1.1"
 	},
 	"suggest": {
 		"nyumbani/docs": "Serves the DtTables docs at /nyumbani-dt-tables/docs in the local environment, in any Laravel app. Nyumbani Essentials requires it."
