@@ -14,19 +14,14 @@
 		}
 	],
 	"require": {
-		"php": "^8.2",
+		"php": "^8.3",
 		"illuminate/console": "^12.0||^13.0",
 		"illuminate/database": "^12.0||^13.0",
 		"illuminate/http": "^12.0||^13.0",
 		"illuminate/support": "^12.0||^13.0",
 		"illuminate/validation": "^12.0||^13.0",
-		"illuminate/view": "^12.0||^13.0"
-	},
-	"require-dev": {
+		"illuminate/view": "^12.0||^13.0",
 		"nyumbani/docs": "^1.1"
-	},
-	"suggest": {
-		"nyumbani/docs": "Serves the DtTables docs at /nyumbani-dt-tables/docs in the local environment, in any Laravel app. Nyumbani Essentials requires it."
 	},
 	"autoload": {
 		"psr-4": {

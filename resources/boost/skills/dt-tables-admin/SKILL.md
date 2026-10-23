@@ -98,7 +98,7 @@ Column rows use the column's own `id` as the bag id, and the add-column form use
 
 ## Documentation (`/nyumbani-dt-tables/docs`)
 
-The docs are served by the `nyumbani/docs` engine, in the local environment only, with its own styles and scripts. `Docs\DtTablesDocs::describe()` is the single list of sections and pages (slug => title) in reading order, and `DtTablesServiceProvider::registerDocs()` registers it when `nyumbani/docs` is installed (it is a suggested package, so the admin hides its Docs links without it). Each page is `resources/views/docs/{slug}.blade.php`, which extends `docs::layout` and fills the `page`, `lead` and `content` sections. The Essentials docs link to them from their Data tables page.
+The docs are served by the `nyumbani/docs` engine, in the local environment only, with its own styles and scripts. `Docs\DtTablesDocs::describe()` is the single list of sections and pages (slug => title) in reading order, and `DtTablesServiceProvider::registerDocs()` registers it (the package requires `nyumbani/docs`). Each page is `resources/views/docs/{slug}.blade.php`, which extends `docs::layout` and fills the `page`, `lead` and `content` sections. The Essentials docs link to them from their Data tables page.
 
 To add a page: create the view and add its slug to `DtTablesDocs::describe()`. Write pages with the engine's components, never raw markup for these:
 

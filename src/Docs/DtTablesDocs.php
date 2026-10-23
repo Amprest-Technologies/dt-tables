@@ -58,19 +58,17 @@ class DtTablesDocs
     }
 
     /**
-     * Find the registered docs, or null when Nyumbani Docs is not installed to serve them.
+     * Find the registered docs.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */
     public static function registered(): ?Docs
     {
-        return class_exists(DocsRegistry::class)
-            ? app(DocsRegistry::class)->find(self::SLUG)
-            : null;
+        return app(DocsRegistry::class)->find(self::SLUG);
     }
 
     /**
-     * Get the url of a docs page, or null when the docs are not served.
+     * Get the url of a docs page, or null when the docs are not registered.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */

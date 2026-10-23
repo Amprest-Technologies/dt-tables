@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "804bf1e251b31b82a1967c60409ea6e8",
+    "content-hash": "6b61ff24c6d787f228541e0de5c0ac16",
     "packages": [
         {
             "name": "brick/math",
@@ -1611,6 +1611,74 @@
             "time": "2026-10-06T02:42:44+00:00"
         },
         {
+            "name": "illuminate/routing",
+            "version": "v13.38.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/routing.git",
+                "reference": "49b69e43f6ae6c3736fcaa5e53e9414c99acc02e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/routing/zipball/49b69e43f6ae6c3736fcaa5e53e9414c99acc02e",
+                "reference": "49b69e43f6ae6c3736fcaa5e53e9414c99acc02e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-filter": "*",
+                "ext-hash": "*",
+                "illuminate/collections": "^13.0",
+                "illuminate/conditionable": "^13.0",
+                "illuminate/container": "^13.0",
+                "illuminate/contracts": "^13.0",
+                "illuminate/http": "^13.0",
+                "illuminate/macroable": "^13.0",
+                "illuminate/pipeline": "^13.0",
+                "illuminate/reflection": "^13.0",
+                "illuminate/session": "^13.0",
+                "illuminate/support": "^13.0",
+                "php": "^8.3",
+                "symfony/http-foundation": "^7.4.0 || ^8.0.0",
+                "symfony/http-kernel": "^7.4.0 || ^8.0.0",
+                "symfony/polyfill-php84": "^1.36",
+                "symfony/polyfill-php85": "^1.36",
+                "symfony/routing": "^7.4.0 || ^8.0.0"
+            },
+            "suggest": {
+                "illuminate/console": "Required to use the make commands (^13.0).",
+                "php-http/discovery": "Required to use PSR-7 bridging features (^1.15).",
+                "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^7.4 || ^8.0)."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "13.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Routing\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "The Illuminate Routing package.",
+            "homepage": "https://laravel.com",
+            "support": {
+                "issues": "https://github.com/laravel/framework/issues",
+                "source": "https://github.com/laravel/framework"
+            },
+            "time": "2026-10-08T23:20:47+00:00"
+        },
+        {
             "name": "illuminate/session",
             "version": "v13.38.0",
             "source": {
@@ -2228,6 +2296,66 @@
                 }
             ],
             "time": "2026-02-16T23:10:27+00:00"
+        },
+        {
+            "name": "nyumbani/docs",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nyumbani-tech-solutions/docs.git",
+                "reference": "0368f358a1b7d586cbc2683b23a44e3536497658"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nyumbani-tech-solutions/docs/zipball/0368f358a1b7d586cbc2683b23a44e3536497658",
+                "reference": "0368f358a1b7d586cbc2683b23a44e3536497658",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "^12.0||^13.0",
+                "illuminate/routing": "^12.0||^13.0",
+                "illuminate/support": "^12.0||^13.0",
+                "illuminate/view": "^12.0||^13.0",
+                "php": "^8.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Nyumbani\\Docs\\DocsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Support/helpers.php"
+                ],
+                "psr-4": {
+                    "Nyumbani\\Docs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Alvin Kaburu",
+                    "email": "geekaburu@nyumbanitech.co.ke"
+                }
+            ],
+            "description": "The docs engine of the Nyumbani packages: a page shell, interactive components and live demos, served only in the local environment, with its own styles and scripts so it works in any Laravel app.",
+            "homepage": "https://nyumbanitech.co.ke/",
+            "keywords": [
+                "docs",
+                "laravel",
+                "nyumbani"
+            ],
+            "support": {
+                "issues": "https://github.com/nyumbani-tech-solutions/docs/issues",
+                "source": "https://github.com/nyumbani-tech-solutions/docs/tree/v1.1.0"
+            },
+            "time": "2026-10-23T18:32:59+00:00"
         },
         {
             "name": "psr/clock",
@@ -4456,6 +4584,86 @@
             "time": "2026-10-08T16:57:43+00:00"
         },
         {
+            "name": "symfony/routing",
+            "version": "v8.1.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/routing.git",
+                "reference": "edb06fb6ced3c1faaaed74c1c6c0f176a614c330"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/edb06fb6ced3c1faaaed74c1c6c0f176a614c330",
+                "reference": "edb06fb6ced3c1faaaed74c1c6c0f176a614c330",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4.1",
+                "symfony/deprecation-contracts": "^2.5|^3"
+            },
+            "require-dev": {
+                "psr/log": "^1|^2|^3",
+                "symfony/config": "^7.4|^8.0",
+                "symfony/dependency-injection": "^7.4|^8.0",
+                "symfony/expression-language": "^7.4|^8.0",
+                "symfony/http-foundation": "^7.4|^8.0",
+                "symfony/yaml": "^7.4|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Routing\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Maps an HTTP request to a set of configuration variables",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "router",
+                "routing",
+                "uri",
+                "url"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/routing/tree/v8.1.9"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-10-12T12:37:13+00:00"
+        },
+        {
             "name": "symfony/service-contracts",
             "version": "v3.7.3",
             "source": {
@@ -4969,223 +5177,14 @@
             "time": "2026-04-26T05:33:54+00:00"
         }
     ],
-    "packages-dev": [
-        {
-            "name": "illuminate/routing",
-            "version": "v13.38.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/illuminate/routing.git",
-                "reference": "49b69e43f6ae6c3736fcaa5e53e9414c99acc02e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/routing/zipball/49b69e43f6ae6c3736fcaa5e53e9414c99acc02e",
-                "reference": "49b69e43f6ae6c3736fcaa5e53e9414c99acc02e",
-                "shasum": ""
-            },
-            "require": {
-                "ext-filter": "*",
-                "ext-hash": "*",
-                "illuminate/collections": "^13.0",
-                "illuminate/conditionable": "^13.0",
-                "illuminate/container": "^13.0",
-                "illuminate/contracts": "^13.0",
-                "illuminate/http": "^13.0",
-                "illuminate/macroable": "^13.0",
-                "illuminate/pipeline": "^13.0",
-                "illuminate/reflection": "^13.0",
-                "illuminate/session": "^13.0",
-                "illuminate/support": "^13.0",
-                "php": "^8.3",
-                "symfony/http-foundation": "^7.4.0 || ^8.0.0",
-                "symfony/http-kernel": "^7.4.0 || ^8.0.0",
-                "symfony/polyfill-php84": "^1.36",
-                "symfony/polyfill-php85": "^1.36",
-                "symfony/routing": "^7.4.0 || ^8.0.0"
-            },
-            "suggest": {
-                "illuminate/console": "Required to use the make commands (^13.0).",
-                "php-http/discovery": "Required to use PSR-7 bridging features (^1.15).",
-                "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^7.4 || ^8.0)."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "13.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Illuminate\\Routing\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                }
-            ],
-            "description": "The Illuminate Routing package.",
-            "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
-            "time": "2026-10-08T23:20:47+00:00"
-        },
-        {
-            "name": "nyumbani/docs",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nyumbani-tech-solutions/docs.git",
-                "reference": "0368f358a1b7d586cbc2683b23a44e3536497658"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nyumbani-tech-solutions/docs/zipball/0368f358a1b7d586cbc2683b23a44e3536497658",
-                "reference": "0368f358a1b7d586cbc2683b23a44e3536497658",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/http": "^12.0||^13.0",
-                "illuminate/routing": "^12.0||^13.0",
-                "illuminate/support": "^12.0||^13.0",
-                "illuminate/view": "^12.0||^13.0",
-                "php": "^8.3"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Nyumbani\\Docs\\DocsServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/Support/helpers.php"
-                ],
-                "psr-4": {
-                    "Nyumbani\\Docs\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Alvin Kaburu",
-                    "email": "geekaburu@nyumbanitech.co.ke"
-                }
-            ],
-            "description": "The docs engine of the Nyumbani packages: a page shell, interactive components and live demos, served only in the local environment, with its own styles and scripts so it works in any Laravel app.",
-            "homepage": "https://nyumbanitech.co.ke/",
-            "keywords": [
-                "docs",
-                "laravel",
-                "nyumbani"
-            ],
-            "support": {
-                "issues": "https://github.com/nyumbani-tech-solutions/docs/issues",
-                "source": "https://github.com/nyumbani-tech-solutions/docs/tree/v1.1.0"
-            },
-            "time": "2026-10-23T18:32:59+00:00"
-        },
-        {
-            "name": "symfony/routing",
-            "version": "v8.1.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/routing.git",
-                "reference": "edb06fb6ced3c1faaaed74c1c6c0f176a614c330"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/edb06fb6ced3c1faaaed74c1c6c0f176a614c330",
-                "reference": "edb06fb6ced3c1faaaed74c1c6c0f176a614c330",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.4.1",
-                "symfony/deprecation-contracts": "^2.5|^3"
-            },
-            "require-dev": {
-                "psr/log": "^1|^2|^3",
-                "symfony/config": "^7.4|^8.0",
-                "symfony/dependency-injection": "^7.4|^8.0",
-                "symfony/expression-language": "^7.4|^8.0",
-                "symfony/http-foundation": "^7.4|^8.0",
-                "symfony/yaml": "^7.4|^8.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Routing\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Maps an HTTP request to a set of configuration variables",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "router",
-                "routing",
-                "uri",
-                "url"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/routing/tree/v8.1.9"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/nicolas-grekas",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2026-10-12T12:37:13+00:00"
-        }
-    ],
+    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2"
+        "php": "^8.3"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"

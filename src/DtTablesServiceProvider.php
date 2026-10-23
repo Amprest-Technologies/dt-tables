@@ -84,7 +84,7 @@ class DtTablesServiceProvider extends ServiceProvider
         //  Load the assets blade component
         Blade::component('data-table-assets', DataTableAssets::class);
 
-        //  Add the docs when Nyumbani Docs is installed to show them
+        //  Add the docs, which Nyumbani Docs serves
         $this->registerDocs();
     }
 
@@ -95,11 +95,6 @@ class DtTablesServiceProvider extends ServiceProvider
      */
     protected function registerDocs(): void
     {
-        //  Skip when Nyumbani Docs is not installed
-        if (! class_exists(DocsRegistry::class)) {
-            return;
-        }
-
         //  Describe the pages
         $this->app->make(DocsRegistry::class)->register(DtTablesDocs::describe());
     }
