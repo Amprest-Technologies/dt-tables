@@ -64,11 +64,12 @@ class DtTablesDocs
      */
     public static function registered(): ?Docs
     {
-        return app(DocsRegistry::class)->find(self::SLUG);
+        //  The docs package is a dev dependency, so it may not be installed
+        return class_exists(DocsRegistry::class) ? app(DocsRegistry::class)->find(self::SLUG) : null;
     }
 
     /**
-     * Get the url of a docs page, or null when the docs are not registered.
+     * Get the url of a docs page, or null when the docs are not installed or registered.
      *
      * @author Alvin G. Kaburu <geekaburu@nyumbanitech.co.ke>
      */

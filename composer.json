@@ -3,10 +3,13 @@
 	"type": "library",
 	"description": "This is a package that provides a customizable data tables component for the Laravel Framework.",
 	"homepage": "https://nyumbanitech.co.ke/",
-	"keywords": [ "laravel", "datatables" ],
+	"keywords": [
+		"laravel",
+		"datatables"
+	],
 	"license": "MIT",
 	"minimum-stability": "dev",
-    "prefer-stable": true,
+	"prefer-stable": true,
 	"authors": [
 		{
 			"name": "Alvin Kaburu",
@@ -20,8 +23,13 @@
 		"illuminate/http": "^12.0||^13.0",
 		"illuminate/support": "^12.0||^13.0",
 		"illuminate/validation": "^12.0||^13.0",
-		"illuminate/view": "^12.0||^13.0",
+		"illuminate/view": "^12.0||^13.0"
+	},
+	"require-dev": {
 		"nyumbani/docs": "^1.1"
+	},
+	"suggest": {
+		"nyumbani/docs": "The local-only guides of Nyumbani packages, chosen in php artisan nyumbani:install and installed with composer require --dev nyumbani/docs"
 	},
 	"autoload": {
 		"psr-4": {
